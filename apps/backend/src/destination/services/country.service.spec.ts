@@ -42,13 +42,32 @@ describe('CountryService', () => {
     expect(res).toMatchObject({
       capital: 'Brasília',
       idioma: 'Portuguese',
-      moeda: 'Brazilian real (R$)',
+      moeda: 'Real brasileiro (R$)',
       codigoMoeda: 'BRL',
-      populacao: 'N/A',
       continente: 'South America',
       cca2: 'BR',
       cca3: 'BRA',
     });
+  });
+
+  it('população vem do Banco Mundial, formatada em pt-BR com o ano', () => {
+    countries.getByName.mockReturnValue(makeCountry());
+    const res = svc.getCountryInfo('Brazil');
+    expect(res.populacao).toMatch(/^\d{1,3}(\.\d{3})+ \(\d{4}\)$/);
+  });
+
+  it('população "Não disponível" quando o país não tem dado', () => {
+    countries.getByName.mockReturnValue(makeCountry({ cca3: 'ATA' }));
+    expect(svc.getCountryInfo('Antarctica').populacao).toBe('Não disponível');
+  });
+
+  it('mantém o nome original da moeda quando não há tradução', () => {
+    countries.getByName.mockReturnValue(
+      makeCountry({
+        currencyDetails: [{ code: 'XYZ', name: 'Moeda de teste', symbol: '¤' }],
+      }),
+    );
+    expect(svc.getCountryInfo('X').moeda).toBe('Moeda de teste (¤)');
   });
 
   it('usa currencies[0] como fallback quando currencyDetails vazio', () => {
