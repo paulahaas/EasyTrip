@@ -24,16 +24,15 @@ describe('History (e2e)', () => {
         cca3: n.slice(0, 3).toUpperCase(),
         name: n[0].toUpperCase() + n.slice(1).toLowerCase(),
         continent: 'Europe',
-        region: 'Europe',
         subregion: 'Southern Europe',
-        borders: [],
+        capital: 'Madrid',
         latlng: [40, -4] as [number, number],
         landlocked: false,
         languages: ['Spanish'],
         currencies: ['EUR'],
-        population: 47_000_000,
-        area: 505_000,
+        currencyDetails: [],
         flag: '',
+        altSpellings: [],
       };
     });
   });

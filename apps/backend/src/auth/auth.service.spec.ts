@@ -28,6 +28,7 @@ describe('AuthService', () => {
         id: 'u1',
         email,
         passwordHash,
+        role: 'USER' as const,
         createdAt: new Date('2026-04-23T10:00:00Z'),
       }),
     );
@@ -48,6 +49,7 @@ describe('AuthService', () => {
       id: 'u1',
       email: 'a@b.com',
       passwordHash: 'x',
+      role: 'USER' as const,
       createdAt: new Date(),
     });
     await expect(
@@ -61,6 +63,7 @@ describe('AuthService', () => {
       id: 'u1',
       email: 'a@b.com',
       passwordHash,
+      role: 'USER' as const,
       createdAt: new Date(),
     });
     await expect(service.login('a@b.com', 'wrong')).rejects.toBeInstanceOf(
@@ -74,6 +77,7 @@ describe('AuthService', () => {
       id: 'u1',
       email: 'a@b.com',
       passwordHash,
+      role: 'USER' as const,
       createdAt: new Date(),
     });
     const res = await service.login('a@b.com', 'realpass');
@@ -91,7 +95,8 @@ describe('AuthService', () => {
     users.findById.mockResolvedValueOnce({
       id: 'u1',
       email: 'a@b.com',
-      role: 'USER',
+      passwordHash: 'x',
+      role: 'USER' as const,
       createdAt: new Date('2026-01-01T00:00:00Z'),
     });
     const res = await service.me('u1');

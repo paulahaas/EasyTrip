@@ -49,7 +49,7 @@ export function ProfilePage() {
 
         {/* Profile content */}
         <div className="px-5 pb-5 -mt-10 flex flex-col sm:flex-row sm:items-end gap-4">
-          <Avatar className="h-20 w-20 ring-4 shrink-0" style={{ ringColor: '#16181f' }}>
+          <Avatar className="h-20 w-20 ring-4 ring-[#16181f] shrink-0">
             <AvatarFallback
               className="text-xl font-semibold"
               style={{ background: 'linear-gradient(135deg, #1e2029, #22252f)', color: '#7dd3fc' }}

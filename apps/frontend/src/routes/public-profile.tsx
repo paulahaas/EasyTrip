@@ -111,7 +111,7 @@ export function PublicProfilePage() {
           style={{ background: 'linear-gradient(135deg, rgba(79,142,247,0.2) 0%, rgba(125,211,252,0.08) 100%)' }}
         />
         <div className="px-5 pb-5 -mt-8 flex flex-col sm:flex-row sm:items-end gap-4">
-          <Avatar className="h-16 w-16 ring-4" style={{ ringColor: '#16181f' }}>
+          <Avatar className="h-16 w-16 ring-4 ring-[#16181f]">
             <AvatarFallback
               className="text-lg font-semibold"
               style={{ background: '#22252f', color: '#7dd3fc' }}
