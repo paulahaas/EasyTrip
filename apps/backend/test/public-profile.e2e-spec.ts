@@ -20,7 +20,7 @@ describe('PublicProfile (e2e)', () => {
     await resetDb(prisma);
     const reg = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: 'pp@ex.com', password: 'secret123' });
+      .send({ email: 'pp@ex.com', username: 'pp_user', password: 'secret123' });
     token = reg.body.tokens.accessToken;
     userId = reg.body.user.id;
   });
@@ -35,7 +35,8 @@ describe('PublicProfile (e2e)', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
     expect(res.body.id).toBe(userId);
-    expect(res.body.email).toBe('pp@ex.com');
+    expect(res.body.username).toBe('pp_user');
+    expect(res.body).not.toHaveProperty('email');
     expect(res.body.perContinent).toHaveLength(7);
     expect(res.body.totalVisited).toBe(0);
   });

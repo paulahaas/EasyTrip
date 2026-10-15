@@ -30,7 +30,7 @@ describe('AuthContext', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
 
     await act(async () => {
-      await result.current.login({ email: 'a@b.com', password: 'secret123' })
+      await result.current.login({ login: 'a@b.com', password: 'secret123' })
     })
 
     expect(localStorage.getItem('easytrip:token')).toBe('abc.def.ghi')
@@ -40,7 +40,7 @@ describe('AuthContext', () => {
     const loginCall = calls.find((c) => c.url === '/api/auth/login')
     expect(loginCall).toBeTruthy()
     expect(JSON.parse(loginCall!.init.body as string)).toEqual({
-      email: 'a@b.com',
+      login: 'a@b.com',
       password: 'secret123',
     })
   })
@@ -64,7 +64,7 @@ describe('AuthContext', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
 
     await act(async () => {
-      await result.current.login({ email: 'a@b.com', password: 'secret123' })
+      await result.current.login({ login: 'a@b.com', password: 'secret123' })
     })
 
     await waitFor(() => {

@@ -12,6 +12,7 @@ import type {
   AuthResponse,
   LoginDTO,
   RegisterDTO,
+  UpdateProfileDTO,
   User,
 } from '@easytrip/shared'
 import { api, clearToken, getToken, setToken } from '@/lib/apiClient'
@@ -25,6 +26,7 @@ interface AuthContextValue {
   loading: boolean
   login: (input: LoginDTO) => Promise<void>
   register: (input: RegisterDTO) => Promise<void>
+  updateProfile: (input: UpdateProfileDTO) => Promise<void>
   logout: () => void
 }
 
@@ -124,6 +126,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [applyAuth],
   )
 
+  const updateProfile = useCallback(async (input: UpdateProfileDTO) => {
+    const updated = await api<User>('/api/auth/me', {
+      method: 'PATCH',
+      body: JSON.stringify(input),
+    })
+    setUser(updated)
+  }, [])
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -132,9 +142,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       login,
       register,
+      updateProfile,
       logout: handleLogout,
     }),
-    [user, token, loading, login, register, handleLogout],
+    [user, token, loading, login, register, updateProfile, handleLogout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
@@ -19,6 +20,7 @@ import type { AuthUser } from './decorators/current-user.decorator';
 import { Roles } from './decorators/roles.decorator';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,10 +46,10 @@ export class AuthController {
   @ApiResponse({
     status: 409,
     type: ErrorResponseDto,
-    description: 'Email já cadastrado',
+    description: 'Email ou nome de usuário já cadastrado',
   })
   register(@Body() dto: RegisterDto): Promise<AuthResponse> {
-    return this.auth.register(dto.email, dto.password);
+    return this.auth.register(dto.email, dto.username, dto.password);
   }
 
   @Post('login')
@@ -55,7 +57,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Autentica e retorna um access token JWT',
     description:
-      'Recebe email + senha e retorna o access token que deve ser usado em `Authorization: Bearer <token>`.',
+      'Recebe email ou nome de usuário + senha e retorna o access token que deve ser usado em `Authorization: Bearer <token>`.',
   })
   @ApiOkResponse({ type: AuthResponseDto })
   @ApiUnauthorizedResponse({
@@ -63,7 +65,7 @@ export class AuthController {
     description: 'Credenciais inválidas',
   })
   login(@Body() dto: LoginDto): Promise<AuthResponse> {
-    return this.auth.login(dto.email, dto.password);
+    return this.auth.login(dto.login, dto.password);
   }
 
   @Get('me')
@@ -77,5 +79,25 @@ export class AuthController {
   })
   me(@CurrentUser() user: AuthUser): Promise<SharedUser> {
     return this.auth.me(user.id);
+  }
+
+  @Patch('me')
+  @Roles()
+  @ApiBearerAuth('jwt')
+  @ApiOperation({ summary: 'Altera o nome de usuário do usuário autenticado' })
+  @ApiOkResponse({ type: UserResponseDto })
+  @ApiConflictResponse({
+    type: ErrorResponseDto,
+    description: 'Nome de usuário já está em uso',
+  })
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: 'Token ausente ou inválido',
+  })
+  updateMe(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: UpdateProfileDto,
+  ): Promise<SharedUser> {
+    return this.auth.updateUsername(user.id, dto.username);
   }
 }

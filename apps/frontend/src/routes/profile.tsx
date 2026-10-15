@@ -6,6 +6,7 @@ import { ContinentBarChart } from '@/components/charts/ContinentBarChart'
 import { ContinentStatsCard } from '@/components/ContinentStatsCard'
 import { ProfileHistoryList } from '@/components/ProfileHistoryList'
 import { ShareProfileButton } from '@/components/ShareProfileButton'
+import { UsernameEditor } from '@/components/UsernameEditor'
 import { VisitedSection } from '@/components/VisitedSection'
 import { WishlistSection } from '@/components/WishlistSection'
 import { WorldMapCard } from '@/components/charts/WorldMapCard'
@@ -30,7 +31,7 @@ export function ProfilePage() {
   }
   if (!isAuthenticated || !user) return <Navigate to="/login" />
 
-  const initials     = user.email.slice(0, 2).toUpperCase()
+  const initials     = user.username.slice(0, 2).toUpperCase()
   const totalVisited = stats.data?.totalVisited ?? visited.items.length
   const continentsVisited = stats.data?.perContinent.filter((c) => c.visited > 0).length ?? 0
 
@@ -59,12 +60,7 @@ export function ProfilePage() {
           </Avatar>
 
           <div className="flex-1 sm:mb-2">
-            <h1
-              className="text-xl sm:text-2xl font-normal leading-tight"
-              style={{ color: '#f0f2f8' }}
-            >
-              {user.email.split('@')[0]}
-            </h1>
+            <UsernameEditor username={user.username} />
             <p className="text-xs mt-0.5" style={{ color: '#7c8194' }}>
               {user.email}
               {user.role === 'ADMIN' && <span style={{ color: '#7dd3fc' }}> · administrador</span>}

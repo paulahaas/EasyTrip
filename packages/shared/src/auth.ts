@@ -3,6 +3,7 @@ import type { Role } from './roles';
 export interface User {
   id: string;
   email: string;
+  username: string;
   role: Role;
   createdAt: string;
 }
@@ -17,11 +18,17 @@ export interface AuthResponse {
 }
 
 export interface LoginDTO {
-  email: string;
+  /** Email ou nome de usuário. */
+  login: string;
   password: string;
 }
 
 export interface RegisterDTO {
   email: string;
+  username: string;
   password: string;
+}
+
+export interface UpdateProfileDTO {
+  username: string;
 }

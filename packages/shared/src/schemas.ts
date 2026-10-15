@@ -1,16 +1,30 @@
 import { z } from 'zod';
 
+// Nome de usuário: 3–20 caracteres, letras minúsculas, números, _ e .
+export const USERNAME_REGEX = /^[a-z0-9_.]{3,20}$/;
+export const usernameSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(USERNAME_REGEX);
+
 export const loginSchema = z.object({
-  email: z.string().email(),
+  login: z.string().trim().min(1),
   password: z.string().min(6),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export const registerSchema = z.object({
   email: z.string().email(),
+  username: usernameSchema,
   password: z.string().min(6).max(72),
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+export const updateProfileSchema = z.object({
+  username: usernameSchema,
+});
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 
 export const addHistorySchema = z.object({
   query: z.string().min(1),

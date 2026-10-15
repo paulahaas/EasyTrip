@@ -34,6 +34,7 @@ function makeCtrl(userExists = true) {
         ? {
             id: 'u2',
             email: 'b@c.com',
+            username: 'bia',
             role: 'USER',
             createdAt: new Date('2026-01-01'),
           }
@@ -57,10 +58,12 @@ describe('UsersController', () => {
     const res = await ctrl.publicProfile('u2');
     expect(res).toMatchObject({
       id: 'u2',
-      email: 'b@c.com',
+      username: 'bia',
       totalVisited: 3,
       totalWishlist: 1,
     });
+    // o perfil público não expõe o email
+    expect(res).not.toHaveProperty('email');
   });
 
   it('publicProfile lança NotFoundException quando usuário não existe', async () => {

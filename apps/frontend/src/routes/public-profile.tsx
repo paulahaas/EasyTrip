@@ -87,7 +87,7 @@ export function PublicProfilePage() {
     )
   }
 
-  const initials = data.email.slice(0, 2).toUpperCase()
+  const initials = data.username.slice(0, 2).toUpperCase()
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6">
@@ -124,7 +124,7 @@ export function PublicProfilePage() {
               className="text-xl font-normal"
               style={{ color: '#f0f2f8' }}
             >
-              {data.email}
+              @{data.username}
             </h1>
             <p className="text-xs mt-0.5" style={{ color: '#7c8194' }}>
               No EasyTrip desde {new Date(data.createdAt).toLocaleDateString('pt-BR')}

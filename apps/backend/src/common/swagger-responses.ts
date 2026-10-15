@@ -7,6 +7,9 @@ export class UserResponseDto {
   @ApiProperty({ example: 'maria@easytrip.com' })
   email!: string;
 
+  @ApiProperty({ example: 'maria.silva' })
+  username!: string;
+
   @ApiProperty({ enum: ['USER', 'ADMIN'], example: 'USER' })
   role!: 'USER' | 'ADMIN';
 
@@ -132,8 +135,8 @@ export class PublicProfileDto {
   @ApiProperty({ example: 'cmoc0cudr0000aql4hyofnthb' })
   id!: string;
 
-  @ApiProperty({ example: 'maria@easytrip.com' })
-  email!: string;
+  @ApiProperty({ example: 'maria.silva' })
+  username!: string;
 
   @ApiProperty({ example: '2026-04-23T21:42:59.535Z' })
   createdAt!: string;

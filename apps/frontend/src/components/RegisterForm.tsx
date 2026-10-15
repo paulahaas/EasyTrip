@@ -12,6 +12,7 @@ interface RegisterFormProps {
 export function RegisterForm({ onSuccess }: RegisterFormProps) {
   const { register } = useAuth()
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -24,9 +25,16 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       setError('As senhas não coincidem')
       return
     }
-    const parsed = registerSchema.safeParse({ email, password })
+    const parsed = registerSchema.safeParse({ email, username, password })
     if (!parsed.success) {
-      setError('Email inválido ou senha precisa ter 6+ caracteres')
+      const field = parsed.error.issues[0]?.path[0]
+      setError(
+        field === 'username'
+          ? 'Nome de usuário deve ter 3 a 20 caracteres: letras, números, "_" ou "."'
+          : field === 'email'
+            ? 'Email inválido'
+            : 'A senha precisa ter de 6 a 72 caracteres',
+      )
       return
     }
     setSubmitting(true)
@@ -58,6 +66,31 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           autoComplete="email"
           required
         />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="register-username"
+          className="text-xs uppercase tracking-wider"
+          style={{ color: '#7c8194' }}
+        >
+          Nome de usuário
+        </label>
+        <Input
+          id="register-username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value.toLowerCase())}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
+          placeholder="ex.: maria.silva"
+          minLength={3}
+          maxLength={20}
+          required
+        />
+        <span className="text-xs" style={{ color: '#7c8194' }}>
+          3 a 20 caracteres: letras, números, _ ou .
+        </span>
       </div>
       <div className="flex flex-col gap-1">
         <label

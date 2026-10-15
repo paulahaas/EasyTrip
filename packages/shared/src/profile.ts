@@ -4,7 +4,7 @@ import type { VisitedCountry } from './visited';
 
 export interface PublicProfile {
   id: string;
-  email: string;
+  username: string;
   createdAt: string;
   totalVisited: number;
   totalWishlist: number;

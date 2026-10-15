@@ -41,7 +41,7 @@ describe('History (e2e)', () => {
     await resetDb(prisma);
     const reg = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: 'hist@ex.com', password: 'secret123' });
+      .send({ email: 'hist@ex.com', username: 'hist', password: 'secret123' });
     token = reg.body.tokens.accessToken;
   });
 

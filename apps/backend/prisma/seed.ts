@@ -10,7 +10,7 @@ async function main() {
   const user = await prisma.user.upsert({
     where: { email },
     update: {},
-    create: { email, passwordHash },
+    create: { email, username: 'demo', passwordHash },
   });
 
   await prisma.searchHistory.deleteMany({ where: { userId: user.id } });

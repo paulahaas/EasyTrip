@@ -19,7 +19,7 @@ describe('Wishlist (e2e)', () => {
     await resetDb(prisma);
     const reg = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: 'wl@ex.com', password: 'secret123' });
+      .send({ email: 'wl@ex.com', username: 'wl_user', password: 'secret123' });
     token = reg.body.tokens.accessToken;
   });
 

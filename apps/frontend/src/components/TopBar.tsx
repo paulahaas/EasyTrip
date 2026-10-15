@@ -13,7 +13,7 @@ export function TopBar() {
     navigate({ to: '/' })
   }
 
-  const initials = user?.email.slice(0, 2).toUpperCase() ?? '??'
+  const initials = user?.username.slice(0, 2).toUpperCase() ?? '??'
 
   return (
     <header
@@ -53,7 +53,7 @@ export function TopBar() {
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-sm hidden sm:inline" style={{ color: '#f0f2f8' }}>
-                  {user?.email.split('@')[0]}
+                  @{user?.username}
                 </span>
               </Link>
               <Button

@@ -11,7 +11,7 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const { login } = useAuth()
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -19,9 +19,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError(null)
-    const parsed = loginSchema.safeParse({ email, password })
+    const parsed = loginSchema.safeParse({ login: identifier, password })
     if (!parsed.success) {
-      setError('Email ou senha inválidos')
+      setError('Usuário ou senha inválidos')
       return
     }
     setSubmitting(true)
@@ -39,18 +39,20 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label
-          htmlFor="login-email"
+          htmlFor="login-identifier"
           className="text-xs uppercase tracking-wider"
           style={{ color: '#7c8194' }}
         >
-          Email
+          Email ou nome de usuário
         </label>
         <Input
-          id="login-email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
+          id="login-identifier"
+          type="text"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
           required
         />
       </div>

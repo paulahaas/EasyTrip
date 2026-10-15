@@ -1,5 +1,9 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
@@ -8,7 +12,8 @@
   },
   "moduleNameMapper": {
     "^@easytrip/shared$": "<rootDir>/../../../packages/shared/src/index.ts",
-    "^@easytrip/shared/(.*)$": "<rootDir>/../../../packages/shared/src/$1"
+    "^@easytrip/shared/(.*)$": "<rootDir>/../../../packages/shared/src/$1",
+    "^natural$": "<rootDir>/stubs/natural.ts"
   },
   "globalSetup": "<rootDir>/setup-e2e.ts"
 }

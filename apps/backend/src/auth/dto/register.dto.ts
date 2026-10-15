@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, Length } from 'class-validator';
+import { IsUsername } from './username.decorator';
 
 export class RegisterDto {
   @ApiProperty({
@@ -8,6 +9,9 @@ export class RegisterDto {
   })
   @IsEmail()
   email!: string;
+
+  @IsUsername()
+  username!: string;
 
   @ApiProperty({
     description: 'Senha com 6 a 72 caracteres.',

@@ -4,6 +4,7 @@ function makeUser(overrides: Partial<{ id: string; email: string }> = {}) {
   return {
     id: overrides.id ?? 'u1',
     email: overrides.email ?? 'test@example.com',
+    username: 'tester',
     passwordHash: 'hashed',
     createdAt: new Date('2026-01-01T00:00:00Z'),
     role: 'USER' as const,
@@ -11,11 +12,15 @@ function makeUser(overrides: Partial<{ id: string; email: string }> = {}) {
 }
 
 describe('UsersService', () => {
-  let prisma: { user: { findUnique: jest.Mock; create: jest.Mock } };
+  let prisma: {
+    user: { findUnique: jest.Mock; create: jest.Mock; update: jest.Mock };
+  };
   let svc: UsersService;
 
   beforeEach(() => {
-    prisma = { user: { findUnique: jest.fn(), create: jest.fn() } };
+    prisma = {
+      user: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
+    };
     svc = new UsersService(prisma as never);
   });
 
@@ -49,12 +54,41 @@ describe('UsersService', () => {
     expect(await svc.findById('ghost')).toBeNull();
   });
 
-  it('create delega para prisma com email e passwordHash', async () => {
+  it('findByLogin busca por email quando tem @', async () => {
+    prisma.user.findUnique.mockResolvedValue(makeUser());
+    await svc.findByLogin(' test@example.com ');
+    expect(prisma.user.findUnique).toHaveBeenCalledWith({
+      where: { email: 'test@example.com' },
+    });
+  });
+
+  it('findByLogin busca por nome de usuário (minúsculo) sem @', async () => {
+    prisma.user.findUnique.mockResolvedValue(makeUser());
+    await svc.findByLogin('Tester');
+    expect(prisma.user.findUnique).toHaveBeenCalledWith({
+      where: { username: 'tester' },
+    });
+  });
+
+  it('updateUsername delega para prisma.update', async () => {
+    prisma.user.update.mockResolvedValue(makeUser());
+    await svc.updateUsername('u1', 'novo');
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: 'u1' },
+      data: { username: 'novo' },
+    });
+  });
+
+  it('create delega para prisma com email, username e passwordHash', async () => {
     const user = makeUser();
     prisma.user.create.mockResolvedValue(user);
-    const res = await svc.create('test@example.com', 'hash123');
+    const res = await svc.create('test@example.com', 'tester', 'hash123');
     expect(prisma.user.create).toHaveBeenCalledWith({
-      data: { email: 'test@example.com', passwordHash: 'hash123' },
+      data: {
+        email: 'test@example.com',
+        username: 'tester',
+        passwordHash: 'hash123',
+      },
     });
     expect(res).toEqual(user);
   });
