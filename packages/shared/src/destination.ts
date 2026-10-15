@@ -25,7 +25,7 @@ export interface DestinationResponse {
   destino: string;
   informacoesDoPais: CountryInfo;
   clima: WeatherInfo | null;
-  cambio: ExchangeInfo;
+  cambio: ExchangeInfo | null;
   geradoEm: string;
 }
 

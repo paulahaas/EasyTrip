@@ -2,11 +2,11 @@ import type { ExchangeInfo } from '@easytrip/shared'
 import { TrendingUp } from 'lucide-react'
 
 interface ExchangeHighlightProps {
-  cambio: ExchangeInfo
+  cambio: ExchangeInfo | null
 }
 
 export function ExchangeHighlight({ cambio }: ExchangeHighlightProps) {
-  if (cambio.moedaOrigem === 'BRL') return null
+  if (!cambio || cambio.moedaOrigem === 'BRL') return null
 
   return (
     <div

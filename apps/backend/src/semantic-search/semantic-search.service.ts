@@ -3,6 +3,15 @@ import { CountryMeta, CountriesService } from '../countries/countries.service';
 import { keywordMap } from './keyword-map';
 import { FullTextSearchService } from './full-text-search.service';
 
+function normalize(text: string): string {
+  return ` ${text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()} `;
+}
+
 export interface SemanticSearchResult {
   cca2: string;
   cca3: string;
@@ -41,7 +50,15 @@ export class SemanticSearchService {
       return this.fallbackNameSearch(all, query.toLowerCase().trim());
     }
 
-    // 2. Combine BM25 score with keyword-map tag scores, then sort desc
+    // 2. Only keyword-map entries mentioned in the query count towards the
+    // score; otherwise countries with many tags (e.g. many languages) win
+    // every search regardless of what was asked.
+    const normalizedQuery = normalize(query);
+    const queryEntries = keywordMap.filter((e) =>
+      e.keywords.some((k) => normalizedQuery.includes(normalize(k))),
+    );
+
+    // 3. Combine BM25 score with keyword-map tag scores, then sort desc
     const byCca2 = new Map(all.map((c) => [c.cca2, c]));
     const results: SemanticSearchResult[] = [];
 
@@ -49,9 +66,13 @@ export class SemanticSearchService {
       const country = byCca2.get(cca2);
       if (!country) continue;
 
-      const matchedEntries = keywordMap.filter((e) => e.filter(country));
-      const tagScore = matchedEntries.reduce((sum, e) => sum + e.score, 0);
-      const matchedTags = matchedEntries.map((e) => e.tag);
+      const matchedQueryEntries = queryEntries.filter((e) => e.filter(country));
+      if (queryEntries.length > 0 && matchedQueryEntries.length === 0) continue;
+
+      const tagScore = matchedQueryEntries.reduce((sum, e) => sum + e.score, 0);
+      const matchedTags = keywordMap
+        .filter((e) => e.filter(country))
+        .map((e) => e.tag);
 
       results.push({
         cca2: country.cca2,

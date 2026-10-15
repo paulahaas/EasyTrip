@@ -59,6 +59,18 @@ describe('DestinationService', () => {
     expect(exchangeSvc.convertToBRL).toHaveBeenCalledWith('JPY');
   });
 
+  it('retorna clima e câmbio nulos quando as APIs externas falham', async () => {
+    const { svc, weatherSvc, exchangeSvc } = makeService();
+    weatherSvc.getWeather.mockRejectedValue(new Error('sem chave'));
+    exchangeSvc.convertToBRL.mockRejectedValue(new Error('sem chave'));
+    const res = await svc.getDestination('Japan');
+    expect(res).toMatchObject({
+      informacoesDoPais: countryInfo,
+      clima: null,
+      cambio: null,
+    });
+  });
+
   it('propaga erro do countryService', async () => {
     const { svc, country } = makeService();
     country.getCountryInfo.mockImplementation(() => {

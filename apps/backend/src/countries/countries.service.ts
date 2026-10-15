@@ -49,7 +49,16 @@ function toMeta(c: (typeof worldCountries)[number]): CountryMeta {
     currencies: Object.keys(c.currencies ?? {}),
     currencyDetails,
     flag: `https://flagcdn.com/${c.cca2.toLowerCase()}.svg`,
-    altSpellings: c.altSpellings ?? [],
+    // Inclui os nomes em português (ex.: "Estados Unidos", "Alemanha") para
+    // que a busca e o getByName funcionem com o nome em PT.
+    altSpellings: [
+      ...new Set([
+        ...(c.altSpellings ?? []),
+        ...[c.translations?.por?.common, c.translations?.por?.official].filter(
+          (s): s is string => !!s,
+        ),
+      ]),
+    ],
   };
 }
 
