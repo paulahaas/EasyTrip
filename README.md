@@ -42,7 +42,7 @@ cd EasyTrip
 cp apps/backend/.env.example apps/backend/.env
 ```
 
-Preencha `DATABASE_URL`, `OPENWEATHER_API_KEY` e `EXCHANGERATE_API_KEY`.
+Preencha `DATABASE_URL` e troque o `JWT_SECRET`. As chaves `OPENWEATHER_API_KEY` e `EXCHANGERATE_API_KEY` são opcionais: sem elas o site funciona normalmente, só não mostra clima e câmbio na página do país.
 
 ### 3. Instale dependências
 
@@ -50,23 +50,64 @@ Preencha `DATABASE_URL`, `OPENWEATHER_API_KEY` e `EXCHANGERATE_API_KEY`.
 npm install
 ```
 
-### 4. Suba o backend em Docker
+Funciona em Windows, macOS e Linux (o `package-lock.json` traz os binários nativos de todas as plataformas).
+
+### 4. Suba o projeto
+
+Escolha **um** dos dois caminhos abaixo.
+
+#### Opção A — Com Docker
 
 ```bash
 npm run backend:up       # build + start em background
 npm run backend:logs     # acompanha logs
+npm run dev --workspace=@easytrip/frontend
 ```
 
 No boot o container executa `prisma generate`, `prisma migrate deploy` e `nest start --watch`.
 
-### 5. Rode o frontend
+#### Opção B — Sem Docker
+
+Útil quando o Docker não roda na sua máquina (comum no Windows). Você só precisa de um PostgreSQL acessível.
+
+**1. Tenha um PostgreSQL.** Qualquer uma destas serve:
+
+- **Instalado no computador:** baixe em [postgresql.org/download](https://www.postgresql.org/download/) e, no `psql` (ou no pgAdmin), crie o usuário e o banco:
+
+  ```sql
+  CREATE USER easytrip WITH PASSWORD 'easytrip';
+  CREATE DATABASE easytrip OWNER easytrip;
+  ```
+
+  No `apps/backend/.env`:
+
+  ```env
+  DATABASE_URL=postgresql://easytrip:easytrip@localhost:5432/easytrip
+  ```
+
+- **Na nuvem (grátis):** crie um banco no [Neon](https://neon.tech), [Supabase](https://supabase.com) ou [Railway](https://railway.app) e cole a connection string que eles fornecem no `DATABASE_URL`.
+
+**2. Crie as tabelas e (opcional) o usuário de demonstração:**
 
 ```bash
-npm run dev --workspace=@easytrip/frontend
+cd apps/backend
+npx prisma migrate deploy
+npx prisma db seed        # cria demo@easytrip.test / demo1234
+cd ../..
 ```
 
-- **Backend** (Docker): `http://localhost:3000`
-- **Frontend** (Vite): `http://localhost:5173`
+**3. Rode backend e frontend juntos:**
+
+```bash
+npm run dev
+```
+
+---
+
+Em qualquer um dos caminhos:
+
+- **Backend:** `http://localhost:3000` (Swagger em `http://localhost:3000/api/docs`)
+- **Frontend:** `http://localhost:5173`
 
 ---
 
@@ -125,8 +166,8 @@ EasyTrip/
 |----------|-----------|
 | `DATABASE_URL` | Connection string do PostgreSQL |
 | `JWT_SECRET` | Segredo para assinar tokens JWT |
-| `OPENWEATHER_API_KEY` | Chave da [OpenWeatherMap API](https://openweathermap.org/api) |
-| `EXCHANGERATE_API_KEY` | Chave da [ExchangeRate API](https://www.exchangerate-api.com) |
+| `OPENWEATHER_API_KEY` | Chave da [OpenWeatherMap API](https://openweathermap.org/api) (opcional — sem ela o clima não aparece) |
+| `EXCHANGERATE_API_KEY` | Chave da [ExchangeRate API](https://www.exchangerate-api.com) (opcional — sem ela o câmbio não aparece) |
 | `PORT` | Porta do backend (padrão: `3000`) |
 
 ---
