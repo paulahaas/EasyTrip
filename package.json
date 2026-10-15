@@ -25,7 +25,6 @@
     "turbo": "^2.5.4"
   },
   "allowScripts": {
-    "bcrypt@5.1.1": true,
     "esbuild@0.21.5": true,
     "prisma@5.22.0": true,
     "@prisma/client@5.22.0": true,
@@ -37,6 +36,7 @@
     "@embedded-postgres/linux-ia32@17.5.0-beta.15": true,
     "@embedded-postgres/linux-ppc64@17.5.0-beta.15": true,
     "@embedded-postgres/linux-x64@17.5.0-beta.15": true,
-    "@embedded-postgres/windows-x64@17.5.0-beta.15": true
+    "@embedded-postgres/windows-x64@17.5.0-beta.15": true,
+    "bcrypt@6.0.0": true
   }
 }
