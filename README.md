@@ -125,6 +125,18 @@ Em qualquer um dos caminhos:
 
 ---
 
+## Deploy (Render + Neon, grátis)
+
+O backend serve a API (`/api`) e o frontend compilado (`/`) no mesmo serviço, configurado em [`render.yaml`](render.yaml).
+
+1. Crie um banco PostgreSQL grátis no [Neon](https://neon.tech) e copie a connection string.
+2. No [Render](https://render.com): **New → Blueprint**, escolha este repositório e cole a connection string em `DATABASE_URL`. As chaves de clima e câmbio são opcionais.
+3. A cada inicialização o serviço aplica as migrations e recria o usuário demo (`demo@easytrip.test` / `demo1234`).
+
+No plano grátis o serviço "dorme" depois de 15 min sem acesso; a primeira visita seguinte demora ~1 min para acordar.
+
+---
+
 ## Scripts disponíveis
 
 | Comando | Descrição |

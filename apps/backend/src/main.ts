@@ -61,8 +61,13 @@ async function bootstrap() {
     },
   });
 
-  const publicDir = join(__dirname, '..', 'public');
-  if (existsSync(publicDir)) {
+  // O build do frontend vai para apps/backend/public. Compilado, este arquivo
+  // fica em apps/backend/dist/apps/backend/src, então a pasta está 4 níveis acima.
+  const publicDir = [
+    join(__dirname, '..', '..', '..', '..', 'public'),
+    join(process.cwd(), 'public'),
+  ].find((dir) => existsSync(dir));
+  if (publicDir) {
     app.useStaticAssets(publicDir);
 
     app.use((req: Request, res: Response, next: NextFunction) => {
