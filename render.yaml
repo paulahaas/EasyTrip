@@ -1,18 +1,21 @@
 # Deploy no Render (https://render.com) como um único serviço:
 # o backend NestJS serve a API em /api e o frontend já compilado em /.
-# O banco é um PostgreSQL externo (ex.: Neon) informado em DATABASE_URL.
+# O banco é um PostgreSQL externo (ex.: Neon): DATABASE_URL é a conexão com pooling
+# usada pelo app; DATABASE_URL_UNPOOLED (opcional) é a direta, usada nas migrations.
 services:
   - type: web
     name: easytrip
     runtime: node
     plan: free
     buildCommand: npm ci && npm run build
-    startCommand: cd apps/backend && npx prisma migrate deploy && npx prisma db seed && node dist/apps/backend/src/main
+    startCommand: cd apps/backend && DATABASE_URL="${DATABASE_URL_UNPOOLED:-$DATABASE_URL}" npx prisma migrate deploy && npx prisma db seed && node dist/apps/backend/src/main
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
         value: 22.12.0
       - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_URL_UNPOOLED
         sync: false
       - key: JWT_SECRET
         generateValue: true

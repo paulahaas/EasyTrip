@@ -31,3 +31,8 @@ NEXT_STEPS.md
 
 # Banco local do npm run db:local
 .postgres-data/
+.neon
+.env.local
+
+# Neon agent skills (instaladas em .claude/, que ja e ignorada)
+skills-lock.json

@@ -129,8 +129,8 @@ Em qualquer um dos caminhos:
 
 O backend serve a API (`/api`) e o frontend compilado (`/`) no mesmo serviço, configurado em [`render.yaml`](render.yaml).
 
-1. Crie um banco PostgreSQL grátis no [Neon](https://neon.tech) e copie a connection string.
-2. No [Render](https://render.com): **New → Blueprint**, escolha este repositório e cole a connection string em `DATABASE_URL`. As chaves de clima e câmbio são opcionais.
+1. Crie um banco PostgreSQL grátis no [Neon](https://neon.tech). Pegue as duas connection strings: a **com pooling** (host com `-pooler`) e a **direta** (sem `-pooler`). Com o [Neon CLI](https://www.npmjs.com/package/neon), `neon link --project-id <id> -y` grava as duas em `.env.local` como `DATABASE_URL` e `DATABASE_URL_UNPOOLED`.
+2. No [Render](https://render.com): **New → Blueprint**, escolha este repositório e preencha `DATABASE_URL` (com pooling, usada pelo app) e `DATABASE_URL_UNPOOLED` (direta, usada só nas migrations). As chaves de clima e câmbio são opcionais.
 3. A cada inicialização o serviço aplica as migrations e recria o usuário demo (`demo@easytrip.test` / `demo1234`).
 
 No plano grátis o serviço "dorme" depois de 15 min sem acesso; a primeira visita seguinte demora ~1 min para acordar.
