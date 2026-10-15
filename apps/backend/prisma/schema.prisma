@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           String           @id @default(cuid())
+  email        String           @unique
+  passwordHash String
+  role         Role             @default(USER)
+  createdAt    DateTime         @default(now())
+
+  history      SearchHistory[]
+  wishlist     Wishlist[]
+  visited      VisitedCountry[]
+}
+
+model SearchHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  query       String
+  countryName String
+  cca2        String
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Wishlist {
+  id          String   @id @default(cuid())
+  userId      String
+  cca2        String
+  countryName String
+  continent   String
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cca2])
+  @@index([userId])
+}
+
+model VisitedCountry {
+  id          String   @id @default(cuid())
+  userId      String
+  cca2        String
+  countryName String
+  continent   String
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cca2])
+  @@index([userId, continent])
+}

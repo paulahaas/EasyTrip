@@ -1,0 +1,55 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: easytrip-backend
+    env_file:
+      - apps/backend/.env
+    environment:
+      CHOKIDAR_USEPOLLING: 'true'
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./apps/backend/src:/app/apps/backend/src
+      - ./apps/backend/prisma:/app/apps/backend/prisma
+      - ./packages/shared/src:/app/packages/shared/src
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: easytrip-postgres
+    environment:
+      POSTGRES_USER: easytrip
+      POSTGRES_PASSWORD: easytrip
+      POSTGRES_DB: easytrip
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U easytrip']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: easytrip-postgres-test
+    environment:
+      POSTGRES_USER: easytrip
+      POSTGRES_PASSWORD: easytrip
+      POSTGRES_DB: easytrip_test
+    ports:
+      - '5433:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U easytrip']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    profiles: [test]
+
+volumes:
+  postgres_data:
