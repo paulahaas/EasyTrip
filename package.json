@@ -17,9 +17,11 @@
     "backend:logs": "docker compose logs -f backend",
     "backend:rebuild": "docker compose up -d --build --force-recreate backend",
     "db:test:up": "docker compose --profile test up -d postgres-test",
-    "db:test:down": "docker compose --profile test down"
+    "db:test:down": "docker compose --profile test down",
+    "db:local": "node scripts/db-local.mjs"
   },
   "devDependencies": {
+    "embedded-postgres": "17.5.0-beta.15",
     "turbo": "^2.5.4"
   },
   "allowScripts": {
@@ -27,6 +29,14 @@
     "esbuild@0.21.5": true,
     "prisma@5.22.0": true,
     "@prisma/client@5.22.0": true,
-    "@prisma/engines@5.22.0": true
+    "@prisma/engines@5.22.0": true,
+    "@embedded-postgres/darwin-arm64@17.5.0-beta.15": true,
+    "@embedded-postgres/darwin-x64@17.5.0-beta.15": true,
+    "@embedded-postgres/linux-arm@17.5.0-beta.15": true,
+    "@embedded-postgres/linux-arm64@17.5.0-beta.15": true,
+    "@embedded-postgres/linux-ia32@17.5.0-beta.15": true,
+    "@embedded-postgres/linux-ppc64@17.5.0-beta.15": true,
+    "@embedded-postgres/linux-x64@17.5.0-beta.15": true,
+    "@embedded-postgres/windows-x64@17.5.0-beta.15": true
   }
 }

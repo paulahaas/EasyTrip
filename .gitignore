@@ -28,3 +28,6 @@ apps/frontend/dist/
 # Interno / não commitar
 NEXT_STEPS.md
 .claude/
+
+# Banco local do npm run db:local
+.postgres-data/

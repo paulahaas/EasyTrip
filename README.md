@@ -72,6 +72,20 @@ No boot o container executa `prisma generate`, `prisma migrate deploy` e `nest s
 
 **1. Tenha um PostgreSQL.** Qualquer uma destas serve:
 
+- **Portátil, pelo próprio projeto (mais simples):** não precisa instalar nada. Num terminal separado, deixe rodando:
+
+  ```bash
+  npm run db:local
+  ```
+
+  Ele baixa junto com o `npm install` um PostgreSQL 17 para o seu sistema, cria o banco na primeira vez e guarda os dados em `.postgres-data/` (ignorado pelo Git). No `apps/backend/.env` use:
+
+  ```env
+  DATABASE_URL=postgresql://easytrip:easytrip@localhost:5432/easytrip
+  ```
+
+  Se a porta 5432 já estiver ocupada, rode com outra (`PGPORT=5433 npm run db:local`; no PowerShell: `$env:PGPORT=5433; npm run db:local`) e ajuste a porta no `DATABASE_URL`. Para guardar os dados em outra pasta, defina `PGDATA` do mesmo jeito. Para parar, `Ctrl+C`.
+
 - **Instalado no computador:** baixe em [postgresql.org/download](https://www.postgresql.org/download/) e, no `psql` (ou no pgAdmin), crie o usuário e o banco:
 
   ```sql
@@ -120,6 +134,7 @@ Em qualquer um dos caminhos:
 | `npm run backend:logs` | Tail dos logs |
 | `npm run backend:rebuild` | Rebuild completo da imagem |
 | `npm run dev` | Backend + frontend em paralelo (sem Docker) |
+| `npm run db:local` | PostgreSQL portátil para desenvolvimento (sem Docker) |
 | `npm run build` | Build de todos os pacotes |
 | `npm run test` | Testes em todos os pacotes |
 | `npm run lint` | Lint em todos os pacotes |
@@ -153,6 +168,8 @@ EasyTrip/
 │   └── frontend/       React + Vite — interface do usuário
 ├── packages/
 │   └── shared/         Tipos TypeScript e schemas Zod compartilhados
+├── scripts/
+│   └── db-local.mjs    PostgreSQL portátil (npm run db:local)
 ├── CLAUDE.md           Guia de arquitetura e padrões de código
 ├── turbo.json          Pipeline do Turborepo
 └── docker-compose.yml  PostgreSQL local
