@@ -15,7 +15,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@easytrip/shared": ["../../packages/shared/src/index.ts"],
+      "@easytrip/shared": ["../../packages/shared/src/index"],
       "@easytrip/shared/*": ["../../packages/shared/src/*"]
     },
     "incremental": true,
