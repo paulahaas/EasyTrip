@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { InfoGrid } from '@/components/InfoGrid'
 import { WeatherRow } from '@/components/WeatherRow'
 import { ExchangeHighlight } from '@/components/ExchangeHighlight'
+import { FoodsSection } from '@/components/FoodsSection'
+import { RulesSection } from '@/components/RulesSection'
 import { useAuth } from '@/context/AuthContext'
 import { useVisited } from '@/hooks/useVisited'
 import { useWishlist } from '@/hooks/useWishlist'
@@ -19,6 +21,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
   const visited = useVisited()
 
   const cca2 = informacoesDoPais.cca2?.toUpperCase() ?? ''
+  const nome = informacoesDoPais.nome || destino
   const flagUrl = cca2 ? `https://flagcdn.com/w640/${cca2.toLowerCase()}.png` : ''
   const flagThumb = cca2 ? `https://flagcdn.com/w320/${cca2.toLowerCase()}.png` : ''
 
@@ -73,7 +76,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
           {flagThumb && (
             <img
               src={flagThumb}
-              alt={`Bandeira de ${destino}`}
+              alt={`Bandeira de ${nome}`}
               className="et-flag h-14 w-auto shrink-0"
               style={{ border: '2px solid rgba(255,255,255,0.15)', borderRadius: '0.375rem' }}
             />
@@ -83,13 +86,13 @@ export function DestinationCard({ data }: DestinationCardProps) {
               className="text-2xl sm:text-3xl font-normal leading-tight truncate"
               style={{ color: '#f0f2f8' }}
             >
-              {destino}
+              {nome}
             </h2>
             <p
               className="text-xs uppercase tracking-widest mt-1"
               style={{ color: 'rgba(240,242,248,0.5)' }}
             >
-              {informacoesDoPais.continente}
+              {informacoesDoPais.continenteNome || informacoesDoPais.continente}
             </p>
           </div>
         </div>
@@ -101,6 +104,8 @@ export function DestinationCard({ data }: DestinationCardProps) {
 
         <ExchangeHighlight cambio={cambio} />
         <WeatherRow clima={clima} capital={informacoesDoPais.capital} />
+        <FoodsSection comidas={informacoesDoPais.comidas} />
+        <RulesSection regras={informacoesDoPais.regras} pais={nome} />
 
         {isAuthenticated && (
           <div className="flex flex-wrap gap-2 pt-1">

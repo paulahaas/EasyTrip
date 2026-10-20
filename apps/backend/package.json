@@ -40,6 +40,7 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "countries-and-timezones": "^3.11.0",
     "minisearch": "^7.2.0",
     "natural": "^8.1.1",
     "reflect-metadata": "^0.2.2",

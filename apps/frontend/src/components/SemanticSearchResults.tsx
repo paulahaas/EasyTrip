@@ -78,7 +78,7 @@ export function SemanticSearchResults({ items, onSelect }: SemanticSearchResults
               {item.flag ? (
                 <img
                   src={item.flag}
-                  alt={item.name}
+                  alt={item.namePt || item.name}
                   className="et-flag h-8 max-w-[75%] object-contain"
                 />
               ) : (
@@ -92,10 +92,10 @@ export function SemanticSearchResults({ items, onSelect }: SemanticSearchResults
                 className="text-sm font-medium leading-tight"
                 style={{ color: '#f0f2f8' }}
               >
-                {item.name}
+                {item.namePt || item.name}
               </h3>
               <p className="text-[11px]" style={{ color: '#7c8194' }}>
-                {item.subregion || item.continent}
+                {item.regionPt || item.subregion || item.continent}
               </p>
               {item.matchedTags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-0.5">

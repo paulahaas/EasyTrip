@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
+import type { SemanticSearchResult } from '@easytrip/shared';
 import { CountryMeta, CountriesService } from '../countries/countries.service';
 import { keywordMap } from './keyword-map';
 import { FullTextSearchService } from './full-text-search.service';
+import { continentNamePt } from '../countries/country-extras';
 
 function normalize(text: string): string {
   return ` ${text
@@ -12,16 +14,7 @@ function normalize(text: string): string {
     .trim()} `;
 }
 
-export interface SemanticSearchResult {
-  cca2: string;
-  cca3: string;
-  name: string;
-  flag: string;
-  continent: string;
-  subregion: string;
-  matchedTags: string[];
-  score: number;
-}
+export type { SemanticSearchResult };
 
 @Injectable()
 export class SemanticSearchService {
@@ -78,6 +71,8 @@ export class SemanticSearchService {
         cca2: country.cca2,
         cca3: country.cca3,
         name: country.name,
+        namePt: country.namePt,
+        regionPt: continentNamePt(country.continent, country.subregion),
         flag: country.flag,
         continent: country.continent,
         subregion: country.subregion,
@@ -116,6 +111,8 @@ export class SemanticSearchService {
         cca2: c.cca2,
         cca3: c.cca3,
         name: c.name,
+        namePt: c.namePt,
+        regionPt: continentNamePt(c.continent, c.subregion),
         flag: c.flag,
         continent: c.continent,
         subregion: c.subregion,

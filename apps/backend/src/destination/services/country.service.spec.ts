@@ -8,9 +8,11 @@ function makeCountry(
     name: string;
     capital: string;
     languages: string[];
+    languageCodes: string[];
     currencies: string[];
     currencyDetails: { code: string; name: string; symbol: string }[];
     continent: string;
+    subregion: string;
   }> = {},
 ) {
   return {
@@ -19,11 +21,15 @@ function makeCountry(
     name: overrides.name ?? 'Brazil',
     capital: overrides.capital ?? 'Brasília',
     languages: overrides.languages ?? ['Portuguese'],
+    languageCodes: overrides.languageCodes ?? ['por'],
     currencies: overrides.currencies ?? ['BRL'],
     currencyDetails: overrides.currencyDetails ?? [
       { code: 'BRL', name: 'Brazilian real', symbol: 'R$' },
     ],
-    continent: overrides.continent ?? 'South America',
+    continent: overrides.continent ?? 'Americas',
+    subregion: overrides.subregion ?? 'South America',
+    namePt: 'Brasil',
+    idd: { root: '+5', suffixes: ['5'] },
   };
 }
 
@@ -41,13 +47,40 @@ describe('CountryService', () => {
     const res = svc.getCountryInfo('Brazil');
     expect(res).toMatchObject({
       capital: 'Brasília',
-      idioma: 'Portuguese',
+      idioma: 'Português',
       moeda: 'Real brasileiro (R$)',
       codigoMoeda: 'BRL',
-      continente: 'South America',
+      continente: 'Americas',
       cca2: 'BR',
       cca3: 'BRA',
+      nome: 'Brasil',
+      continenteNome: 'América do Sul',
+      idiomas: ['Português'],
+      ddi: '+55',
+      maoDirecao: 'direita',
     });
+    expect(res.fuso).toMatchObject({ fusoPrincipal: 'America/Sao_Paulo' });
+  });
+
+  it('inclui comidas típicas e regras do país quando existem', () => {
+    countries.getByName.mockReturnValue(makeCountry());
+    const br = svc.getCountryInfo('Brazil');
+    expect(br.comidas.map((c) => c.nome)).toEqual(
+      expect.arrayContaining(['Coxinha', 'Guaraná']),
+    );
+    expect(br.regras).toEqual([]);
+
+    countries.getByName.mockReturnValue(makeCountry({ cca2: 'SG', cca3: 'SGP' }));
+    const sg = svc.getCountryInfo('Singapore');
+    expect(sg.regras.some((r) => r.tipo === 'proibido' && /chiclete/i.test(r.titulo))).toBe(true);
+    expect(sg.maoDirecao).toBe('esquerda');
+  });
+
+  it('país sem conteúdo curado devolve listas vazias', () => {
+    countries.getByName.mockReturnValue(makeCountry({ cca2: 'AQ', cca3: 'ATA' }));
+    const res = svc.getCountryInfo('Antarctica');
+    expect(res.comidas).toEqual([]);
+    expect(res.regras).toEqual([]);
   });
 
   it('população vem do Banco Mundial, formatada em pt-BR com o ano', () => {
@@ -101,7 +134,9 @@ describe('CountryService', () => {
   });
 
   it('usa N/A quando sem idiomas', () => {
-    countries.getByName.mockReturnValue(makeCountry({ languages: [] }));
+    countries.getByName.mockReturnValue(
+      makeCountry({ languages: [], languageCodes: [] }),
+    );
     const res = svc.getCountryInfo('TestLand');
     expect(res.idioma).toBe('N/A');
   });

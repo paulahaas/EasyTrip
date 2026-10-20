@@ -33,6 +33,8 @@ describe('History (e2e)', () => {
         currencyDetails: [],
         flag: '',
         altSpellings: [],
+        namePt: n,
+        languageCodes: ['spa'],
       };
     });
   });
