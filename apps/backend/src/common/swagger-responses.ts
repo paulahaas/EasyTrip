@@ -73,7 +73,15 @@ export class WishlistItemDto {
   createdAt!: string;
 }
 
-export class VisitedCountryDto extends WishlistItemDto {}
+export class VisitedCountryDto extends WishlistItemDto {
+  @ApiProperty({
+    example: '2024-03-01',
+    nullable: true,
+    type: String,
+    description: 'Data da viagem (AAAA-MM-DD), quando informada',
+  })
+  visitedAt!: string | null;
+}
 
 export class RecommendationItemDto {
   @ApiProperty({ example: 'PT' })

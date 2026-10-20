@@ -1,12 +1,14 @@
 import { Navigate } from '@tanstack/react-router'
-import { Globe2, Heart, History, Map, MapPin, TrendingUp } from 'lucide-react'
+import { CalendarDays, Globe2, Heart, History, Map, MapPin, TrendingUp } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AchievementsCard } from '@/components/AchievementsCard'
 import { ContinentBarChart } from '@/components/charts/ContinentBarChart'
 import { ContinentStatsCard } from '@/components/ContinentStatsCard'
 import { ProfileHistoryList } from '@/components/ProfileHistoryList'
 import { ShareProfileButton } from '@/components/ShareProfileButton'
 import { UsernameEditor } from '@/components/UsernameEditor'
+import { TravelTimeline } from '@/components/TravelTimeline'
 import { VisitedSection } from '@/components/VisitedSection'
 import { WishlistSection } from '@/components/WishlistSection'
 import { WorldMapCard } from '@/components/charts/WorldMapCard'
@@ -93,6 +95,7 @@ export function ProfilePage() {
             { value: 'map',      label: 'Mapa',        icon: <Map size={13} /> },
             { value: 'wishlist', label: 'Favoritos',   icon: <Heart size={13} /> },
             { value: 'visited',  label: 'Visitados',   icon: <TrendingUp size={13} /> },
+            { value: 'timeline', label: 'Linha do tempo', icon: <CalendarDays size={13} /> },
             { value: 'history',  label: 'Histórico',   icon: <History size={13} /> },
           ].map(({ value, label, icon }) => (
             <TabsTrigger
@@ -107,6 +110,7 @@ export function ProfilePage() {
         </TabsList>
 
         <TabsContent value="overview" className="flex flex-col gap-4 mt-4">
+          <AchievementsCard visited={visited.items} />
           <div className="grid gap-4 md:grid-cols-2">
             <WorldPercentChart totalVisited={totalVisited} />
             {stats.data && <ContinentBarChart perContinent={stats.data.perContinent} />}
@@ -124,6 +128,10 @@ export function ProfilePage() {
 
         <TabsContent value="visited" className="mt-4">
           <VisitedSection />
+        </TabsContent>
+
+        <TabsContent value="timeline" className="mt-4">
+          <TravelTimeline visited={visited.items} />
         </TabsContent>
 
         <TabsContent value="history" className="mt-4">

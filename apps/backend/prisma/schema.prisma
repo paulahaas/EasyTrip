@@ -58,6 +58,8 @@ model VisitedCountry {
   cca2        String
   countryName String
   continent   String
+  /// Mês/data da viagem informado pelo usuário (opcional).
+  visitedAt   DateTime? @db.Date
   createdAt   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

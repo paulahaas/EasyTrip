@@ -3,7 +3,9 @@ import { useState } from 'react'
 import { ArrowLeft, Heart, MapPin, TrendingUp } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { AchievementsCard } from '@/components/AchievementsCard'
 import { AuthRequiredDialog } from '@/components/AuthRequiredDialog'
+import { CompareCard } from '@/components/CompareCard'
 import { Button } from '@/components/ui/button'
 import { ContinentBarChart } from '@/components/charts/ContinentBarChart'
 import { ContinentStatsCard } from '@/components/ContinentStatsCard'
@@ -11,11 +13,14 @@ import { WorldMapCard } from '@/components/charts/WorldMapCard'
 import { WorldPercentChart } from '@/components/charts/WorldPercentChart'
 import { useAuth } from '@/context/AuthContext'
 import { usePublicProfile } from '@/hooks/usePublicProfile'
+import { useVisited } from '@/hooks/useVisited'
+import { countryNamePt } from '@/lib/countryName'
 import { getCountryFlag } from '@/lib/flags'
 
 export function PublicProfilePage() {
   const { id } = useParams({ from: '/profile/$id' })
-  const { isAuthenticated, loading: authLoading } = useAuth()
+  const { isAuthenticated, loading: authLoading, user } = useAuth()
+  const myVisited = useVisited()
   const [dismissed, setDismissed] = useState(false)
   const authModalOpen = !authLoading && !isAuthenticated && !dismissed
   const { data, isLoading } = usePublicProfile(id)
@@ -145,6 +150,12 @@ export function PublicProfilePage() {
         </div>
       </div>
 
+      {user && user.id !== data.id && (
+        <CompareCard mine={myVisited.items} theirs={data.visited} theirName={data.username} />
+      )}
+
+      <AchievementsCard visited={data.visited} title={`Conquistas de @${data.username}`} />
+
       {/* Charts */}
       <div className="grid gap-4 md:grid-cols-2">
         <WorldPercentChart totalVisited={data.totalVisited} />
@@ -169,7 +180,7 @@ export function PublicProfilePage() {
               {data.visited.map((v) => (
                 <span key={v.cca2} className="et-chip" style={{ cursor: 'default' }}>
                   <span>{getCountryFlag(v.countryName)}</span>
-                  {v.countryName}
+                  {countryNamePt(v.cca2, v.countryName)}
                 </span>
               ))}
             </div>
@@ -192,7 +203,7 @@ export function PublicProfilePage() {
               {data.wishlist.map((w) => (
                 <span key={w.cca2} className="et-chip" style={{ cursor: 'default' }}>
                   <span>{getCountryFlag(w.countryName)}</span>
-                  {w.countryName}
+                  {countryNamePt(w.cca2, w.countryName)}
                 </span>
               ))}
             </div>

@@ -36,6 +36,17 @@ export function useVisited() {
     },
   })
 
+  const dateMut = useMutation({
+    mutationFn: ({ cca2, visitedAt }: { cca2: string; visitedAt: string | null }) =>
+      api<VisitedCountry>(`/api/visited/${cca2.toUpperCase()}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ visitedAt }),
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['visited'] })
+    },
+  })
+
   const removeMut = useMutation({
     mutationFn: (cca2: string) =>
       api(`/api/visited/${cca2.toUpperCase()}`, { method: 'DELETE' }),
@@ -51,5 +62,8 @@ export function useVisited() {
     isLoading: query.isLoading,
     add: (input: AddInput) => addMut.mutateAsync(input),
     remove: (cca2: string) => removeMut.mutateAsync(cca2),
+    /** Define (AAAA-MM-DD) ou remove (null) a data da viagem. */
+    setDate: (cca2: string, visitedAt: string | null) =>
+      dateMut.mutateAsync({ cca2, visitedAt }),
   }
 }

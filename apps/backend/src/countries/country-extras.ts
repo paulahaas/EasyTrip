@@ -1,7 +1,28 @@
 import * as ct from 'countries-and-timezones';
-import type { TimezoneInfo } from '@easytrip/shared';
+import worldCountries from 'world-countries';
+import { isContinentKey } from '@easytrip/shared';
+import type { ContinentKey, TimezoneInfo } from '@easytrip/shared';
 
 // Informações extras de cada país, todas calculadas offline.
+
+const REGION_BY_CCA2 = new Map(
+  worldCountries.map((c) => [c.cca2, { region: c.region, subregion: c.subregion }]),
+);
+
+/**
+ * Continente usado por favoritos, visitados e estatísticas. O world-countries
+ * agrupa tudo como "Americas"; aqui separamos América do Sul e do Norte
+ * (Central e Caribe contam como América do Norte).
+ */
+export function continentKeyFor(cca2: string, fallback?: string): ContinentKey | null {
+  const info = REGION_BY_CCA2.get(cca2.toUpperCase());
+  if (!info) return fallback && isContinentKey(fallback) ? fallback : null;
+  if (info.region === 'Americas') {
+    return info.subregion === 'South America' ? 'South America' : 'North America';
+  }
+  if (info.region === 'Antarctic') return 'Antarctica';
+  return isContinentKey(info.region) ? info.region : null;
+}
 
 const languageNames = new Intl.DisplayNames(['pt-BR'], { type: 'language' });
 

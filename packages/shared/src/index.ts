@@ -9,3 +9,4 @@ export * from './stats';
 export * from './continents';
 export * from './profile';
 export * from './schemas';
+export * from './achievements';

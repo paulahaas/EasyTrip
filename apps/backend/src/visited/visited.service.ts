@@ -1,6 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { VisitedCountry as SharedVisitedCountry } from '@easytrip/shared';
 import { VisitedCountry } from '@prisma/client';
+import { continentKeyFor } from '../countries/country-extras';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddVisitedDto } from './dto/add-visited.dto';
 
@@ -24,7 +29,9 @@ export class VisitedService {
           userId,
           cca2,
           countryName: dto.countryName,
-          continent: dto.continent,
+          // O continente vem do código do país, não do cliente.
+          continent: continentKeyFor(cca2, dto.continent) ?? dto.continent,
+          visitedAt: dto.visitedAt ? new Date(dto.visitedAt) : null,
         },
       });
       return this.toDTO(created);
@@ -41,6 +48,24 @@ export class VisitedService {
     }
   }
 
+  async setVisitedAt(
+    userId: string,
+    cca2: string,
+    visitedAt: string | null,
+  ): Promise<SharedVisitedCountry> {
+    const { count } = await this.prisma.visitedCountry.updateMany({
+      where: { userId, cca2: cca2.toUpperCase() },
+      data: { visitedAt: visitedAt ? new Date(visitedAt) : null },
+    });
+    if (count === 0) {
+      throw new NotFoundException('País não está entre os visitados');
+    }
+    const row = await this.prisma.visitedCountry.findUniqueOrThrow({
+      where: { userId_cca2: { userId, cca2: cca2.toUpperCase() } },
+    });
+    return this.toDTO(row);
+  }
+
   async remove(userId: string, cca2: string): Promise<void> {
     await this.prisma.visitedCountry.deleteMany({
       where: { userId, cca2: cca2.toUpperCase() },
@@ -54,6 +79,7 @@ export class VisitedService {
       cca2: row.cca2,
       countryName: row.countryName,
       continent: row.continent,
+      visitedAt: row.visitedAt ? row.visitedAt.toISOString().slice(0, 10) : null,
       createdAt: row.createdAt.toISOString(),
     };
   }

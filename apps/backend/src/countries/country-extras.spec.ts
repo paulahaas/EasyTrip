@@ -1,4 +1,5 @@
 import {
+  continentKeyFor,
   callingCode,
   continentNamePt,
   drivingSide,
@@ -18,6 +19,18 @@ describe('country-extras', () => {
     expect(continentNamePt('Americas', 'South America')).toBe('América do Sul');
     expect(continentNamePt('Americas', 'Caribbean')).toBe('Caribe');
     expect(continentNamePt('Asia', 'Eastern Asia')).toBe('Ásia');
+  });
+
+  it('separa as Américas em Sul e Norte para as estatísticas', () => {
+    expect(continentKeyFor('BR')).toBe('South America');
+    expect(continentKeyFor('ar')).toBe('South America');
+    expect(continentKeyFor('US')).toBe('North America');
+    expect(continentKeyFor('CR')).toBe('North America'); // América Central
+    expect(continentKeyFor('JM')).toBe('North America'); // Caribe
+    expect(continentKeyFor('AQ')).toBe('Antarctica');
+    expect(continentKeyFor('JP')).toBe('Asia');
+    expect(continentKeyFor('ZZ', 'Europe')).toBe('Europe');
+    expect(continentKeyFor('ZZ', 'Americas')).toBeNull();
   });
 
   it('monta o código de discagem', () => {

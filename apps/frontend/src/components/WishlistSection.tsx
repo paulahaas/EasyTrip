@@ -1,6 +1,7 @@
 import { X, Heart } from 'lucide-react'
 import { useWishlist } from '@/hooks/useWishlist'
 import { getCountryFlag } from '@/lib/flags'
+import { countryNamePt } from '@/lib/countryName'
 
 export function WishlistSection() {
   const { items, remove } = useWishlist()
@@ -31,7 +32,7 @@ export function WishlistSection() {
               style={{ background: '#1e2029', color: '#f0f2f8', border: '1px solid rgba(255,255,255,0.07)' }}
             >
               <span>{getCountryFlag(item.countryName)}</span>
-              <span>{item.countryName}</span>
+              <span>{countryNamePt(item.cca2, item.countryName)}</span>
               <button
                 type="button"
                 onClick={() => remove(item.cca2)}
@@ -39,7 +40,7 @@ export function WishlistSection() {
                 style={{ color: '#4e5468' }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171' }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = '#4e5468' }}
-                aria-label={`Remover ${item.countryName}`}
+                aria-label={`Remover ${countryNamePt(item.cca2, item.countryName)}`}
               >
                 <X size={11} />
               </button>

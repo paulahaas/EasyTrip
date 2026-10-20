@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { WishlistItem } from '@easytrip/shared';
 import { Wishlist } from '@prisma/client';
+import { continentKeyFor } from '../countries/country-extras';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddWishlistDto } from './dto/add-wishlist.dto';
 
@@ -24,7 +25,8 @@ export class WishlistService {
           userId,
           cca2,
           countryName: dto.countryName,
-          continent: dto.continent,
+          // O continente vem do código do país, não do cliente.
+          continent: continentKeyFor(cca2, dto.continent) ?? dto.continent,
         },
       });
       return this.toDTO(created);
