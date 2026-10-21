@@ -1,7 +1,7 @@
 import { X, TrendingUp } from 'lucide-react'
 import { toast } from 'sonner'
 import { useVisited } from '@/hooks/useVisited'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
 import { countryNamePt } from '@/lib/countryName'
 
 export function VisitedSection() {
@@ -47,7 +47,7 @@ export function VisitedSection() {
                   className="flex items-center gap-3 rounded-lg px-3 py-2"
                   style={{ background: '#1e2029' }}
                 >
-                  <span aria-hidden>{getCountryFlag(item.countryName)}</span>
+                  <CountryFlag cca2={item.cca2} />
                   <span className="text-sm flex-1 min-w-0 truncate" style={{ color: '#f0f2f8' }}>
                     {nome}
                   </span>

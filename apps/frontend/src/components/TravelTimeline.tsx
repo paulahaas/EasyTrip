@@ -1,6 +1,6 @@
 import { CalendarDays } from 'lucide-react'
 import type { VisitedCountry } from '@easytrip/shared'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
 import { countryNamePt, formatVisitMonth } from '@/lib/countryName'
 
 interface TravelTimelineProps {
@@ -57,7 +57,7 @@ export function TravelTimeline({ visited }: TravelTimelineProps) {
               >
                 {trips.map((trip) => (
                   <li key={trip.cca2} className="flex items-center gap-2 text-sm">
-                    <span aria-hidden>{getCountryFlag(trip.countryName)}</span>
+                    <CountryFlag cca2={trip.cca2} size={12} />
                     <span style={{ color: '#f0f2f8' }}>
                       {countryNamePt(trip.cca2, trip.countryName)}
                     </span>

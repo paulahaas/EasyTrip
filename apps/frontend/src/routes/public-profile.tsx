@@ -15,7 +15,7 @@ import { useAuth } from '@/context/AuthContext'
 import { usePublicProfile } from '@/hooks/usePublicProfile'
 import { useVisited } from '@/hooks/useVisited'
 import { countryNamePt } from '@/lib/countryName'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
 
 export function PublicProfilePage() {
   const { id } = useParams({ from: '/profile/$id' })
@@ -179,7 +179,7 @@ export function PublicProfilePage() {
             <div className="flex flex-wrap gap-2">
               {data.visited.map((v) => (
                 <span key={v.cca2} className="et-chip" style={{ cursor: 'default' }}>
-                  <span>{getCountryFlag(v.countryName)}</span>
+                  <CountryFlag cca2={v.cca2} size={12} />
                   {countryNamePt(v.cca2, v.countryName)}
                 </span>
               ))}
@@ -202,7 +202,7 @@ export function PublicProfilePage() {
             <div className="flex flex-wrap gap-2">
               {data.wishlist.map((w) => (
                 <span key={w.cca2} className="et-chip" style={{ cursor: 'default' }}>
-                  <span>{getCountryFlag(w.countryName)}</span>
+                  <CountryFlag cca2={w.cca2} size={12} />
                   {countryNamePt(w.cca2, w.countryName)}
                 </span>
               ))}

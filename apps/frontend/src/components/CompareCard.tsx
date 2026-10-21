@@ -1,6 +1,6 @@
 import { Users } from 'lucide-react'
 import type { VisitedCountry } from '@easytrip/shared'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
 import { countryNamePt } from '@/lib/countryName'
 
 type Country = Pick<VisitedCountry, 'cca2' | 'countryName'>
@@ -29,7 +29,7 @@ function Chips({ countries, empty }: { countries: Country[]; empty: string }) {
     <div className="flex flex-wrap gap-1.5">
       {countries.map((c) => (
         <span key={c.cca2} className="et-chip" style={{ cursor: 'default' }}>
-          <span aria-hidden>{getCountryFlag(c.countryName)}</span>
+          <CountryFlag cca2={c.cca2} size={12} />
           {countryNamePt(c.cca2, c.countryName)}
         </span>
       ))}

@@ -1,7 +1,8 @@
 import { History, Trash2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useSearchHistory } from '@/hooks/useSearchHistory'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
+import { countryNamePt } from '@/lib/countryName'
 
 export function ProfileHistoryList() {
   const { entries, removeById, clear } = useSearchHistory()
@@ -43,8 +44,8 @@ export function ProfileHistoryList() {
               style={{ background: '#1e2029' }}
             >
               <span className="flex items-center gap-2.5" style={{ color: '#f0f2f8' }}>
-                <span className="text-base leading-none">{getCountryFlag(entry.countryName)}</span>
-                <span>{entry.countryName}</span>
+                <CountryFlag cca2={entry.cca2} />
+                <span>{entry.cca2 ? countryNamePt(entry.cca2, entry.countryName) : entry.countryName}</span>
               </span>
               <button
                 type="button"

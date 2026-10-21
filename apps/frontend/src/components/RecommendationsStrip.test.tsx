@@ -30,12 +30,12 @@ describe('RecommendationsStrip', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('renderiza items e clique chama onSelect com countryName', () => {
+  it('mostra nomes em português e o clique chama onSelect com o nome em inglês', () => {
     const onSelect = vi.fn()
     render(<RecommendationsStrip items={ITEMS} onSelect={onSelect} />)
-    expect(screen.getByText('Spain')).toBeInTheDocument()
+    expect(screen.getByText('Espanha')).toBeInTheDocument()
     expect(screen.getByText('Portugal')).toBeInTheDocument()
-    fireEvent.click(screen.getByText('Spain'))
+    fireEvent.click(screen.getByText('Espanha'))
     expect(onSelect).toHaveBeenCalledWith('Spain')
   })
 })

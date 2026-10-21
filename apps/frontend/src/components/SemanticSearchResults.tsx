@@ -1,17 +1,10 @@
 import { Globe } from 'lucide-react'
 import type { SemanticSearchResult } from '@easytrip/shared'
+import { CountryFlag } from '@/components/CountryFlag'
 
 interface SemanticSearchResultsProps {
   items: SemanticSearchResult[]
   onSelect?: (countryName: string) => void
-}
-
-function emojiFlag(cca2: string): string {
-  const codePoints = cca2
-    .toUpperCase()
-    .split('')
-    .map((char) => 127397 + char.charCodeAt(0))
-  return String.fromCodePoint(...codePoints)
 }
 
 const TAG_COLORS: Record<string, { bg: string; color: string }> = {
@@ -82,7 +75,7 @@ export function SemanticSearchResults({ items, onSelect }: SemanticSearchResults
                   className="et-flag h-8 max-w-[75%] object-contain"
                 />
               ) : (
-                <span className="text-2xl">{emojiFlag(item.cca2)}</span>
+                <CountryFlag cca2={item.cca2} size={24} />
               )}
             </div>
 

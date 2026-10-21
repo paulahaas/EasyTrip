@@ -1,6 +1,6 @@
 import { X, Heart } from 'lucide-react'
 import { useWishlist } from '@/hooks/useWishlist'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
 import { countryNamePt } from '@/lib/countryName'
 
 export function WishlistSection() {
@@ -31,7 +31,7 @@ export function WishlistSection() {
               className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full"
               style={{ background: '#1e2029', color: '#f0f2f8', border: '1px solid rgba(255,255,255,0.07)' }}
             >
-              <span>{getCountryFlag(item.countryName)}</span>
+              <CountryFlag cca2={item.cca2} size={12} />
               <span>{countryNamePt(item.cca2, item.countryName)}</span>
               <button
                 type="button"

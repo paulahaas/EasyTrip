@@ -1,5 +1,6 @@
 import type { RecommendationItem } from '@easytrip/shared'
-import { getCountryFlag } from '@/lib/flags'
+import { CountryFlag } from '@/components/CountryFlag'
+import { countryNamePt } from '@/lib/countryName'
 
 interface RecommendationsStripProps {
   items: RecommendationItem[]
@@ -20,8 +21,8 @@ export function RecommendationsStrip({ items, onSelect }: RecommendationsStripPr
             onClick={() => onSelect(item.countryName)}
             className="et-chip et-chip-accent"
           >
-            <span className="text-sm leading-none">{getCountryFlag(item.countryName)}</span>
-            <span className="font-medium">{item.countryName}</span>
+            <CountryFlag cca2={item.cca2} size={12} />
+            <span className="font-medium">{countryNamePt(item.cca2, item.countryName)}</span>
           </button>
         ))}
       </div>
