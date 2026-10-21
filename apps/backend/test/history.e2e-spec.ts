@@ -35,6 +35,7 @@ describe('History (e2e)', () => {
         altSpellings: [],
         namePt: n,
         languageCodes: ['spa'],
+        borders: [],
       };
     });
   });

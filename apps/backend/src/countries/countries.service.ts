@@ -26,6 +26,8 @@ export interface CountryMeta {
   /** Códigos ISO 639-3 dos idiomas, na mesma ordem de `languages`. */
   languageCodes: string[];
   idd?: { root?: string; suffixes?: string[] };
+  /** Países com fronteira terrestre (ISO alpha-3). */
+  borders: string[];
 }
 
 const regionToContinent: Record<string, string> = {
@@ -54,6 +56,7 @@ function toMeta(c: (typeof worldCountries)[number]): CountryMeta {
     languageCodes: Object.keys(c.languages ?? {}),
     namePt: c.translations?.por?.common ?? c.name.common,
     idd: c.idd,
+    borders: c.borders ?? [],
     currencies: Object.keys(c.currencies ?? {}),
     currencyDetails,
     flag: `https://flagcdn.com/${c.cca2.toLowerCase()}.svg`,

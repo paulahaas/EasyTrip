@@ -15,9 +15,11 @@ function makeCountry(
     languages: string[];
     currencies: string[];
     latlng: [number, number];
+    borders: string[];
   }> = {},
 ) {
   return {
+    borders: overrides.borders ?? ['ARG'],
     cca2: overrides.cca2 ?? 'BR',
     cca3: overrides.cca3 ?? 'BRA',
     name: overrides.name ?? 'Brazil',
@@ -160,6 +162,63 @@ describe('SemanticSearchService', () => {
       const svc = makeService({ countries: [country], ftsResults: [] });
       const res = await svc.search('Osterreich');
       expect(res.some((r) => r.name === 'Österreich')).toBe(true);
+    });
+  });
+
+  describe('search — várias características na mesma busca', () => {
+    const fiji = makeCountry({
+      cca2: 'FJ', cca3: 'FJI', name: 'Fiji', continent: 'Oceania',
+      subregion: 'Melanesia', borders: [], languages: ['English'],
+    });
+    const japan = makeCountry({
+      cca2: 'JP', cca3: 'JPN', name: 'Japan', continent: 'Asia',
+      subregion: 'Eastern Asia', borders: [], languages: ['Japanese'],
+    });
+    const faroe = makeCountry({
+      cca2: 'FO', cca3: 'FRO', name: 'Faroe Islands', continent: 'Europe',
+      subregion: 'Northern Europe', borders: [], languages: ['Faroese'],
+    });
+    const argentina = makeCountry({
+      cca2: 'AR', cca3: 'ARG', name: 'Argentina', languages: ['Spanish'],
+    });
+    const brazil = makeCountry();
+    const hits = (...cs: { cca2: string }[]) => cs.map((c) => ({ cca2: c.cca2, bm25: 1 }));
+
+    it('"ilhas no pacífico" traz só ilhas que ficam no Pacífico', async () => {
+      const svc = makeService({
+        countries: [fiji, japan, faroe],
+        ftsResults: hits(fiji, japan, faroe),
+      });
+      const res = await svc.search('ilhas no Pacífico');
+      expect(res.map((r) => r.cca2)).toEqual(['FJ']);
+    });
+
+    it('um país sem fronteira terrestre conta como ilha', async () => {
+      const svc = makeService({
+        countries: [japan, brazil],
+        ftsResults: hits(japan, brazil),
+      });
+      const res = await svc.search('ilhas');
+      expect(res.map((r) => r.cca2)).toEqual(['JP']);
+    });
+
+    it('com "ou" basta uma das características', async () => {
+      const svc = makeService({
+        countries: [brazil, argentina],
+        ftsResults: hits(brazil, argentina),
+      });
+      const res = await svc.search('fala português ou espanhol');
+      expect(res.map((r) => r.cca2).sort()).toEqual(['AR', 'BR']);
+    });
+
+    it('sem país que atenda a tudo, volta a aceitar qualquer uma', async () => {
+      const svc = makeService({
+        countries: [japan, faroe],
+        ftsResults: hits(japan, faroe),
+      });
+      // nenhum dos dois é ilha do Pacífico
+      const res = await svc.search('ilhas no Pacífico');
+      expect(res.map((r) => r.cca2).sort()).toEqual(['FO', 'JP']);
     });
   });
 });

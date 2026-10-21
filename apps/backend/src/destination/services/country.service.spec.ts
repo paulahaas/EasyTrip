@@ -83,6 +83,19 @@ describe('CountryService', () => {
     expect(res.regras).toEqual([]);
   });
 
+  it('traduz a capital para exibição sem mudar o nome usado no clima', () => {
+    countries.getByName.mockReturnValue(
+      makeCountry({ cca2: 'JP', cca3: 'JPN', capital: 'Tokyo' }),
+    );
+    const jp = svc.getCountryInfo('Japan');
+    expect(jp.capital).toBe('Tokyo');
+    expect(jp.capitalNome).toBe('Tóquio');
+
+    // capital igual em português: mantém
+    countries.getByName.mockReturnValue(makeCountry());
+    expect(svc.getCountryInfo('Brazil').capitalNome).toBe('Brasília');
+  });
+
   it('população vem do Banco Mundial, formatada em pt-BR com o ano', () => {
     countries.getByName.mockReturnValue(makeCountry());
     const res = svc.getCountryInfo('Brazil');

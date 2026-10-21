@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { CountryInfo } from '@easytrip/shared';
+import { CAPITALS_PT } from '../../countries/content/capitals';
 import { COUNTRY_RULES } from '../../countries/content/rules';
 import { TYPICAL_FOODS } from '../../countries/content/foods';
 import { CountriesService } from '../../countries/countries.service';
@@ -63,6 +64,7 @@ export class CountryService {
       continente: country.continent,
       cca2: country.cca2,
       cca3: country.cca3,
+      capitalNome: CAPITALS_PT[country.cca2] ?? capital,
       nome: country.namePt,
       continenteNome: continentNamePt(country.continent, country.subregion),
       idiomas,

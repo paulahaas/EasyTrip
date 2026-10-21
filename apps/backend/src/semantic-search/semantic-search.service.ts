@@ -51,17 +51,33 @@ export class SemanticSearchService {
       e.keywords.some((k) => normalizedQuery.includes(normalize(k))),
     );
 
-    // 3. Combine BM25 score with keyword-map tag scores, then sort desc
+    // 3. Countries that match at least one of the asked characteristics. When
+    // the query names several ("ilhas no Pacífico", "país frio na Europa"),
+    // keep only the countries that match all of them — unless the query says
+    // "ou"/"or", or no country matches all.
     const byCca2 = new Map(all.map((c) => [c.cca2, c]));
+    let candidates = ftsHits.flatMap(({ cca2, bm25 }) => {
+      const country = byCca2.get(cca2);
+      if (!country) return [];
+      const matched = queryEntries.filter((e) => e.filter(country));
+      if (queryEntries.length > 0 && matched.length === 0) return [];
+      return [{ country, bm25, matched }];
+    });
+    const wantsAll =
+      queryEntries.length > 1 && !/ (ou|or) /.test(normalizedQuery);
+    if (
+      wantsAll &&
+      candidates.some((c) => c.matched.length === queryEntries.length)
+    ) {
+      candidates = candidates.filter(
+        (c) => c.matched.length === queryEntries.length,
+      );
+    }
+
+    // 4. Combine BM25 score with keyword-map tag scores, then sort desc
     const results: SemanticSearchResult[] = [];
 
-    for (const { cca2, bm25 } of ftsHits) {
-      const country = byCca2.get(cca2);
-      if (!country) continue;
-
-      const matchedQueryEntries = queryEntries.filter((e) => e.filter(country));
-      if (queryEntries.length > 0 && matchedQueryEntries.length === 0) continue;
-
+    for (const { country, bm25, matched: matchedQueryEntries } of candidates) {
       const tagScore = matchedQueryEntries.reduce((sum, e) => sum + e.score, 0);
       const matchedTags = keywordMap
         .filter((e) => e.filter(country))

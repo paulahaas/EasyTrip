@@ -103,7 +103,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
         <InfoGrid info={informacoesDoPais} />
 
         <ExchangeHighlight cambio={cambio} />
-        <WeatherRow clima={clima} capital={informacoesDoPais.capital} />
+        <WeatherRow clima={clima} capital={informacoesDoPais.capitalNome || informacoesDoPais.capital} />
         <FoodsSection comidas={informacoesDoPais.comidas} />
         <RulesSection regras={informacoesDoPais.regras} pais={nome} />
 

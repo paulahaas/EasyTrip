@@ -20,7 +20,10 @@ export interface TimezoneInfo {
 }
 
 export interface CountryInfo {
+  /** Capital em inglês, usada para buscar o clima e o fuso — não traduzir. */
   capital: string;
+  /** Capital em português, para exibição (ex.: "Tóquio"). */
+  capitalNome: string;
   idioma: string;
   moeda: string;
   codigoMoeda: string;

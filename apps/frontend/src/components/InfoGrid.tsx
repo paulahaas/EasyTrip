@@ -48,7 +48,7 @@ export function InfoGrid({ info }: InfoGridProps) {
   const localTime = useLocalTime(info.fuso?.fusoPrincipal)
 
   const items: Item[] = [
-    { key: 'capital', label: 'Capital', icon: Building2, value: info.capital },
+    { key: 'capital', label: 'Capital', icon: Building2, value: info.capitalNome || info.capital },
     {
       key: 'idioma',
       label: info.idiomas.length > 1 ? 'Idiomas' : 'Idioma',
