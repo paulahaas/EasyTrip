@@ -1,10 +1,22 @@
-import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  lazyRouteComponent,
+} from '@tanstack/react-router'
 import { RootLayout } from './components/RootLayout'
 import { HomePage } from './routes/index'
 import { LoginPage } from './routes/login'
-import { ProfilePage } from './routes/profile'
-import { PublicProfilePage } from './routes/public-profile'
 import { RegisterPage } from './routes/register'
+
+// As páginas de perfil carregam os gráficos e o mapa (recharts,
+// react-simple-maps), as bibliotecas mais pesadas do site. Elas só são
+// baixadas quando a pessoa abre um perfil, deixando a página inicial leve.
+const ProfilePage = lazyRouteComponent(() => import('./routes/profile'), 'ProfilePage')
+const PublicProfilePage = lazyRouteComponent(
+  () => import('./routes/public-profile'),
+  'PublicProfilePage',
+)
 
 const rootRoute = createRootRoute({ component: RootLayout })
 

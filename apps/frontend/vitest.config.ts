@@ -7,9 +7,9 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
       '@easytrip/shared': path.resolve(
-        __dirname,
+        import.meta.dirname,
         '../../packages/shared/src/index.ts',
       ),
     },
