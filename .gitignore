@@ -36,3 +36,6 @@ NEXT_STEPS.md
 
 # Neon agent skills (instaladas em .claude/, que ja e ignorada)
 skills-lock.json
+
+# Banco de teste dos testes de ponta a ponta
+.postgres-test/
