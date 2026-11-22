@@ -2,15 +2,18 @@
 
 Plataforma de exploração de destinos que reúne clima, câmbio e informações de países em um só lugar, com busca semântica em linguagem natural.
 
+**Site no ar:** https://easytrip-e4xg.onrender.com (a primeira visita pode levar ~1 min, veja [Deploy](#deploy-render--neon-grátis))
+
 ## Funcionalidades
 
-- **Busca semântica** — pesquise em português ou inglês: "país frio", "fala árabe", "ilhas no Pacífico"
+- **Busca semântica** — pesquise em português ou inglês: "país frio", "fala árabe", "ilhas no Pacífico", "oceano Índico"
 - **Clima em tempo real** — temperatura, sensação térmica e umidade via OpenWeatherMap
-- **Conversão de moeda** — cotação atualizada para BRL via ExchangeRate API
-- **Informações do país** — capital, idioma, moeda e continente (250+ países, dados offline)
-- **Perfil do usuário** — histórico de pesquisas, mapa interativo, estatísticas por continente
-- **Favoritos e visitados** — gerencie e compartilhe seu perfil público
-- **Autenticação** — cadastro e login com JWT
+- **Câmbio com o real** — cotação nos dois sentidos (R$ → moeda local e vice-versa), atualizada diariamente, sem precisar de chave
+- **Informações do país** — capital, idiomas, moeda e continente em português, população, hora local, DDI e lado do trânsito (250+ países, dados offline)
+- **Comidas típicas e regras para turistas** — pratos famosos de cada país e leis locais que costumam pegar viajantes de surpresa
+- **Perfil do usuário** — histórico de pesquisas, mapa interativo, estatísticas por continente, linha do tempo das viagens e 15 conquistas
+- **Favoritos e visitados** — com mês/ano da viagem; perfil público com comparação de países entre amigos
+- **Autenticação** — cadastro e login por email ou nome de usuário, com JWT
 
 ## Stack
 
@@ -29,10 +32,12 @@ Plataforma de exploração de destinos que reúne clima, câmbio e informações
 
 ## Como rodar localmente
 
+**Pré-requisitos:** Git e Node.js **22.12 ou mais novo** (exigência do Vite 8). Docker e PostgreSQL instalado são opcionais.
+
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/marcella-81/EasyTrip.git
+git clone https://github.com/paulahaas/EasyTrip.git
 cd EasyTrip
 ```
 
@@ -42,7 +47,7 @@ cd EasyTrip
 cp apps/backend/.env.example apps/backend/.env
 ```
 
-Preencha `DATABASE_URL` e troque o `JWT_SECRET`. As chaves `OPENWEATHER_API_KEY` e `EXCHANGERATE_API_KEY` são opcionais: sem elas o site funciona normalmente, só não mostra clima e câmbio na página do país.
+Preencha `DATABASE_URL` e troque o `JWT_SECRET`. As chaves `OPENWEATHER_API_KEY` e `EXCHANGERATE_API_KEY` são opcionais: sem a do OpenWeather o site só não mostra o clima, e o câmbio funciona mesmo sem chave (usa o acesso aberto da ExchangeRate API).
 
 ### 3. Instale dependências
 
@@ -155,19 +160,34 @@ No plano grátis o serviço "dorme" depois de 15 min sem acesso; a primeira visi
 
 ## Testes
 
-O backend tem cobertura de testes unitários com Jest:
+| Onde | Ferramenta | Quantidade | Como rodar |
+|------|-----------|-----------|------------|
+| Backend (unitários) | Jest | 171 testes | `cd apps/backend && npx jest` |
+| Frontend | Vitest + Testing Library | 50 testes | `cd apps/frontend && npx vitest run` |
+| Backend (ponta a ponta, com banco real) | Jest + Supertest | 23 testes | veja abaixo |
 
-| Métrica | Cobertura |
-|---------|-----------|
-| Statements | ~98% |
-| Branches | ~80% |
-| Functions | ~99% |
-| Lines | ~99% |
+Os testes de ponta a ponta usam um banco separado. Sem Docker, suba um segundo banco portátil na porta 5433 e rode:
 
 ```bash
+PGPORT=5433 PGDATA=.postgres-test npm run db:local      # terminal 1, deixe aberto
 cd apps/backend
-npx jest --coverage
+DATABASE_URL_TEST=postgresql://easytrip:easytrip@localhost:5433/easytrip npm run test:e2e
 ```
+
+No PowerShell, defina as variáveis antes do comando: `$env:PGPORT=5433; $env:PGDATA=".postgres-test"; npm run db:local`. Com Docker, `npm run db:test:up` sobe o banco de teste e basta `npm run test:e2e`.
+
+Cobertura do backend: `cd apps/backend && npx jest --coverage`.
+
+---
+
+## Problemas comuns
+
+| Sintoma | Solução |
+|---------|---------|
+| `EPERM: operation not permitted` no `npm run build` (Windows) | Pare o `npm run dev` (Ctrl+C) antes de rodar o build: o servidor em execução prende os arquivos do Prisma |
+| `Prisma.PrismaClientKnownRequestError is not a constructor` nos testes | Rode `npx prisma generate` em `apps/backend` (acontece logo depois de um `npm ci`) |
+| `Connection refused` / `ECONNREFUSED` no banco | Confira se o `npm run db:local` está aberto e se a porta do `DATABASE_URL` é a mesma |
+| Página do país sem clima | Falta a `OPENWEATHER_API_KEY` ou ela ainda não foi ativada (leva até 2 h depois de criada) |
 
 ---
 
@@ -181,11 +201,17 @@ EasyTrip/
 ├── packages/
 │   └── shared/         Tipos TypeScript e schemas Zod compartilhados
 ├── scripts/
-│   └── db-local.mjs    PostgreSQL portátil (npm run db:local)
+│   ├── db-local.mjs            PostgreSQL portátil (npm run db:local)
+│   └── update-population.mjs   Atualiza a população dos países (Banco Mundial)
+├── docs/               Documentação técnica (arquitetura, API, busca, testes)
+├── RELATORIO.md        O que existia no projeto original e o que mudou
 ├── CLAUDE.md           Guia de arquitetura e padrões de código
+├── render.yaml         Deploy no Render
 ├── turbo.json          Pipeline do Turborepo
 └── docker-compose.yml  PostgreSQL local
 ```
+
+Mais detalhes em [`docs/index.md`](docs/index.md).
 
 ---
 
@@ -193,11 +219,22 @@ EasyTrip/
 
 | Variável | Descrição |
 |----------|-----------|
-| `DATABASE_URL` | Connection string do PostgreSQL |
+| `DATABASE_URL` | Connection string do PostgreSQL (no Neon, a com pooling) |
+| `DATABASE_URL_UNPOOLED` | Conexão direta, usada só nas migrations do deploy (opcional localmente) |
 | `JWT_SECRET` | Segredo para assinar tokens JWT |
+| `JWT_EXPIRES_IN` | Validade do login (padrão: `7d`) |
 | `OPENWEATHER_API_KEY` | Chave da [OpenWeatherMap API](https://openweathermap.org/api) (opcional — sem ela o clima não aparece) |
-| `EXCHANGERATE_API_KEY` | Chave da [ExchangeRate API](https://www.exchangerate-api.com) (opcional — sem ela o câmbio não aparece) |
+| `EXCHANGERATE_API_KEY` | Chave da [ExchangeRate API](https://www.exchangerate-api.com) (opcional — sem ela usa o acesso aberto, atualizado 1 vez por dia) |
 | `PORT` | Porta do backend (padrão: `3000`) |
+| `PGPORT` / `PGDATA` | Porta e pasta do banco portátil do `npm run db:local` (padrão: `5432` / `.postgres-data`) |
+
+---
+
+## Equipe
+
+Paula Haas · Gustavo Correia · Pedro Cardoso · Marcella Cagliari · Richard Pompeo
+
+Projeto desenvolvido para a disciplina PMI IV — Análise e Desenvolvimento de Sistemas.
 
 ---
 
