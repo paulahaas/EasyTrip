@@ -40,7 +40,6 @@ function makeCountry(
 
 function makeService(countries: ReturnType<typeof makeCountry>[]) {
   const countriesSvc = {
-    loadAll: jest.fn().mockResolvedValue(undefined),
     getAll: jest.fn().mockReturnValue(countries),
   };
   return new FullTextSearchService(countriesSvc as never);

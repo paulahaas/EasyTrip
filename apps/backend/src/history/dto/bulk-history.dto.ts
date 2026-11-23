@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMaxSize, IsArray, IsString, MinLength } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class BulkHistoryDto {
   @ApiProperty({
@@ -12,5 +18,6 @@ export class BulkHistoryDto {
   @ArrayMaxSize(64)
   @IsString({ each: true })
   @MinLength(1, { each: true })
+  @MaxLength(100, { each: true })
   queries!: string[];
 }

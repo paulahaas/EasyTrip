@@ -18,7 +18,10 @@ export class DestinationService {
     // Clima e câmbio são opcionais: se a API externa falhar (ou a chave não
     // estiver configurada), o país ainda é exibido sem esses dados.
     const [clima, cambio] = await Promise.all([
-      this.optional(this.weatherService.getWeather(pais.capital), 'clima'),
+      this.optional(
+        this.weatherService.getWeather(pais.capital, pais.cca2),
+        'clima',
+      ),
       this.optional(
         this.exchangeService.convertToBRL(pais.codigoMoeda),
         'câmbio',
@@ -26,11 +29,12 @@ export class DestinationService {
     ]);
 
     return {
-      destino: name,
+      // Nome canônico (inglês) — o cliente usa para favoritos e visitados.
+      destino: pais.nomeIngles ?? name,
       clima,
       informacoesDoPais: pais,
       cambio,
-      geradoEm: new Date().toLocaleString('pt-BR'),
+      geradoEm: new Date().toISOString(),
     };
   }
 

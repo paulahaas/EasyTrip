@@ -28,7 +28,7 @@ async function bootstrap() {
         'Todas as rotas protegidas exigem `Authorization: Bearer <token>` obtido via /auth/login.',
     )
     .setVersion('1.0.0')
-    .setContact('EasyTrip', 'https://github.com/marcella-81/EasyTrip', '')
+    .setContact('EasyTrip', 'https://github.com/paulahaas/EasyTrip', '')
     .addBearerAuth(
       {
         type: 'http',

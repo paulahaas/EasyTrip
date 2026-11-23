@@ -3,6 +3,7 @@ import MiniSearch from 'minisearch';
 import { PorterStemmerPt } from 'natural';
 import { CountriesService } from '../countries/countries.service';
 import { buildProfile } from './country-profile';
+import { removeStopwords } from './keyword-map';
 
 const DIACRITICS_RE = /[\u0300-\u036f]/g;
 
@@ -34,7 +35,6 @@ export class FullTextSearchService implements OnModuleInit {
 
   async buildIndex(): Promise<void> {
     if (this.indexed) return;
-    await this.countries.loadAll();
     const all = this.countries.getAll();
 
     if (all.length === 0) {
@@ -59,7 +59,10 @@ export class FullTextSearchService implements OnModuleInit {
       await this.buildIndex();
     }
 
-    const results = this.index.search(normalize(query), {
+    // Sem stopwords: "país frio na Europa" não deve casar tudo que começa com "na".
+    const terms = removeStopwords(query);
+    const text = terms.length > 0 ? terms.join(' ') : normalize(query);
+    const results = this.index.search(text, {
       prefix: true,
       fuzzy: (term) => (term.length > 5 ? 0.2 : 0),
       boost: { profile: 1 },

@@ -6,8 +6,16 @@ import type { ContinentKey, TimezoneInfo } from '@easytrip/shared';
 // Informações extras de cada país, todas calculadas offline.
 
 const REGION_BY_CCA2 = new Map(
-  worldCountries.map((c) => [c.cca2, { region: c.region, subregion: c.subregion }]),
+  worldCountries.map((c) => [
+    c.cca2,
+    { region: c.region, subregion: c.subregion, name: c.name.common },
+  ]),
 );
+
+/** Nome canônico (inglês) do país, ou null se o código não existe. */
+export function countryNameFor(cca2: string): string | null {
+  return REGION_BY_CCA2.get(cca2.toUpperCase())?.name ?? null;
+}
 
 /**
  * Continente usado por favoritos, visitados e estatísticas. O world-countries
@@ -22,6 +30,19 @@ export function continentKeyFor(cca2: string, fallback?: string): ContinentKey |
   }
   if (info.region === 'Antarctic') return 'Antarctica';
   return isContinentKey(info.region) ? info.region : null;
+}
+
+/**
+ * País como favoritos e visitados guardam: nome e continente vêm da base,
+ * nunca do cliente. Null se o código não for um país conhecido.
+ */
+export function resolveSavedCountry(
+  cca2: string,
+): { cca2: string; countryName: string; continent: ContinentKey } | null {
+  const code = cca2.toUpperCase();
+  const name = countryNameFor(code);
+  const continent = continentKeyFor(code);
+  return name && continent ? { cca2: code, countryName: name, continent } : null;
 }
 
 const languageNames = new Intl.DisplayNames(['pt-BR'], { type: 'language' });

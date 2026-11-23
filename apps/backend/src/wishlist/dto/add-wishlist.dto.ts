@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Length, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, Length, MaxLength } from 'class-validator';
 
 export class AddWishlistDto {
   @ApiProperty({ description: 'Código ISO alpha-2.', example: 'JP' })
@@ -7,12 +7,17 @@ export class AddWishlistDto {
   @Length(2, 2)
   cca2!: string;
 
-  @ApiProperty({ example: 'Japan' })
+  @ApiPropertyOptional({
+    example: 'Japan',
+    description: 'Ignorado: o servidor usa o nome canônico do país pelo cca2.',
+  })
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  countryName!: string;
+  @MaxLength(100)
+  countryName?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
+    description: 'Ignorado: o servidor calcula o continente pelo cca2.',
     enum: [
       'Africa',
       'Antarctica',
@@ -24,7 +29,8 @@ export class AddWishlistDto {
     ],
     example: 'Asia',
   })
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  continent!: string;
+  @MaxLength(40)
+  continent?: string;
 }

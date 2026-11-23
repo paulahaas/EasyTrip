@@ -71,6 +71,29 @@ describe('CountriesService', () => {
       expect(() => svc.getByName('Neverland')).toThrow(NotFoundException);
     });
 
+    it('encontra pelo nome em português sem acento', () => {
+      expect(svc.getByName('japao').cca2).toBe('JP');
+      expect(svc.getByName('Alemanha').cca2).toBe('DE');
+    });
+
+    it('encontra por sigla', () => {
+      expect(svc.getByName('br').cca2).toBe('BR');
+      expect(svc.getByName('usa').cca2).toBe('US');
+    });
+
+    it('não chuta país para trechos curtos ou ambíguos', () => {
+      expect(() => svc.getByName('a')).toThrow(NotFoundException);
+      expect(() => svc.getByName('land')).toThrow(NotFoundException);
+      // "IR" é a sigla do Irã, não um trecho de "Emirados Árabes".
+      expect(svc.getByName('ir').cca2).toBe('IR');
+      // "Congo" é o nome em português da República do Congo.
+      expect(svc.getByName('congo').cca2).toBe('CG');
+    });
+
+    it('aceita trecho único com 4+ letras', () => {
+      expect(svc.getByName('zeala').cca2).toBe('NZ');
+    });
+
     it('encontra Japan por nome exato', () => {
       expect(svc.getByName('Japan').cca2).toBe('JP');
     });
@@ -98,12 +121,6 @@ describe('CountriesService', () => {
     it('gera URL correta para BR', () => {
       const c = svc.getByCca2('BR')!;
       expect(c.flag).toBe('https://flagcdn.com/br.svg');
-    });
-  });
-
-  describe('loadAll', () => {
-    it('é no-op e resolve sem erro', async () => {
-      await expect(svc.loadAll()).resolves.toBeUndefined();
     });
   });
 });

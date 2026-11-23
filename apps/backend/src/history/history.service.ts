@@ -50,14 +50,21 @@ export class HistoryService {
     userId: string,
     queries: string[],
   ): Promise<SearchHistoryEntry[]> {
-    const created: SearchHistoryEntry[] = [];
+    // O localStorage guarda do mais novo para o mais antigo. Deduplica
+    // mantendo a ocorrência mais nova e insere do mais antigo para o mais novo,
+    // para que o createdAt preserve a ordem original.
     const seen = new Set<string>();
+    const ordered: string[] = [];
     for (const raw of queries) {
       const q = raw.trim();
-      if (!q) continue;
       const key = q.toLowerCase();
-      if (seen.has(key)) continue;
+      if (!q || seen.has(key)) continue;
       seen.add(key);
+      ordered.push(q);
+    }
+
+    const created: SearchHistoryEntry[] = [];
+    for (const q of ordered.reverse()) {
       try {
         const entry = await this.addFromQuery(userId, q);
         created.push(entry);
@@ -65,7 +72,7 @@ export class HistoryService {
         // best effort — ignora país não encontrado
       }
     }
-    return created;
+    return created.reverse();
   }
 
   async deleteAll(userId: string): Promise<void> {

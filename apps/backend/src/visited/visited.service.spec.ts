@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { VisitedService } from './visited.service';
 
 function makeRow(
@@ -102,6 +106,33 @@ describe('VisitedService', () => {
       expect(prisma.visitedCountry.deleteMany).toHaveBeenCalledWith({
         where: { userId: 'u1', cca2: 'JP' },
       });
+    });
+  });
+
+  describe('país vem da base, não do cliente', () => {
+    it('recusa código de país desconhecido', async () => {
+      await expect(svc.add('u1', { cca2: 'ZZ' })).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
+      expect(prisma.visitedCountry.create).not.toHaveBeenCalled();
+    });
+
+    it('ignora nome e continente enviados pelo cliente', async () => {
+      prisma.visitedCountry.create.mockResolvedValue(makeRow());
+      await svc.add('u1', {
+        cca2: 'jp',
+        countryName: '<script>x</script>',
+        continent: 'Europe',
+      });
+      expect(prisma.visitedCountry.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            cca2: 'JP',
+            countryName: 'Japan',
+            continent: 'Asia',
+          }),
+        }),
+      );
     });
   });
 

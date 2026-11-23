@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { CountryInfo } from '@easytrip/shared';
 import { CAPITALS_PT } from '../../countries/content/capitals';
 import { COUNTRY_RULES } from '../../countries/content/rules';
@@ -35,10 +35,8 @@ export class CountryService {
   constructor(private readonly countries: CountriesService) {}
 
   getCountryInfo(countryName: string): CountryInfo {
+    // Lança NotFoundException quando o país não existe.
     const country = this.countries.getByName(countryName);
-    if (!country) {
-      throw new NotFoundException(`País "${countryName}" não encontrado.`);
-    }
 
     const currency = country.currencyDetails[0];
     const moeda = currency
@@ -64,6 +62,7 @@ export class CountryService {
       continente: country.continent,
       cca2: country.cca2,
       cca3: country.cca3,
+      nomeIngles: country.name,
       capitalNome: CAPITALS_PT[country.cca2] ?? capital,
       nome: country.namePt,
       continenteNome: continentNamePt(country.continent, country.subregion),

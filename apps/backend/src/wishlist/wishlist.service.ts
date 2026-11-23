@@ -1,7 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { WishlistItem } from '@easytrip/shared';
 import { Wishlist } from '@prisma/client';
-import { continentKeyFor } from '../countries/country-extras';
+import { resolveSavedCountry } from '../countries/country-extras';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddWishlistDto } from './dto/add-wishlist.dto';
 
@@ -18,15 +22,16 @@ export class WishlistService {
   }
 
   async add(userId: string, dto: AddWishlistDto): Promise<WishlistItem> {
-    const cca2 = dto.cca2.toUpperCase();
+    const country = resolveSavedCountry(dto.cca2);
+    if (!country) {
+      throw new BadRequestException(`Código de país desconhecido: ${dto.cca2}`);
+    }
     try {
       const created = await this.prisma.wishlist.create({
         data: {
           userId,
-          cca2,
-          countryName: dto.countryName,
-          // O continente vem do código do país, não do cliente.
-          continent: continentKeyFor(cca2, dto.continent) ?? dto.continent,
+          // Nome e continente vêm da base pelo código, nunca do cliente.
+          ...country,
         },
       });
       return this.toDTO(created);

@@ -41,7 +41,6 @@ function makeService(opts: {
   ftsResults: { cca2: string; bm25: number }[];
 }) {
   const countriesSvc = {
-    loadAll: jest.fn().mockResolvedValue(undefined),
     getAll: jest.fn().mockReturnValue(opts.countries),
   };
   const ftsSvc = {

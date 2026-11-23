@@ -47,7 +47,7 @@ export class HistoryController {
   @ApiOperation({
     summary: 'Adiciona uma pesquisa ao histórico',
     description:
-      'Resolve o país via RestCountries e mantém somente as 8 entradas mais recentes do usuário.',
+      'Resolve o país pelo nome (world-countries, offline) e mantém somente as 8 entradas mais recentes do usuário. 404 se o texto não for um país.',
   })
   @ApiResponse({ status: 201, type: SearchHistoryEntryDto })
   @ApiResponse({ status: 404, description: 'País não encontrado' })

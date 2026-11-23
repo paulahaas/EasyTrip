@@ -1,11 +1,12 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { VisitedCountry as SharedVisitedCountry } from '@easytrip/shared';
 import { VisitedCountry } from '@prisma/client';
-import { continentKeyFor } from '../countries/country-extras';
+import { resolveSavedCountry } from '../countries/country-extras';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddVisitedDto } from './dto/add-visited.dto';
 
@@ -22,15 +23,16 @@ export class VisitedService {
   }
 
   async add(userId: string, dto: AddVisitedDto): Promise<SharedVisitedCountry> {
-    const cca2 = dto.cca2.toUpperCase();
+    const country = resolveSavedCountry(dto.cca2);
+    if (!country) {
+      throw new BadRequestException(`Código de país desconhecido: ${dto.cca2}`);
+    }
     try {
       const created = await this.prisma.visitedCountry.create({
         data: {
           userId,
-          cca2,
-          countryName: dto.countryName,
-          // O continente vem do código do país, não do cliente.
-          continent: continentKeyFor(cca2, dto.continent) ?? dto.continent,
+          // Nome e continente vêm da base pelo código, nunca do cliente.
+          ...country,
           visitedAt: dto.visitedAt ? new Date(dto.visitedAt) : null,
         },
       });

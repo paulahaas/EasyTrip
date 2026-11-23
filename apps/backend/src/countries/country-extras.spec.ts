@@ -1,5 +1,8 @@
+import worldCountries from 'world-countries';
+import { CONTINENT_TOTALS } from '@easytrip/shared';
 import {
   continentKeyFor,
+  countryNameFor,
   callingCode,
   continentNamePt,
   drivingSide,
@@ -66,5 +69,19 @@ describe('country-extras', () => {
     const au = timezoneInfo('AU', 'Canberra')!;
     expect(au.fusoPrincipal).toBe('Australia/Sydney');
     expect(au.fusos).not.toContain('UTC+09:00 a');
+  });
+
+  it('totais por continente do shared batem com o world-countries', () => {
+    const counts: Record<string, number> = {};
+    for (const c of worldCountries) {
+      const key = continentKeyFor(c.cca2);
+      if (key) counts[key] = (counts[key] ?? 0) + 1;
+    }
+    expect(counts).toEqual(CONTINENT_TOTALS);
+  });
+
+  it('countryNameFor devolve o nome canônico ou null', () => {
+    expect(countryNameFor('br')).toBe('Brazil');
+    expect(countryNameFor('ZZ')).toBeNull();
   });
 });

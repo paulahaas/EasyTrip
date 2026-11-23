@@ -27,7 +27,7 @@ interface RatesTable {
 const CACHE_MS = 6 * 60 * 60 * 1000;
 
 function money(value: number, currency: string): string {
-  const decimals = value >= 100 ? 2 : value >= 1 ? 2 : 4;
+  const decimals = value >= 1 ? 2 : 4;
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency,
