@@ -254,7 +254,7 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-  L["/conheca<br/>Landing page"] --> H["/<br/>Busca"]
+  L["/<br/>Landing page"] --> H["/buscar<br/>Busca"]
   H --> R["Resultados da busca semântica"]
   R --> D["Ficha do país<br/>clima · câmbio · comidas · regras"]
   D -->|favoritar / visitar| LG{logado?}

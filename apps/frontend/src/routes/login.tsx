@@ -7,7 +7,7 @@ export function LoginPage() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
 
-  if (isAuthenticated) return <Navigate to="/" />
+  if (isAuthenticated) return <Navigate to="/buscar" />
 
   return (
     <div className="min-h-[calc(100vh-56px)] flex items-center justify-center px-4 py-12">
@@ -37,7 +37,7 @@ export function LoginPage() {
         <div
           className="et-card p-6 flex flex-col gap-5"
         >
-          <LoginForm onSuccess={() => navigate({ to: '/' })} />
+          <LoginForm onSuccess={() => navigate({ to: '/buscar' })} />
           <p className="text-xs text-center" style={{ color: 'var(--color-muted)' }}>
             Sem conta?{' '}
             <Link to="/register" style={{ color: 'var(--color-accent)' }} className="font-medium hover:underline">

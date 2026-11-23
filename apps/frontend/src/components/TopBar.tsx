@@ -45,10 +45,10 @@ export function TopBar() {
         {/* Nav */}
         <nav className="flex items-center gap-1">
           <Link
-            to="/conheca"
-            className="text-xs px-2 py-1 rounded-lg transition-colors hover:bg-white/5 hidden sm:inline text-muted"
+            to="/buscar"
+            className="text-xs px-2 py-1 rounded-lg transition-colors hover:bg-white/5 text-muted"
           >
-            Conheça
+            Buscar
           </Link>
           <Link
             to="/about"

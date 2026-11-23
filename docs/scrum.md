@@ -42,7 +42,7 @@ O time trabalhou em ciclos curtos com entregas incrementais. Cada funcionalidade
 | H8 | Como viajante, quero a ficha completa: fuso, DDI, mão de direção, comidas e regras locais | Média | Pronto |
 | H9 | Como usuário, quero registrar a data da viagem e ver a linha do tempo e conquistas | Baixa | Pronto |
 | H10 | Como time, queremos o sistema publicado na nuvem | Alta | Pronto (Render + Neon) |
-| H11 | Como visitante, quero uma landing page que explique o produto | Média | Pronto (`/conheca`) |
+| H11 | Como visitante, quero uma landing page que explique o produto | Média | Pronto (tela inicial `/`) |
 | H12 | Como time, queremos auditoria de qualidade e segurança | Alta | Pronto (nov/2026) |
 | H13 | Mapa offline das bandeiras e PWA | Baixa | Backlog |
 | H14 | Perfil compartilhado visível sem login (opção de privacidade) | Baixa | Backlog |
