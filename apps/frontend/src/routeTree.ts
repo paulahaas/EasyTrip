@@ -7,6 +7,7 @@ import {
 import { NotFound } from './components/NotFound'
 import { RootLayout } from './components/RootLayout'
 import { AboutPage } from './routes/about'
+import { LandingPage } from './routes/landing'
 import { HomePage } from './routes/index'
 import { LoginPage } from './routes/login'
 import { RegisterPage } from './routes/register'
@@ -40,6 +41,12 @@ const registerRoute = createRoute({
   component: RegisterPage,
 })
 
+const landingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/conheca',
+  component: LandingPage,
+})
+
 const aboutRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/about',
@@ -62,6 +69,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
+  landingRoute,
   aboutRoute,
   profileRoute,
   publicProfileRoute,
