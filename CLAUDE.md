@@ -210,7 +210,11 @@ export function MyComponent({ prop }: Props) {
 export default function MyComponent() { ... }
 ```
 
-##### Mapa
+##### Rotas
+- `/` landing page (tela inicial) · `/buscar` busca e ficha do país · `/conheca` redireciona para `/`
+- `/login`, `/register`, `/about`, `/profile`, `/profile/$id`; qualquer outra mostra a página 404
+
+#### Mapa
 - `WorldMapCard` casa países pelo código numérico (`geo.id` = ccn3, ver `lib/ccn3.ts`), não pelo nome
 - Cores de continente em `lib/palette.ts` (tokens `--color-continent-*`)
 

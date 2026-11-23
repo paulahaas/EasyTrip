@@ -2,7 +2,7 @@
 
 Plataforma de exploração de destinos que reúne clima, câmbio e informações de países em um só lugar, com busca semântica em linguagem natural.
 
-**Site no ar:** https://easytrip-e4xg.onrender.com (a primeira visita pode levar ~1 min, veja [Deploy](#deploy-render--neon-grátis)) · **Landing page:** [`/conheca`](https://easytrip-e4xg.onrender.com/conheca)
+**Site no ar:** https://easytrip-e4xg.onrender.com (a primeira visita pode levar ~1 min, veja [Deploy](#deploy-render--neon-grátis)) · a tela inicial é a landing page; a busca fica em `/buscar`
 
 **Documentação:** [diagramas do sistema](docs/diagramas.md) · [Scrum e sprints](docs/scrum.md) · [API](docs/api.md) · [arquitetura](docs/architecture.md) · [testes](docs/testing.md)
 

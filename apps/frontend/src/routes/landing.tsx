@@ -109,7 +109,7 @@ export function LandingPage() {
           guarda o mapa das suas viagens.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
-          <Link to="/">
+          <Link to="/buscar">
             <Button className="rounded-full px-6 h-11 font-semibold bg-gradient-accent text-background gap-2">
               Explorar destinos <ArrowRight size={16} />
             </Button>
@@ -193,7 +193,7 @@ export function LandingPage() {
       {/* CTA final */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-24 text-center flex flex-col items-center gap-4">
         <h2 className="text-2xl sm:text-3xl font-light text-foreground">Qual vai ser a próxima viagem?</h2>
-        <Link to="/">
+        <Link to="/buscar">
           <Button className="rounded-full px-6 h-11 font-semibold bg-gradient-accent text-background gap-2">
             Começar a buscar <ArrowRight size={16} />
           </Button>

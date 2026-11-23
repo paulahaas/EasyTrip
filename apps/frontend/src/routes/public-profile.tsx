@@ -97,7 +97,7 @@ export function PublicProfilePage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6">
       <Link
-        to="/"
+        to="/buscar"
         className="inline-flex items-center gap-1.5 text-xs w-fit transition-colors"
         style={{ color: 'var(--color-muted)' }}
         onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-foreground)' }}
