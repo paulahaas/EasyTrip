@@ -1,43 +1,35 @@
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import type { SemanticSearchResult } from '@easytrip/shared'
-import { ApiError } from '@/lib/apiClient'
+import { api } from '@/lib/apiClient'
 
-async function fetchSemanticSearch(query: string): Promise<SemanticSearchResult[]> {
-  const res = await fetch(
-    `/api/destination/search?q=${encodeURIComponent(query.trim())}`,
-  )
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new ApiError(
-      (body as { erro?: string }).erro ?? 'Erro na busca semântica.',
-      res.status,
-    )
-  }
-  return res.json()
-}
-
+/** Busca semântica. Como em useDestination, cada termo é uma query (sem corrida). */
 export function useSemanticSearch() {
-  const [data, setData] = useState<SemanticSearchResult[] | null>(null)
-  const mutation = useMutation({
-    mutationFn: fetchSemanticSearch,
-    onSuccess: (res) => setData(res),
+  const [term, setTerm] = useState<string | null>(null)
+  const query = useQuery<SemanticSearchResult[]>({
+    queryKey: ['semantic-search', term],
+    queryFn: () =>
+      api<SemanticSearchResult[]>(
+        `/api/destination/search?q=${encodeURIComponent(term ?? '')}`,
+      ),
+    enabled: !!term,
+    staleTime: 5 * 60_000,
+    retry: false,
   })
 
-  function search(query: string) {
-    if (!query.trim()) return
-    setData(null)
-    mutation.mutate(query)
+  function search(q: string) {
+    const trimmed = q.trim()
+    if (trimmed) setTerm(trimmed)
   }
 
   function clear() {
-    setData(null)
+    setTerm(null)
   }
 
   return {
-    data,
-    loading: mutation.isPending,
-    error: mutation.error instanceof Error ? mutation.error.message : null,
+    data: term ? (query.data ?? null) : null,
+    loading: !!term && query.isFetching && !query.data,
+    error: term && query.error instanceof Error ? query.error.message : null,
     search,
     clear,
   }

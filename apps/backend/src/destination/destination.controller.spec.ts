@@ -1,5 +1,6 @@
 jest.mock('natural', () => ({ PorterStemmerPt: { stem: (t: string) => t } }));
 
+import { BadRequestException } from '@nestjs/common';
 import { DestinationController } from './destination.controller';
 
 describe('DestinationController', () => {
@@ -21,6 +22,15 @@ describe('DestinationController', () => {
   it('semanticSearch delega para semanticSearchService.search', async () => {
     await ctrl.semanticSearch('brasil frio');
     expect(semanticService.search).toHaveBeenCalledWith('brasil frio');
+  });
+
+  it('semanticSearch recusa q ausente, vazio ou longo demais', () => {
+    expect(() => ctrl.semanticSearch(undefined)).toThrow(BadRequestException);
+    expect(() => ctrl.semanticSearch('   ')).toThrow(BadRequestException);
+    expect(() => ctrl.semanticSearch('x'.repeat(201))).toThrow(
+      BadRequestException,
+    );
+    expect(semanticService.search).not.toHaveBeenCalled();
   });
 
   it('getDestination delega para destinationService.getDestination', async () => {

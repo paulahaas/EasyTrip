@@ -8,6 +8,11 @@ services:
       - apps/backend/.env
     environment:
       CHOKIDAR_USEPOLLING: 'true'
+      # Dentro do container "localhost" é o próprio container: o banco é o serviço postgres.
+      DATABASE_URL: postgresql://easytrip:easytrip@postgres:5432/easytrip
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - '3000:3000'
     volumes:

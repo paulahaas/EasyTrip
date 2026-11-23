@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, Length, MinLength } from 'class-validator';
+import { IsOptional, IsString, Length, MaxLength } from 'class-validator';
 import { IsVisitDate } from './visit-date.decorator';
 
 export class AddVisitedDto {
@@ -8,14 +8,17 @@ export class AddVisitedDto {
   @Length(2, 2)
   cca2!: string;
 
-  @ApiProperty({ example: 'France' })
+  @ApiPropertyOptional({
+    example: 'France',
+    description: 'Ignorado: o servidor usa o nome canônico do país pelo cca2.',
+  })
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  countryName!: string;
+  @MaxLength(100)
+  countryName?: string;
 
-  @ApiProperty({
-    description:
-      'Continente informado pelo cliente. O servidor recalcula a partir do cca2 sempre que conhece o país.',
+  @ApiPropertyOptional({
+    description: 'Ignorado: o servidor calcula o continente pelo cca2.',
     enum: [
       'Africa',
       'Antarctica',
@@ -27,9 +30,10 @@ export class AddVisitedDto {
     ],
     example: 'Europe',
   })
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  continent!: string;
+  @MaxLength(40)
+  continent?: string;
 
   @ApiPropertyOptional({
     description: 'Data da viagem (AAAA-MM-DD). Opcional.',

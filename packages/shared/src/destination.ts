@@ -32,6 +32,8 @@ export interface CountryInfo {
   continente: string;
   cca2: string;
   cca3: string;
+  /** Nome canônico em inglês (world-countries), usado em favoritos, visitados e no histórico. */
+  nomeIngles: string;
   /** Nome do país em português, para exibição. */
   nome: string;
   /** Continente em português, para exibição (nas Américas, a sub-região). */
@@ -62,10 +64,12 @@ export interface ExchangeInfo {
 }
 
 export interface DestinationResponse {
+  /** Nome canônico do país (inglês). */
   destino: string;
   informacoesDoPais: CountryInfo;
   clima: WeatherInfo | null;
   cambio: ExchangeInfo | null;
+  /** ISO 8601 — o cliente formata no fuso de quem vê. */
   geradoEm: string;
 }
 

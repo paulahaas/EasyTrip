@@ -41,7 +41,6 @@ function makeService(opts: {
   ftsResults: { cca2: string; bm25: number }[];
 }) {
   const countriesSvc = {
-    loadAll: jest.fn().mockResolvedValue(undefined),
     getAll: jest.fn().mockReturnValue(opts.countries),
   };
   const ftsSvc = {
@@ -167,22 +166,41 @@ describe('SemanticSearchService', () => {
 
   describe('search — várias características na mesma busca', () => {
     const fiji = makeCountry({
-      cca2: 'FJ', cca3: 'FJI', name: 'Fiji', continent: 'Oceania',
-      subregion: 'Melanesia', borders: [], languages: ['English'],
+      cca2: 'FJ',
+      cca3: 'FJI',
+      name: 'Fiji',
+      continent: 'Oceania',
+      subregion: 'Melanesia',
+      borders: [],
+      languages: ['English'],
     });
     const japan = makeCountry({
-      cca2: 'JP', cca3: 'JPN', name: 'Japan', continent: 'Asia',
-      subregion: 'Eastern Asia', borders: [], languages: ['Japanese'],
+      cca2: 'JP',
+      cca3: 'JPN',
+      name: 'Japan',
+      continent: 'Asia',
+      subregion: 'Eastern Asia',
+      borders: [],
+      languages: ['Japanese'],
     });
     const faroe = makeCountry({
-      cca2: 'FO', cca3: 'FRO', name: 'Faroe Islands', continent: 'Europe',
-      subregion: 'Northern Europe', borders: [], languages: ['Faroese'],
+      cca2: 'FO',
+      cca3: 'FRO',
+      name: 'Faroe Islands',
+      continent: 'Europe',
+      subregion: 'Northern Europe',
+      borders: [],
+      languages: ['Faroese'],
     });
     const argentina = makeCountry({
-      cca2: 'AR', cca3: 'ARG', name: 'Argentina', languages: ['Spanish'],
+      cca2: 'AR',
+      cca3: 'ARG',
+      name: 'Argentina',
+      languages: ['Spanish'],
     });
     const brazil = makeCountry();
-    const hits = (...cs: { cca2: string }[]) => cs.map((c) => ({ cca2: c.cca2, bm25: 1 }));
+    const hits = (...cs: { cca2: string }[]) =>
+      cs.map((c) => ({ cca2: c.cca2, bm25: 1 }));
 
     it('"ilhas no pacífico" traz só ilhas que ficam no Pacífico', async () => {
       const svc = makeService({

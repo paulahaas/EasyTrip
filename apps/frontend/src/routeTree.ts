@@ -3,8 +3,12 @@ import {
   createRoute,
   createRouter,
   lazyRouteComponent,
+  redirect,
 } from '@tanstack/react-router'
+import { NotFound } from './components/NotFound'
 import { RootLayout } from './components/RootLayout'
+import { AboutPage } from './routes/about'
+import { LandingPage } from './routes/landing'
 import { HomePage } from './routes/index'
 import { LoginPage } from './routes/login'
 import { RegisterPage } from './routes/register'
@@ -18,11 +22,18 @@ const PublicProfilePage = lazyRouteComponent(
   'PublicProfilePage',
 )
 
-const rootRoute = createRootRoute({ component: RootLayout })
+const rootRoute = createRootRoute({ component: RootLayout, notFoundComponent: NotFound })
 
+// A landing page é a tela inicial; a busca fica em /buscar.
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  component: LandingPage,
+})
+
+const searchRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/buscar',
   component: HomePage,
 })
 
@@ -36,6 +47,21 @@ const registerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/register',
   component: RegisterPage,
+})
+
+// Endereço antigo da landing page.
+const legacyLandingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/conheca',
+  beforeLoad: () => {
+    throw redirect({ to: '/', replace: true })
+  },
+})
+
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: AboutPage,
 })
 
 const profileRoute = createRoute({
@@ -52,8 +78,11 @@ const publicProfileRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  searchRoute,
   loginRoute,
   registerRoute,
+  legacyLandingRoute,
+  aboutRoute,
   profileRoute,
   publicProfileRoute,
 ])

@@ -26,13 +26,58 @@ interface KeywordEntry {
 const PACIFIC_EXTRA = ['AU', 'NZ', 'NF'];
 // Países e territórios banhados pelo Mediterrâneo.
 const MEDITERRANEAN = [
-  'AL', 'BA', 'CY', 'DZ', 'EG', 'ES', 'FR', 'GI', 'GR', 'HR', 'IL', 'IT',
-  'LB', 'LY', 'MA', 'MC', 'ME', 'MT', 'PS', 'SI', 'SY', 'TN', 'TR',
+  'AL',
+  'BA',
+  'CY',
+  'DZ',
+  'EG',
+  'ES',
+  'FR',
+  'GI',
+  'GR',
+  'HR',
+  'IL',
+  'IT',
+  'LB',
+  'LY',
+  'MA',
+  'MC',
+  'ME',
+  'MT',
+  'PS',
+  'SI',
+  'SY',
+  'TN',
+  'TR',
 ];
 // Ilhas e arquipélagos do Oceano Índico.
-const INDIAN_OCEAN_ISLANDS = ['CC', 'CX', 'IO', 'KM', 'LK', 'MG', 'MU', 'MV', 'RE', 'SC', 'TF', 'YT'];
+const INDIAN_OCEAN_ISLANDS = [
+  'CC',
+  'CX',
+  'IO',
+  'KM',
+  'LK',
+  'MG',
+  'MU',
+  'MV',
+  'RE',
+  'SC',
+  'TF',
+  'YT',
+];
 // Ilhas e arquipélagos do Atlântico.
-const ATLANTIC_ISLANDS = ['BM', 'BS', 'BV', 'CV', 'FK', 'FO', 'GS', 'IS', 'SH', 'ST'];
+const ATLANTIC_ISLANDS = [
+  'BM',
+  'BS',
+  'BV',
+  'CV',
+  'FK',
+  'FO',
+  'GS',
+  'IS',
+  'SH',
+  'ST',
+];
 
 // ---------- Helpers ----------
 const lat = (m: { latlng: [number, number] }) => m.latlng[0];
@@ -252,27 +297,52 @@ export const keywordMap: KeywordEntry[] = [
   },
   // --- Oceanos e mares ---
   {
-    keywords: ['pacifico', 'pacífico', 'pacific', 'oceano pacifico', 'oceano pacífico'],
+    keywords: [
+      'pacifico',
+      'pacífico',
+      'pacific',
+      'oceano pacifico',
+      'oceano pacífico',
+    ],
     filter: (m) =>
-      ['polynesia', 'melanesia', 'micronesia'].includes(m.subregion.toLowerCase()) ||
-      PACIFIC_EXTRA.includes(m.cca2),
+      ['polynesia', 'melanesia', 'micronesia'].includes(
+        m.subregion.toLowerCase(),
+      ) || PACIFIC_EXTRA.includes(m.cca2),
     tag: 'Pacífico',
     score: 12,
   },
   {
-    keywords: ['mediterraneo', 'mediterrâneo', 'mediterranean', 'mar mediterraneo', 'mar mediterrâneo'],
+    keywords: [
+      'mediterraneo',
+      'mediterrâneo',
+      'mediterranean',
+      'mar mediterraneo',
+      'mar mediterrâneo',
+    ],
     filter: (m) => MEDITERRANEAN.includes(m.cca2),
     tag: 'Mediterrâneo',
     score: 12,
   },
   {
-    keywords: ['indico', 'índico', 'indian ocean', 'oceano indico', 'oceano índico'],
+    keywords: [
+      'indico',
+      'índico',
+      'indian ocean',
+      'oceano indico',
+      'oceano índico',
+    ],
     filter: (m) => INDIAN_OCEAN_ISLANDS.includes(m.cca2),
     tag: 'Oceano Índico',
     score: 12,
   },
   {
-    keywords: ['atlantico', 'atlântico', 'atlantic', 'oceano atlantico', 'oceano atlântico'],
+    keywords: [
+      'atlantico',
+      'atlântico',
+      'atlantic',
+      'oceano atlantico',
+      'oceano atlântico',
+    ],
     filter: (m) => ATLANTIC_ISLANDS.includes(m.cca2),
     tag: 'Atlântico',
     score: 12,
@@ -327,11 +397,7 @@ export const keywordMap: KeywordEntry[] = [
     score: 12,
   },
   {
-    keywords: [
-      'europa do sul',
-      'southern europe',
-      'southern european',
-    ],
+    keywords: ['europa do sul', 'southern europe', 'southern european'],
     filter: (m) => m.subregion.toLowerCase().includes('southern europe'),
     tag: 'Europa do Sul',
     score: 12,
@@ -662,7 +728,8 @@ export const keywordMap: KeywordEntry[] = [
     // Sem fronteira terrestre (Japão, Fiji, Islândia...) ou "Island" no nome.
     filter: (m) =>
       !m.landlocked &&
-      ((m.borders ?? []).length === 0 || m.name.toLowerCase().includes('island')),
+      ((m.borders ?? []).length === 0 ||
+        m.name.toLowerCase().includes('island')),
     tag: 'Ilha',
     score: 12,
   },

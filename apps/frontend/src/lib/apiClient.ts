@@ -20,6 +20,16 @@ export class ApiError extends Error {
   }
 }
 
+/** Mensagem do erro do Nest: `message` pode ser texto ou lista (ValidationPipe). */
+function errorMessage(body: unknown, status: number): string {
+  const { message, erro } = (body ?? {}) as { message?: unknown; erro?: unknown }
+  if (Array.isArray(message) && message.length > 0) return message.map(String).join('. ')
+  if (typeof message === 'string' && message) return message
+  if (typeof erro === 'string' && erro) return erro
+  if (status >= 500) return 'Servidor indisponível no momento. Tente de novo em instantes.'
+  return `HTTP ${status}`
+}
+
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = getToken()
   const headers = new Headers(init.headers)
@@ -34,10 +44,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    const msg =
-      (body as { message?: string; erro?: string }).message ??
-      (body as { message?: string; erro?: string }).erro ??
-      `HTTP ${res.status}`
+    const msg = errorMessage(body, res.status)
 
     // 401 em requisição autenticada = sessão expirou.
     // 401 sem token = credenciais inválidas no login — propaga a mensagem real.

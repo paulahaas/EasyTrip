@@ -30,6 +30,15 @@ export interface CountryMeta {
   borders: string[];
 }
 
+function normalizeName(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
 const regionToContinent: Record<string, string> = {
   Antarctic: 'Antarctica',
 };
@@ -84,31 +93,45 @@ export class CountriesService {
   private readonly byCca3 = new Map<string, CountryMeta>(
     this.all.map((c) => [c.cca3, c]),
   );
-  private readonly byNameLower = new Map<string, CountryMeta>(
-    this.all.map((c) => [c.name.toLowerCase(), c]),
-  );
+  /** Nome normalizado (sem acento, minúsculo) → país, para nomes exatos. */
+  private readonly byExactName = new Map<string, CountryMeta>();
 
   constructor() {
+    // Nome comum tem prioridade sobre grafias alternativas de outros países.
+    for (const c of this.all) this.byExactName.set(normalizeName(c.name), c);
+    for (const c of this.all) {
+      for (const alt of [c.namePt, ...c.altSpellings]) {
+        const key = normalizeName(alt);
+        if (key && !this.byExactName.has(key)) this.byExactName.set(key, c);
+      }
+    }
     this.logger.log(`${this.all.length} países carregados (world-countries)`);
   }
-
-  async loadAll(): Promise<void> {}
 
   getAll(): CountryMeta[] {
     return this.all;
   }
 
+  /**
+   * Resolve um nome de país (inglês, português, sigla ou grafia alternativa,
+   * com ou sem acento). Busca parcial só vale com 4+ letras e quando aponta
+   * para um único país — "a" ou "congo" não viram um país qualquer.
+   */
   getByName(name: string): CountryMeta {
-    const lower = name.toLowerCase().trim();
-    const direct = this.byNameLower.get(lower);
-    if (direct) return direct;
+    const key = normalizeName(name);
+    const exact =
+      this.byExactName.get(key) ??
+      (key.length === 2 || key.length === 3
+        ? (this.getByCca2(key) ?? this.getByCca3(key))
+        : null);
+    if (exact) return exact;
 
-    const match = this.all.find(
-      (c) =>
-        c.altSpellings.some((s) => s.toLowerCase() === lower) ||
-        c.name.toLowerCase().includes(lower),
-    );
-    if (match) return match;
+    if (key.length >= 4) {
+      const partial = this.all.filter((c) =>
+        [c.name, c.namePt].some((n) => normalizeName(n).includes(key)),
+      );
+      if (partial.length === 1) return partial[0];
+    }
 
     throw new NotFoundException(`País "${name}" não encontrado.`);
   }

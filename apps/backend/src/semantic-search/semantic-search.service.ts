@@ -26,12 +26,7 @@ export class SemanticSearchService {
   ) {}
 
   async search(query: string): Promise<SemanticSearchResult[]> {
-    await this.countries.loadAll();
     const all = this.countries.getAll();
-
-    if (all.length === 0) {
-      this.logger.warn('getAll() retornou vazio — loadAll() pode ter falhado');
-    }
 
     // 1. Full-text search → ranked by BM25 (lazy rebuild if needed)
     const ftsHits = await this.fts.search(query);

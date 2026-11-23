@@ -54,7 +54,7 @@ export function UsernameEditor({ username }: UsernameEditorProps) {
       <div className="flex items-center gap-1.5">
         <h1
           className="text-xl sm:text-2xl font-normal leading-tight"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           @{username}
         </h1>
@@ -62,7 +62,7 @@ export function UsernameEditor({ username }: UsernameEditorProps) {
           type="button"
           onClick={startEditing}
           className={iconButton}
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
           aria-label="Editar nome de usuário"
           title="Editar nome de usuário"
         >
@@ -75,7 +75,7 @@ export function UsernameEditor({ username }: UsernameEditorProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-1">
       <div className="flex items-center gap-1.5">
-        <span className="text-xl" style={{ color: '#7c8194' }}>@</span>
+        <span className="text-xl" style={{ color: 'var(--color-muted)' }}>@</span>
         <Input
           aria-label="Novo nome de usuário"
           value={value}
@@ -93,7 +93,7 @@ export function UsernameEditor({ username }: UsernameEditorProps) {
           type="submit"
           disabled={saving}
           className={iconButton}
-          style={{ color: '#7dd3fc' }}
+          style={{ color: 'var(--color-accent2)' }}
           aria-label="Salvar nome de usuário"
           title="Salvar"
         >
@@ -103,7 +103,7 @@ export function UsernameEditor({ username }: UsernameEditorProps) {
           type="button"
           onClick={() => setEditing(false)}
           className={iconButton}
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
           aria-label="Cancelar edição"
           title="Cancelar"
         >
@@ -111,7 +111,7 @@ export function UsernameEditor({ username }: UsernameEditorProps) {
         </button>
       </div>
       {error && (
-        <p className="text-xs" role="alert" style={{ color: '#f87171' }}>
+        <p className="text-xs" role="alert" style={{ color: 'var(--color-danger)' }}>
           {error}
         </p>
       )}

@@ -11,16 +11,7 @@ import {
   YAxis,
 } from 'recharts'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-
-const CONTINENT_COLOR: Record<string, string> = {
-  Africa: '#f59e0b',
-  Antarctica: '#a3a3a3',
-  Asia: '#ef4444',
-  Europe: '#4f8ef7',
-  'North America': '#10b981',
-  Oceania: '#8b5cf6',
-  'South America': '#eab308',
-}
+import { continentColor } from '@/lib/palette'
 
 const LABEL_PT: Record<string, string> = {
   Africa: 'África',
@@ -50,18 +41,18 @@ export function ContinentBarChart({ perContinent }: ContinentBarChartProps) {
     <Card
       className="border-0"
       style={{
-        background: '#16181f',
+        background: 'var(--color-surface)',
         border: '1px solid rgba(255,255,255,0.07)',
       }}
     >
       <CardHeader>
         <h2
           className="text-lg font-semibold"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           Cobertura por continente
         </h2>
-        <p className="text-xs" style={{ color: '#7c8194' }}>
+        <p className="text-xs" style={{ color: 'var(--color-muted)' }}>
           Visitados vs. restantes em cada continente
         </p>
       </CardHeader>
@@ -74,17 +65,17 @@ export function ContinentBarChart({ perContinent }: ContinentBarChartProps) {
             />
             <XAxis
               dataKey="continent"
-              stroke="#7c8194"
+              stroke="var(--color-muted)"
               tick={{ fontSize: 11 }}
             />
-            <YAxis stroke="#7c8194" tick={{ fontSize: 11 }} allowDecimals={false} />
+            <YAxis stroke="var(--color-muted)" tick={{ fontSize: 11 }} allowDecimals={false} />
             <Tooltip
               cursor={{ fill: 'rgba(79,142,247,0.08)' }}
               contentStyle={{
-                background: '#1e2029',
+                background: 'var(--color-surface2)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: 8,
-                color: '#f0f2f8',
+                color: 'var(--color-foreground)',
                 fontSize: 12,
               }}
               labelFormatter={(label, payload) => {
@@ -95,14 +86,14 @@ export function ContinentBarChart({ perContinent }: ContinentBarChartProps) {
               }}
             />
             <Legend
-              wrapperStyle={{ color: '#f0f2f8', fontSize: 12 }}
+              wrapperStyle={{ color: 'var(--color-foreground)', fontSize: 12 }}
               iconType="circle"
             />
             <Bar dataKey="Visitados" stackId="a" radius={[6, 6, 0, 0]}>
               {data.map((entry) => (
                 <Cell
                   key={entry.originalContinent}
-                  fill={CONTINENT_COLOR[entry.originalContinent] ?? '#4f8ef7'}
+                  fill={continentColor(entry.originalContinent)}
                 />
               ))}
             </Bar>

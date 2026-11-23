@@ -30,13 +30,13 @@ export function TopBar() {
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center shadow-md"
-            style={{ background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))' }}
           >
-            <Plane size={14} color="#0e0f14" strokeWidth={2.5} />
+            <Plane size={14} color="var(--color-background)" strokeWidth={2.5} />
           </div>
           <span
             className="text-base font-semibold tracking-tight hidden sm:inline"
-            style={{ color: '#f0f2f8' }}
+            style={{ color: 'var(--color-foreground)' }}
           >
             EasyTrip
           </span>
@@ -44,15 +44,27 @@ export function TopBar() {
 
         {/* Nav */}
         <nav className="flex items-center gap-1">
+          <Link
+            to="/buscar"
+            className="text-xs px-2 py-1 rounded-lg transition-colors hover:bg-white/5 text-muted"
+          >
+            Buscar
+          </Link>
+          <Link
+            to="/about"
+            className="text-xs px-2 py-1 rounded-lg transition-colors hover:bg-white/5 hidden sm:inline text-muted"
+          >
+            Sobre
+          </Link>
           {isAuthenticated ? (
             <>
               <Link to="/profile" className="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors hover:bg-white/5">
                 <Avatar className="h-7 w-7">
-                  <AvatarFallback className="text-[10px] font-semibold" style={{ background: '#1e2029', color: '#7dd3fc' }}>
+                  <AvatarFallback className="text-[10px] font-semibold" style={{ background: 'var(--color-surface2)', color: 'var(--color-accent2)' }}>
                     {initials}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm hidden sm:inline" style={{ color: '#f0f2f8' }}>
+                <span className="text-sm hidden sm:inline" style={{ color: 'var(--color-foreground)' }}>
                   @{user?.username}
                 </span>
               </Link>
@@ -61,7 +73,7 @@ export function TopBar() {
                 size="sm"
                 onClick={handleLogout}
                 className="gap-1.5 text-xs"
-                style={{ color: '#7c8194' }}
+                style={{ color: 'var(--color-muted)' }}
               >
                 <LogOut size={13} />
                 <span className="hidden sm:inline">Sair</span>
@@ -70,7 +82,7 @@ export function TopBar() {
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="gap-1.5 text-xs" style={{ color: '#7c8194' }}>
+                <Button variant="ghost" size="sm" className="gap-1.5 text-xs" style={{ color: 'var(--color-muted)' }}>
                   <User size={13} />
                   Entrar
                 </Button>
@@ -79,7 +91,7 @@ export function TopBar() {
                 <Button
                   size="sm"
                   className="text-xs font-semibold h-8 px-4 rounded-full"
-                  style={{ background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)', color: '#0e0f14' }}
+                  style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))', color: 'var(--color-background)' }}
                 >
                   Criar conta
                 </Button>

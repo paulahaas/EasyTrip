@@ -3,6 +3,7 @@ import MiniSearch from 'minisearch';
 import { PorterStemmerPt } from 'natural';
 import { CountriesService } from '../countries/countries.service';
 import { buildProfile } from './country-profile';
+import { removeStopwords } from './keyword-map';
 
 const DIACRITICS_RE = /[\u0300-\u036f]/g;
 
@@ -28,13 +29,13 @@ export class FullTextSearchService implements OnModuleInit {
     });
   }
 
-  async onModuleInit() {
-    await this.buildIndex();
+  onModuleInit() {
+    this.buildIndex();
   }
 
-  async buildIndex(): Promise<void> {
+  /** Monta o índice uma vez (os dados são offline, então é síncrono). */
+  buildIndex(): void {
     if (this.indexed) return;
-    await this.countries.loadAll();
     const all = this.countries.getAll();
 
     if (all.length === 0) {
@@ -54,18 +55,21 @@ export class FullTextSearchService implements OnModuleInit {
     this.logger.log(`index built: ${docs.length} countries`);
   }
 
-  async search(query: string): Promise<{ cca2: string; bm25: number }[]> {
-    if (!this.indexed) {
-      await this.buildIndex();
-    }
+  search(query: string): Promise<{ cca2: string; bm25: number }[]> {
+    if (!this.indexed) this.buildIndex();
 
-    const results = this.index.search(normalize(query), {
+    // Sem stopwords: "país frio na Europa" não deve casar tudo que começa com "na".
+    const terms = removeStopwords(query);
+    const text = terms.length > 0 ? terms.join(' ') : normalize(query);
+    const results = this.index.search(text, {
       prefix: true,
       fuzzy: (term) => (term.length > 5 ? 0.2 : 0),
       boost: { profile: 1 },
       combineWith: 'OR',
     });
 
-    return results.map((r) => ({ cca2: r.id as string, bm25: r.score }));
+    return Promise.resolve(
+      results.map((r) => ({ cca2: r.id as string, bm25: r.score })),
+    );
   }
 }

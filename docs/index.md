@@ -13,6 +13,8 @@ Guia técnico completo do projeto EasyTrip: um monorepo full-stack para pesquisa
 | [Hooks & Libs (Frontend)](./frontend-hooks.md) | Hooks customizados, apiClient, utilitários |
 | [Estilo de Código](./code-style.md) | Convenções de código frontend e backend |
 | [Testes](./testing.md) | Estratégias, cobertura e como rodar os testes |
+| [Diagramas](./diagramas.md) | Casos de uso, arquitetura, ER, módulos, sequência e fluxo de telas |
+| [Scrum](./scrum.md) | Papéis, backlog, sprints e fluxo de trabalho no Git |
 
 ## Comandos rápidos
 

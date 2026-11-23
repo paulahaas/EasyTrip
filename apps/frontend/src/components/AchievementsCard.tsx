@@ -19,8 +19,8 @@ export function AchievementsCard({ visited, title = 'Conquistas' }: Achievements
   return (
     <div className="et-card p-5 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Award size={16} style={{ color: '#fbbf24' }} />
-        <h3 className="text-lg font-normal" style={{ color: '#f0f2f8' }}>
+        <Award size={16} style={{ color: 'var(--color-warning)' }} />
+        <h3 className="text-lg font-normal" style={{ color: 'var(--color-foreground)' }}>
           {title}
         </h3>
         <span className="et-label ml-auto">
@@ -37,7 +37,7 @@ export function AchievementsCard({ visited, title = 'Conquistas' }: Achievements
               aria-label={`${a.titulo}: ${a.descricao}. ${a.conquistada ? 'Conquistada' : `${a.progresso.atual} de ${a.progresso.meta}`}`}
               className="rounded-lg p-3 flex flex-col items-center text-center gap-1"
               style={{
-                background: a.conquistada ? 'rgba(251,191,36,0.08)' : '#1e2029',
+                background: a.conquistada ? 'rgba(251,191,36,0.08)' : 'var(--color-surface2)',
                 border: `1px solid ${a.conquistada ? 'rgba(251,191,36,0.3)' : 'rgba(255,255,255,0.05)'}`,
               }}
             >
@@ -50,11 +50,11 @@ export function AchievementsCard({ visited, title = 'Conquistas' }: Achievements
               </span>
               <span
                 className="text-xs font-medium leading-tight"
-                style={{ color: a.conquistada ? '#f0f2f8' : '#9ba1b4' }}
+                style={{ color: a.conquistada ? 'var(--color-foreground)' : 'var(--color-text-soft)' }}
               >
                 {a.titulo}
               </span>
-              <span className="text-[10px] leading-tight" style={{ color: '#7c8194' }}>
+              <span className="text-[10px] leading-tight" style={{ color: 'var(--color-muted)' }}>
                 {a.descricao}
               </span>
               {!a.conquistada && (
@@ -64,7 +64,7 @@ export function AchievementsCard({ visited, title = 'Conquistas' }: Achievements
                 >
                   <div
                     className="h-full rounded-full"
-                    style={{ width: `${pct}%`, background: '#4f8ef7' }}
+                    style={{ width: `${pct}%`, background: 'var(--color-accent)' }}
                   />
                 </div>
               )}

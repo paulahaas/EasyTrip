@@ -44,13 +44,13 @@ describe('DestinationService', () => {
       informacoesDoPais: countryInfo,
       cambio: exchange,
     });
-    expect(typeof res.geradoEm).toBe('string');
+    expect(new Date(res.geradoEm).toISOString()).toBe(res.geradoEm);
   });
 
   it('passa capital ao weatherService', async () => {
     const { svc, weatherSvc } = makeService();
     await svc.getDestination('Japan');
-    expect(weatherSvc.getWeather).toHaveBeenCalledWith('Tokyo');
+    expect(weatherSvc.getWeather).toHaveBeenCalledWith('Tokyo', 'JP');
   });
 
   it('passa codigoMoeda ao exchangeService', async () => {

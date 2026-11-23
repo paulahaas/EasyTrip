@@ -9,10 +9,10 @@ export function WishlistSection() {
   return (
     <div className="et-card p-5 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Heart size={16} style={{ color: '#f87171' }} />
+        <Heart size={16} style={{ color: 'var(--color-danger)' }} />
         <h3
           className="text-lg font-normal"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           Favoritos
         </h3>
@@ -20,7 +20,7 @@ export function WishlistSection() {
       </div>
 
       {items.length === 0 ? (
-        <p className="text-sm py-4 text-center" style={{ color: '#7c8194' }}>
+        <p className="text-sm py-4 text-center" style={{ color: 'var(--color-muted)' }}>
           Adicione países favoritos na busca.
         </p>
       ) : (
@@ -29,7 +29,7 @@ export function WishlistSection() {
             <span
               key={item.cca2}
               className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full"
-              style={{ background: '#1e2029', color: '#f0f2f8', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ background: 'var(--color-surface2)', color: 'var(--color-foreground)', border: '1px solid rgba(255,255,255,0.07)' }}
             >
               <CountryFlag cca2={item.cca2} size={12} />
               <span>{countryNamePt(item.cca2, item.countryName)}</span>
@@ -37,9 +37,9 @@ export function WishlistSection() {
                 type="button"
                 onClick={() => remove(item.cca2)}
                 className="cursor-pointer transition-colors ml-0.5"
-                style={{ color: '#4e5468' }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171' }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = '#4e5468' }}
+                style={{ color: 'var(--color-muted2)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-danger)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-muted2)' }}
                 aria-label={`Remover ${countryNamePt(item.cca2, item.countryName)}`}
               >
                 <X size={11} />

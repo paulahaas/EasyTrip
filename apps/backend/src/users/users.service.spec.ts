@@ -13,29 +13,39 @@ function makeUser(overrides: Partial<{ id: string; email: string }> = {}) {
 
 describe('UsersService', () => {
   let prisma: {
-    user: { findUnique: jest.Mock; create: jest.Mock; update: jest.Mock };
+    user: {
+      findUnique: jest.Mock;
+      findFirst: jest.Mock;
+      create: jest.Mock;
+      update: jest.Mock;
+    };
   };
   let svc: UsersService;
 
   beforeEach(() => {
     prisma = {
-      user: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
+      user: {
+        findUnique: jest.fn(),
+        findFirst: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+      },
     };
     svc = new UsersService(prisma as never);
   });
 
-  it('findByEmail delega para prisma com email', async () => {
+  it('findByEmail busca sem diferenciar maiúsculas', async () => {
     const user = makeUser();
-    prisma.user.findUnique.mockResolvedValue(user);
-    const res = await svc.findByEmail('test@example.com');
-    expect(prisma.user.findUnique).toHaveBeenCalledWith({
-      where: { email: 'test@example.com' },
+    prisma.user.findFirst.mockResolvedValue(user);
+    const res = await svc.findByEmail('Test@Example.com');
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { email: { equals: 'Test@Example.com', mode: 'insensitive' } },
     });
     expect(res).toEqual(user);
   });
 
   it('findByEmail retorna null quando não existe', async () => {
-    prisma.user.findUnique.mockResolvedValue(null);
+    prisma.user.findFirst.mockResolvedValue(null);
     expect(await svc.findByEmail('none@x.com')).toBeNull();
   });
 
@@ -55,10 +65,10 @@ describe('UsersService', () => {
   });
 
   it('findByLogin busca por email quando tem @', async () => {
-    prisma.user.findUnique.mockResolvedValue(makeUser());
+    prisma.user.findFirst.mockResolvedValue(makeUser());
     await svc.findByLogin(' test@example.com ');
-    expect(prisma.user.findUnique).toHaveBeenCalledWith({
-      where: { email: 'test@example.com' },
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { email: { equals: 'test@example.com', mode: 'insensitive' } },
     });
   });
 

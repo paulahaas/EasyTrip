@@ -41,6 +41,20 @@ describe('WeatherService', () => {
     expect(opts.params.q).toBe('Brasilia');
   });
 
+  it('envia o código do país junto da cidade', async () => {
+    const { svc, http } = makeService();
+    await svc.getWeather('Kingston', 'jm');
+    const [, opts] = http.get.mock.calls[0];
+    expect(opts.params.q).toBe('Kingston,JM');
+  });
+
+  it('guarda o clima em cache por cidade', async () => {
+    const { svc, http } = makeService();
+    await svc.getWeather('Tokyo', 'JP');
+    await svc.getWeather('Tokyo', 'JP');
+    expect(http.get).toHaveBeenCalledTimes(1);
+  });
+
   it('lança InternalServerErrorException em falha HTTP', async () => {
     const http = {
       get: jest

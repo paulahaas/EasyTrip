@@ -19,10 +19,10 @@ export function VisitedSection() {
   return (
     <div className="et-card p-5 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <TrendingUp size={16} style={{ color: '#34d399' }} />
+        <TrendingUp size={16} style={{ color: 'var(--color-success)' }} />
         <h3
           className="text-lg font-normal"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           Países visitados
         </h3>
@@ -30,12 +30,12 @@ export function VisitedSection() {
       </div>
 
       {items.length === 0 ? (
-        <p className="text-sm py-4 text-center" style={{ color: '#7c8194' }}>
+        <p className="text-sm py-4 text-center" style={{ color: 'var(--color-muted)' }}>
           Marque países visitados na busca para ver suas estatísticas.
         </p>
       ) : (
         <>
-          <p className="text-xs" style={{ color: '#7c8194' }}>
+          <p className="text-xs" style={{ color: 'var(--color-muted)' }}>
             Informe quando foi cada viagem para montar sua linha do tempo.
           </p>
           <ul className="flex flex-col gap-2">
@@ -45,10 +45,10 @@ export function VisitedSection() {
                 <li
                   key={item.cca2}
                   className="flex items-center gap-3 rounded-lg px-3 py-2"
-                  style={{ background: '#1e2029' }}
+                  style={{ background: 'var(--color-surface2)' }}
                 >
                   <CountryFlag cca2={item.cca2} />
-                  <span className="text-sm flex-1 min-w-0 truncate" style={{ color: '#f0f2f8' }}>
+                  <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--color-foreground)' }}>
                     {nome}
                   </span>
                   <input
@@ -59,7 +59,7 @@ export function VisitedSection() {
                     onChange={(e) => changeDate(item.cca2, e.target.value)}
                     className="text-xs rounded-md px-2 py-1 bg-transparent"
                     style={{
-                      color: item.visitedAt ? '#f0f2f8' : '#7c8194',
+                      color: item.visitedAt ? 'var(--color-foreground)' : 'var(--color-muted)',
                       border: '1px solid rgba(255,255,255,0.1)',
                       colorScheme: 'dark',
                     }}
@@ -68,9 +68,9 @@ export function VisitedSection() {
                     type="button"
                     onClick={() => remove(item.cca2)}
                     className="cursor-pointer transition-colors"
-                    style={{ color: '#4e5468' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = '#4e5468' }}
+                    style={{ color: 'var(--color-muted2)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-danger)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-muted2)' }}
                     aria-label={`Remover ${nome}`}
                   >
                     <X size={13} />

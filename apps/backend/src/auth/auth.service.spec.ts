@@ -12,7 +12,13 @@ describe('AuthService', () => {
   let users: jest.Mocked<UsersService>;
   let service: AuthService;
 
-  function userRow(overrides: Partial<{ id: string; username: string; passwordHash: string }> = {}) {
+  function userRow(
+    overrides: Partial<{
+      id: string;
+      username: string;
+      passwordHash: string;
+    }> = {},
+  ) {
     return {
       id: 'u1',
       email: 'a@b.com',
@@ -47,7 +53,6 @@ describe('AuthService', () => {
 
     const res = await service.register('a@b.com', 'maria', 'secret123');
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(users.create).toHaveBeenCalledTimes(1);
     const [, username, passwordHash] = users.create.mock.calls[0];
     expect(username).toBe('maria');
@@ -133,7 +138,9 @@ describe('AuthService', () => {
 
   it('updateUsername: troca o nome quando está livre', async () => {
     users.findByUsername.mockResolvedValueOnce(null);
-    users.updateUsername.mockResolvedValueOnce(userRow({ username: 'novo.nome' }));
+    users.updateUsername.mockResolvedValueOnce(
+      userRow({ username: 'novo.nome' }),
+    );
     const res = await service.updateUsername('u1', 'novo.nome');
     expect(users.updateUsername).toHaveBeenCalledWith('u1', 'novo.nome');
     expect(res.username).toBe('novo.nome');

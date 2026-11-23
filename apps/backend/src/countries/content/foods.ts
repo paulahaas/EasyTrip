@@ -3,20 +3,35 @@
 
 import type { TypicalFood } from '@easytrip/shared';
 
-const f = (nome: string, descricao: string): TypicalFood => ({ nome, descricao });
+const f = (nome: string, descricao: string): TypicalFood => ({
+  nome,
+  descricao,
+});
 
 export const TYPICAL_FOODS: Record<string, TypicalFood[]> = {
   // ── América do Sul ──
   BR: [
-    f('Feijoada', 'Feijão-preto cozido com carnes de porco, servido com arroz, couve e farofa'),
-    f('Coxinha', 'Salgado frito de massa de batata recheado com frango desfiado'),
+    f(
+      'Feijoada',
+      'Feijão-preto cozido com carnes de porco, servido com arroz, couve e farofa',
+    ),
+    f(
+      'Coxinha',
+      'Salgado frito de massa de batata recheado com frango desfiado',
+    ),
     f('Pão de queijo', 'Bolinho de polvilho e queijo, típico de Minas Gerais'),
-    f('Brigadeiro', 'Doce de leite condensado com chocolate, presente em toda festa'),
+    f(
+      'Brigadeiro',
+      'Doce de leite condensado com chocolate, presente em toda festa',
+    ),
     f('Guaraná', 'Refrigerante feito com a fruta amazônica de mesmo nome'),
   ],
   AR: [
     f('Asado', 'Churrasco argentino de cortes bovinos assados na parrilla'),
-    f('Empanada', 'Pastel assado ou frito recheado com carne, frango ou queijo'),
+    f(
+      'Empanada',
+      'Pastel assado ou frito recheado com carne, frango ou queijo',
+    ),
     f('Doce de leite', 'Usado em alfajores, panquecas e sobremesas'),
     f('Mate', 'Infusão de erva-mate tomada na cuia e compartilhada'),
   ],
@@ -38,7 +53,10 @@ export const TYPICAL_FOODS: Record<string, TypicalFood[]> = {
     f('Pisco sour', 'Coquetel nacional de pisco, limão e clara de ovo'),
   ],
   CO: [
-    f('Bandeja paisa', 'Prato farto com feijão, arroz, carne moída, torresmo, ovo e banana'),
+    f(
+      'Bandeja paisa',
+      'Prato farto com feijão, arroz, carne moída, torresmo, ovo e banana',
+    ),
     f('Arepa', 'Pão de milho grelhado, comido com queijo ou recheios'),
     f('Ajiaco', 'Sopa de frango com três tipos de batata, típica de Bogotá'),
   ],
@@ -79,7 +97,10 @@ export const TYPICAL_FOODS: Record<string, TypicalFood[]> = {
     f('Tacos', 'Tortilhas de milho com carne, cebola, coentro e molho'),
     f('Guacamole', 'Pasta de abacate com tomate, cebola e limão'),
     f('Mole', 'Molho complexo com chocolate e pimentas, servido com frango'),
-    f('Chilaquiles', 'Tortilhas fritas cobertas com molho, típicas do café da manhã'),
+    f(
+      'Chilaquiles',
+      'Tortilhas fritas cobertas com molho, típicas do café da manhã',
+    ),
   ],
   CU: [
     f('Ropa vieja', 'Carne desfiada cozida em molho de tomate'),
@@ -240,14 +261,20 @@ export const TYPICAL_FOODS: Record<string, TypicalFood[]> = {
     f('Sushi', 'Arroz temperado com peixe cru e outros ingredientes'),
     f('Lámen', 'Macarrão em caldo, com versões de shoyu, missô e porco'),
     f('Tempurá', 'Legumes e frutos do mar empanados e fritos'),
-    f('Onigiri', 'Bolinho de arroz com recheio, vendido em lojas de conveniência'),
+    f(
+      'Onigiri',
+      'Bolinho de arroz com recheio, vendido em lojas de conveniência',
+    ),
     f('Matchá', 'Chá verde em pó usado na cerimônia do chá e em doces'),
   ],
   CN: [
     f('Pato laqueado', 'Pato assado de pele crocante, especialidade de Pequim'),
     f('Dim sum', 'Porções pequenas como bolinhos no vapor'),
     f('Xiaolongbao', 'Pastéis no vapor com caldo dentro'),
-    f('Hot pot', 'Panela de caldo fervente onde se cozinham ingredientes à mesa'),
+    f(
+      'Hot pot',
+      'Panela de caldo fervente onde se cozinham ingredientes à mesa',
+    ),
   ],
   KR: [
     f('Kimchi', 'Acelga fermentada com pimenta, presente em toda refeição'),
@@ -352,9 +379,7 @@ export const TYPICAL_FOODS: Record<string, TypicalFood[]> = {
     f('Moamba de galinha', 'Frango cozido em óleo de palma'),
     f('Funge', 'Massa de mandioca ou milho que acompanha os pratos'),
   ],
-  CV: [
-    f('Cachupa', 'Ensopado de milho, feijão e carnes ou peixe'),
-  ],
+  CV: [f('Cachupa', 'Ensopado de milho, feijão e carnes ou peixe')],
   MZ: [
     f('Matapa', 'Folhas de mandioca com amendoim e coco'),
     f('Frango à zambeziana', 'Frango grelhado com leite de coco'),
@@ -379,7 +404,5 @@ export const TYPICAL_FOODS: Record<string, TypicalFood[]> = {
     f('Pavlova', 'Merengue com frutas, disputado com a Austrália'),
     f('Sorvete hokey pokey', 'Sorvete de baunilha com pedaços de caramelo'),
   ],
-  FJ: [
-    f('Kokoda', 'Peixe cru marinado em limão e leite de coco'),
-  ],
+  FJ: [f('Kokoda', 'Peixe cru marinado em limão e leite de coco')],
 };

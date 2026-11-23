@@ -165,13 +165,14 @@ const country = await this.countries.getByName(query);
 
 ### Guards e decorators
 
-- `@UseGuards(JwtAuthGuard)` em controllers protegidos
-- `@Roles('ADMIN')` para endpoints de administrador
+- `@Roles()` em controllers/rotas protegidos (valida o JWT e aplica o `RolesGuard`)
+- `@Roles('ADMIN')` para endpoints de administrador (nenhum existe hoje)
+- `@UseGuards(LoginThrottleGuard)` em rotas de login/cadastro
 - `@CurrentUser()` para injetar o usuário autenticado no handler
 
 ```ts
 @Get('me')
-@UseGuards(JwtAuthGuard)
+@Roles()
 async me(@CurrentUser() user: AuthUser) {
   return this.authService.me(user.id);
 }

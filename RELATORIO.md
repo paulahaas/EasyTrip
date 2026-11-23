@@ -136,7 +136,7 @@ O site está publicado no Render com o banco no Neon, os dois no plano gratuito,
 | Publicação | Não existia | [Render](https://render.com) via `render.yaml`: cada push no GitHub publica sozinho |
 | Migrações | Manuais | Rodam a cada início do servidor, pela conexão direta do Neon; o app usa a conexão com pooling |
 
-No plano gratuito, o site dorme depois de 15 minutos sem visitas e leva cerca de 1 minuto para acordar. A cada início, o usuário de demonstração (`demo` / `demo1234`) é recriado e o histórico dele volta ao padrão.
+No plano gratuito, o site dorme depois de 15 minutos sem visitas e leva cerca de 1 minuto para acordar. O usuário de demonstração (`demo` / `demo1234`) só é criado fora de produção, já que a senha dele é pública.
 
 O README ganhou as instruções de rodar sem Docker e de publicar no Render com o Neon.
 

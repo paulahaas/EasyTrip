@@ -33,7 +33,7 @@ export class StatsService {
     const perContinent: StatsPerContinent[] = CONTINENT_KEYS.map((c) => {
       const visited = countByContinent.get(c) ?? 0;
       const total = CONTINENT_TOTALS[c];
-      const percent = Math.round((visited / total) * 1000) / 10;
+      const percent = Math.min(100, Math.round((visited / total) * 1000) / 10);
       return { continent: c, visited, total, percent };
     });
 

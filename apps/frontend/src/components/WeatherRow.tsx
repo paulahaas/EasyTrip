@@ -31,15 +31,15 @@ export function WeatherRow({ clima, capital }: WeatherRowProps) {
   return (
     <div
       className="rounded-lg p-4 flex items-center gap-4"
-      style={{ background: '#1e2029' }}
+      style={{ background: 'var(--color-surface2)' }}
     >
       <span className="text-3xl leading-none shrink-0">{getWeatherEmoji(clima.descricao)}</span>
       <div className="flex-1 min-w-0">
         <p className="et-label mb-1">Clima em {capital}</p>
-        <p className="text-sm font-semibold" style={{ color: '#f0f2f8' }}>
+        <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>
           {clima.temperatura} · {clima.descricao}
         </p>
-        <p className="text-xs mt-0.5" style={{ color: '#7c8194' }}>
+        <p className="text-xs mt-0.5" style={{ color: 'var(--color-muted)' }}>
           Sensação {clima.sensacao} · Umidade {clima.umidade}
         </p>
       </div>

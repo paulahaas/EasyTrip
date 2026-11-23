@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { RecommendationItem, RecommendationReason } from '@easytrip/shared';
 import { CountriesService, CountryMeta } from '../countries/countries.service';
+import { continentKeyFor } from '../countries/country-extras';
 import { PrismaService } from '../prisma/prisma.service';
 
 const RECENT_SEARCHES = 5;
 const MAX_RESULTS = 8;
+const WEIGHT_BORDER = 2;
 const WEIGHT_SUBREGION = 1;
 
 interface Tally {
   meta: CountryMeta;
   score: number;
+  reason: RecommendationReason;
 }
 
 @Injectable()
@@ -35,12 +38,19 @@ export class RecommendationsService {
 
     for (const entry of recent) {
       const origin = this.countries.getByCca2(entry.cca2);
-      if (!origin?.subregion) continue;
+      if (!origin) continue;
 
-      const siblings = this.countries.getBySubregion(origin.subregion);
-      for (const sib of siblings) {
+      // Vizinhos de fronteira pesam mais que a mesma sub-região.
+      for (const cca3 of origin.borders ?? []) {
+        const neighbor = this.countries.getByCca3(cca3);
+        if (!neighbor || excluded.has(neighbor.cca2)) continue;
+        this.bump(tally, neighbor, WEIGHT_BORDER, 'border');
+      }
+
+      if (!origin.subregion) continue;
+      for (const sib of this.countries.getBySubregion(origin.subregion)) {
         if (sib.cca2 === origin.cca2 || excluded.has(sib.cca2)) continue;
-        this.bump(tally, sib, WEIGHT_SUBREGION);
+        this.bump(tally, sib, WEIGHT_SUBREGION, 'subregion');
       }
     }
 
@@ -51,8 +61,9 @@ export class RecommendationsService {
         cca2: t.meta.cca2,
         cca3: t.meta.cca3,
         countryName: t.meta.name,
-        continent: t.meta.continent,
-        reason: 'subregion' as RecommendationReason,
+        // Mesma chave de continente de favoritos/visitados (Américas separadas).
+        continent: continentKeyFor(t.meta.cca2) ?? t.meta.continent,
+        reason: t.reason,
         score: t.score,
       }));
   }
@@ -78,12 +89,18 @@ export class RecommendationsService {
     return out;
   }
 
-  private bump(tally: Map<string, Tally>, meta: CountryMeta, weight: number) {
+  private bump(
+    tally: Map<string, Tally>,
+    meta: CountryMeta,
+    weight: number,
+    reason: RecommendationReason,
+  ) {
     const cur = tally.get(meta.cca2);
     if (cur) {
       cur.score += weight;
+      if (reason === 'border') cur.reason = 'border';
     } else {
-      tally.set(meta.cca2, { meta, score: weight });
+      tally.set(meta.cca2, { meta, score: weight, reason });
     }
   }
 }

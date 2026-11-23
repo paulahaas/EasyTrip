@@ -6,8 +6,11 @@ import { PrismaService } from '../prisma/prisma.service';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** Email não diferencia maiúsculas (contas antigas podem ter sido salvas com maiúsculas). */
   findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+    return this.prisma.user.findFirst({
+      where: { email: { equals: email.trim(), mode: 'insensitive' } },
+    });
   }
 
   findByUsername(username: string): Promise<User | null> {
@@ -27,7 +30,9 @@ export class UsersService {
   }
 
   create(email: string, username: string, passwordHash: string): Promise<User> {
-    return this.prisma.user.create({ data: { email, username, passwordHash } });
+    return this.prisma.user.create({
+      data: { email: email.trim().toLowerCase(), username, passwordHash },
+    });
   }
 
   updateUsername(id: string, username: string): Promise<User> {

@@ -17,9 +17,9 @@ export function SearchHistory({ history, onSelect, onClear }: SearchHistoryProps
           type="button"
           onClick={onClear}
           className="flex items-center gap-1 text-[11px] transition-colors cursor-pointer"
-          style={{ color: '#4e5468' }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171' }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = '#4e5468' }}
+          style={{ color: 'var(--color-muted2)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-danger)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-muted2)' }}
         >
           <X size={11} /> Limpar
         </button>

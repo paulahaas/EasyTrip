@@ -18,9 +18,9 @@ export function RootLayout() {
             theme="dark"
             toastOptions={{
               style: {
-                background: '#16181f',
+                background: 'var(--color-surface)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f0f2f8',
+                color: 'var(--color-foreground)',
               },
             }}
           />

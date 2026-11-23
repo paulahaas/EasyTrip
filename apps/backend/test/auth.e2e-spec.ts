@@ -52,7 +52,11 @@ describe('Auth (e2e)', () => {
   it('login com nome de usuário (sem diferenciar maiúsculas)', async () => {
     await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: 'carol@ex.com', username: 'carol.s', password: 'secret123' })
+      .send({
+        email: 'carol@ex.com',
+        username: 'carol.s',
+        password: 'secret123',
+      })
       .expect(201);
     const login = await request(app.getHttpServer())
       .post('/api/auth/login')
@@ -118,7 +122,11 @@ describe('Auth (e2e)', () => {
   it('PATCH /me troca o nome de usuário e recusa nome em uso', async () => {
     await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: 'ocupado@ex.com', username: 'ocupado', password: 'secret123' })
+      .send({
+        email: 'ocupado@ex.com',
+        username: 'ocupado',
+        password: 'secret123',
+      })
       .expect(201);
     const reg = await request(app.getHttpServer())
       .post('/api/auth/register')

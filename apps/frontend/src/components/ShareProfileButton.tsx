@@ -39,7 +39,7 @@ export function ShareProfileButton({ userId }: ShareProfileButtonProps) {
       style={{
         background: 'rgba(79,142,247,0.08)',
         borderColor: 'rgba(79,142,247,0.25)',
-        color: '#7dd3fc',
+        color: 'var(--color-accent2)',
       }}
     >
       {copied ? <Copy size={13} /> : <Share2 size={13} />}

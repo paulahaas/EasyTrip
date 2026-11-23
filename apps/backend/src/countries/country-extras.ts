@@ -6,22 +6,50 @@ import type { ContinentKey, TimezoneInfo } from '@easytrip/shared';
 // Informações extras de cada país, todas calculadas offline.
 
 const REGION_BY_CCA2 = new Map(
-  worldCountries.map((c) => [c.cca2, { region: c.region, subregion: c.subregion }]),
+  worldCountries.map((c) => [
+    c.cca2,
+    { region: c.region, subregion: c.subregion, name: c.name.common },
+  ]),
 );
+
+/** Nome canônico (inglês) do país, ou null se o código não existe. */
+export function countryNameFor(cca2: string): string | null {
+  return REGION_BY_CCA2.get(cca2.toUpperCase())?.name ?? null;
+}
 
 /**
  * Continente usado por favoritos, visitados e estatísticas. O world-countries
  * agrupa tudo como "Americas"; aqui separamos América do Sul e do Norte
  * (Central e Caribe contam como América do Norte).
  */
-export function continentKeyFor(cca2: string, fallback?: string): ContinentKey | null {
+export function continentKeyFor(
+  cca2: string,
+  fallback?: string,
+): ContinentKey | null {
   const info = REGION_BY_CCA2.get(cca2.toUpperCase());
   if (!info) return fallback && isContinentKey(fallback) ? fallback : null;
   if (info.region === 'Americas') {
-    return info.subregion === 'South America' ? 'South America' : 'North America';
+    return info.subregion === 'South America'
+      ? 'South America'
+      : 'North America';
   }
   if (info.region === 'Antarctic') return 'Antarctica';
   return isContinentKey(info.region) ? info.region : null;
+}
+
+/**
+ * País como favoritos e visitados guardam: nome e continente vêm da base,
+ * nunca do cliente. Null se o código não for um país conhecido.
+ */
+export function resolveSavedCountry(
+  cca2: string,
+): { cca2: string; countryName: string; continent: ContinentKey } | null {
+  const code = cca2.toUpperCase();
+  const name = countryNameFor(code);
+  const continent = continentKeyFor(code);
+  return name && continent
+    ? { cca2: code, countryName: name, continent }
+    : null;
 }
 
 const languageNames = new Intl.DisplayNames(['pt-BR'], { type: 'language' });
@@ -65,7 +93,10 @@ export function continentNamePt(continent: string, subregion: string): string {
 }
 
 /** Código de discagem internacional (ex.: Brasil "+55", EUA "+1"). */
-export function callingCode(idd?: { root?: string; suffixes?: string[] }): string | null {
+export function callingCode(idd?: {
+  root?: string;
+  suffixes?: string[];
+}): string | null {
   if (!idd?.root) return null;
   const suffixes = idd.suffixes ?? [];
   return suffixes.length === 1 ? `${idd.root}${suffixes[0]}` : idd.root;
@@ -73,12 +104,81 @@ export function callingCode(idd?: { root?: string; suffixes?: string[] }): strin
 
 // Países e territórios onde se dirige pela esquerda (ISO alpha-2).
 const LEFT_HAND_TRAFFIC = new Set([
-  'AG', 'AI', 'AU', 'BB', 'BD', 'BM', 'BN', 'BS', 'BT', 'BW', 'CC', 'CK', 'CX',
-  'CY', 'DM', 'FJ', 'FK', 'GB', 'GD', 'GG', 'GY', 'HK', 'ID', 'IE', 'IM', 'IN',
-  'JE', 'JM', 'JP', 'KE', 'KI', 'KN', 'KY', 'LC', 'LK', 'LS', 'MO', 'MS', 'MT',
-  'MU', 'MV', 'MW', 'MY', 'MZ', 'NA', 'NF', 'NP', 'NR', 'NU', 'NZ', 'PG', 'PK',
-  'PN', 'SB', 'SC', 'SG', 'SH', 'SR', 'SZ', 'TC', 'TH', 'TK', 'TL', 'TO', 'TT',
-  'TV', 'TZ', 'UG', 'VC', 'VG', 'VI', 'WS', 'ZA', 'ZM', 'ZW',
+  'AG',
+  'AI',
+  'AU',
+  'BB',
+  'BD',
+  'BM',
+  'BN',
+  'BS',
+  'BT',
+  'BW',
+  'CC',
+  'CK',
+  'CX',
+  'CY',
+  'DM',
+  'FJ',
+  'FK',
+  'GB',
+  'GD',
+  'GG',
+  'GY',
+  'HK',
+  'ID',
+  'IE',
+  'IM',
+  'IN',
+  'JE',
+  'JM',
+  'JP',
+  'KE',
+  'KI',
+  'KN',
+  'KY',
+  'LC',
+  'LK',
+  'LS',
+  'MO',
+  'MS',
+  'MT',
+  'MU',
+  'MV',
+  'MW',
+  'MY',
+  'MZ',
+  'NA',
+  'NF',
+  'NP',
+  'NR',
+  'NU',
+  'NZ',
+  'PG',
+  'PK',
+  'PN',
+  'SB',
+  'SC',
+  'SG',
+  'SH',
+  'SR',
+  'SZ',
+  'TC',
+  'TH',
+  'TK',
+  'TL',
+  'TO',
+  'TT',
+  'TV',
+  'TZ',
+  'UG',
+  'VC',
+  'VG',
+  'VI',
+  'WS',
+  'ZA',
+  'ZM',
+  'ZW',
 ]);
 
 export function drivingSide(cca2: string): 'esquerda' | 'direita' {
@@ -116,7 +216,10 @@ function offsetLabel(minutes: number): string {
   return `UTC${sign}${h}:${m}`;
 }
 
-export function timezoneInfo(cca2: string, capital: string): TimezoneInfo | null {
+export function timezoneInfo(
+  cca2: string,
+  capital: string,
+): TimezoneInfo | null {
   const country = ct.getCountry(cca2.toUpperCase());
   if (!country || country.timezones.length === 0) return null;
 

@@ -2,7 +2,9 @@
 
 Plataforma de exploração de destinos que reúne clima, câmbio e informações de países em um só lugar, com busca semântica em linguagem natural.
 
-**Site no ar:** https://easytrip-e4xg.onrender.com (a primeira visita pode levar ~1 min, veja [Deploy](#deploy-render--neon-grátis))
+**Site no ar:** https://easytrip-e4xg.onrender.com (a primeira visita pode levar ~1 min, veja [Deploy](#deploy-render--neon-grátis)) · a tela inicial é a landing page; a busca fica em `/buscar`
+
+**Documentação:** [diagramas do sistema](docs/diagramas.md) · [Scrum e sprints](docs/scrum.md) · [API](docs/api.md) · [arquitetura](docs/architecture.md) · [testes](docs/testing.md)
 
 ## Funcionalidades
 
@@ -111,7 +113,7 @@ No boot o container executa `prisma generate`, `prisma migrate deploy` e `nest s
 ```bash
 cd apps/backend
 npx prisma migrate deploy
-npx prisma db seed        # cria demo@easytrip.test / demo1234
+npx prisma db seed        # cria demo@easytrip.test / demo1234 (só fora de produção)
 cd ../..
 ```
 
@@ -136,7 +138,8 @@ O backend serve a API (`/api`) e o frontend compilado (`/`) no mesmo serviço, c
 
 1. Crie um banco PostgreSQL grátis no [Neon](https://neon.tech). Pegue as duas connection strings: a **com pooling** (host com `-pooler`) e a **direta** (sem `-pooler`). Com o [Neon CLI](https://www.npmjs.com/package/neon), `neon link --project-id <id> -y` grava as duas em `.env.local` como `DATABASE_URL` e `DATABASE_URL_UNPOOLED`.
 2. No [Render](https://render.com): **New → Blueprint**, escolha este repositório e preencha `DATABASE_URL` (com pooling, usada pelo app) e `DATABASE_URL_UNPOOLED` (direta, usada só nas migrations). As chaves de clima e câmbio são opcionais.
-3. A cada inicialização o serviço aplica as migrations e recria o usuário demo (`demo@easytrip.test` / `demo1234`).
+3. A cada inicialização o serviço aplica as migrations. O usuário demo **não** é criado em produção (a senha dele é pública). Para criá-lo de propósito, defina `SEED_DEMO=true` e rode `npx prisma db seed`. Se o banco já tem o demo de deploys anteriores, apague esse usuário.
+4. `JWT_SECRET` é obrigatório; em produção precisa ter 32+ caracteres (o blueprint gera um).
 
 No plano grátis o serviço "dorme" depois de 15 min sem acesso; a primeira visita seguinte demora ~1 min para acordar.
 

@@ -84,7 +84,12 @@ export class AuthService {
         err instanceof Prisma.PrismaClientKnownRequestError &&
         err.code === 'P2002'
       ) {
-        const target = String(err.meta?.target ?? '');
+        const rawTarget: unknown = err.meta?.target;
+        const target = Array.isArray(rawTarget)
+          ? rawTarget.join(',')
+          : typeof rawTarget === 'string'
+            ? rawTarget
+            : '';
         throw new ConflictException(
           target.includes('email') ? 'Email já cadastrado' : USERNAME_TAKEN,
         );

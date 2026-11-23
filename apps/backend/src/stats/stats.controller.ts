@@ -23,7 +23,7 @@ export class StatsController {
   @ApiOperation({
     summary: 'Estatísticas de países visitados por continente',
     description:
-      'Para cada continente retorna `visited`, `total` (snapshot RestCountries) e `percent` (1 casa decimal).',
+      'Para cada continente retorna `visited`, `total` (países e territórios do world-countries) e `percent` (1 casa decimal, máx. 100).',
   })
   @ApiOkResponse({ type: StatsResponseDto })
   continents(@CurrentUser() user: AuthUser): Promise<StatsResponse> {

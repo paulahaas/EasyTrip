@@ -98,6 +98,10 @@ function build(opts: {
     getBySubregion: jest.fn((subregion: string) =>
       Object.values(META).filter((m) => m.subregion === subregion),
     ),
+    getByCca3: jest.fn(
+      (cca3: string) =>
+        Object.values(META).find((m) => m.cca3 === cca3) ?? null,
+    ),
   };
 
   return new RecommendationsService(prisma as never, countries as never);
@@ -203,5 +207,47 @@ describe('RecommendationsService', () => {
       reason: 'subregion',
       score: expect.any(Number),
     });
+  });
+
+  it('vizinho de fronteira pesa 2 e vem com reason border', async () => {
+    const prisma = {
+      searchHistory: {
+        findMany: jest
+          .fn()
+          .mockResolvedValue([{ cca2: 'BR', createdAt: new Date() }]),
+      },
+      wishlist: { findMany: jest.fn().mockResolvedValue([]) },
+      visitedCountry: { findMany: jest.fn().mockResolvedValue([]) },
+    };
+    const br = {
+      cca2: 'BR',
+      cca3: 'BRA',
+      name: 'Brazil',
+      continent: 'Americas',
+      subregion: 'South America',
+      borders: ['ARG'],
+    };
+    const ar = {
+      ...br,
+      cca2: 'AR',
+      cca3: 'ARG',
+      name: 'Argentina',
+      borders: [],
+    };
+    const cl = { ...br, cca2: 'CL', cca3: 'CHL', name: 'Chile', borders: [] };
+    const countries = {
+      getByCca2: jest.fn(() => br),
+      getByCca3: jest.fn((c: string) => (c === 'ARG' ? ar : null)),
+      getBySubregion: jest.fn(() => [br, ar, cl]),
+    };
+    const svc = new RecommendationsService(prisma as never, countries as never);
+    const res = await svc.forUser('u1');
+    expect(res[0]).toMatchObject({
+      cca2: 'AR',
+      reason: 'border',
+      score: 3,
+      continent: 'South America',
+    });
+    expect(res[1]).toMatchObject({ cca2: 'CL', reason: 'subregion', score: 1 });
   });
 });

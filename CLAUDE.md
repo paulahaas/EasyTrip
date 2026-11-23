@@ -45,32 +45,40 @@ npm run test         # roda todos os testes
 ### Módulos principais
 ```
 src/
-├── auth/                  JWT + guards + roles
+├── auth/                  JWT + RolesGuard + LoginThrottleGuard
 ├── countries/             CountriesService (world-countries, offline)
+│   ├── country-extras.ts  Continente (Américas Norte/Sul), fuso, DDI, idioma PT
+│   ├── content/           Capitais, comidas e regras curadas
+│   └── population.json    População (Banco Mundial, scripts/update-population.mjs)
 ├── destination/           Agrega país + clima + câmbio
 ├── recommendations/       Recomendações por sub-região
 ├── semantic-search/       FTS com MiniSearch + keyword-map
 │   ├── country-profile.ts Constrói texto indexável por país
-│   ├── full-text-search.service.ts  Índice MiniSearch (lazy build)
+│   ├── full-text-search.service.ts  Índice MiniSearch (montado no onModuleInit)
 │   ├── keyword-map.ts     Tags semânticas + filtros estruturados
 │   └── semantic-search.service.ts   Orquestra FTS + tags
-├── history/               Histórico de pesquisas (server-side)
+├── history/               Histórico de países abertos (server-side, máx. 8)
 ├── wishlist/              Países favoritos
-└── visited/               Países visitados
+├── visited/               Países visitados (+ data da viagem)
+├── stats/                 Estatísticas por continente
+└── users/                 Perfil compartilhável (/users/:id/profile)
 ```
 
 ### CountriesService — regras
 - Dados carregados de `world-countries` no startup (síncrono, sem HTTP)
-- `loadAll()` é no-op (mantido para compatibilidade com callers existentes)
 - `flag` gerado como `https://flagcdn.com/${cca2.toLowerCase()}.svg`
-- `CountryMeta` inclui: `cca2, cca3, name, continent, subregion, capital, latlng, landlocked, languages[], currencies[], currencyDetails[], flag, altSpellings[]`
+- `CountryMeta` inclui: `cca2, cca3, name, namePt, continent, subregion, capital, latlng, landlocked, languages[], languageCodes[], currencies[], currencyDetails[], flag, altSpellings[], idd, borders[]`
+- `getByName` ignora acentos e aceita nome EN/PT, sigla e grafia alternativa; busca parcial só com 4+ letras e resultado único
+- `CountryMeta.continent` é a região do world-countries ("Americas"). Para favoritos, visitados, estatísticas e recomendações use `continentKeyFor(cca2)` (separa América do Norte/Sul)
+- Favoritos/visitados guardam nome e continente calculados pelo `cca2` (`resolveSavedCountry`), nunca o que o cliente envia
+- `CONTINENT_TOTALS` (shared) tem de bater com o world-countries — há teste em `country-extras.spec.ts`
 - **NÃO usar** a API RestCountries (v3.1 depreciada, v5 paga)
 
 ### Busca semântica — como funciona
 1. `FullTextSearchService.buildIndex()`: cria perfil textual por país via `buildProfile()`
 2. `buildProfile()` inclui: nome, `altSpellings` (ex: "Brasil" para Brazil), continente, sub-região, idiomas, moedas, tokens de clima/hemisfério, keywords do `keyword-map` que o país satisfaz
-3. Query normalizada (NFD + strip diacríticos) → MiniSearch com `prefix: true, fuzzy adaptativo`
-4. Score final = `bm25 + Σ(scores das keyword-map entries que batem)`
+3. Query sem stopwords e normalizada (NFD + strip diacríticos) → MiniSearch com `prefix: true, fuzzy adaptativo`
+4. Score final = `bm25 + Σ(scores das keyword-map entries citadas na query que o país satisfaz)`; com vários critérios, só países que atendem a todos (salvo "ou"/"or")
 5. Retorna top 15 ordenado por score desc
 
 ### Padrões NestJS
@@ -79,6 +87,8 @@ src/
 - Guards globais com `@Roles()` nos controllers protegidos
 - Sem `any` explícito — usar tipos do Prisma ou interfaces próprias
 - Erros: `NotFoundException`, `UnauthorizedException` do NestJS
+- `noImplicitAny` e `@typescript-eslint/no-explicit-any` ativos
+- `JWT_SECRET` é obrigatório no boot; o seed do usuário demo não roda com `NODE_ENV=production`
 
 ---
 
@@ -200,7 +210,15 @@ export function MyComponent({ prop }: Props) {
 export default function MyComponent() { ... }
 ```
 
-#### Hooks de data
+##### Rotas
+- `/` landing page (tela inicial) · `/buscar` busca e ficha do país · `/conheca` redireciona para `/`
+- `/login`, `/register`, `/about`, `/profile`, `/profile/$id`; qualquer outra mostra a página 404
+
+#### Mapa
+- `WorldMapCard` casa países pelo código numérico (`geo.id` = ccn3, ver `lib/ccn3.ts`), não pelo nome
+- Cores de continente em `lib/palette.ts` (tokens `--color-continent-*`)
+
+### Hooks de data
 ```tsx
 // Sempre via react-query através dos custom hooks
 const { data, loading, error } = useDestination()
@@ -208,6 +226,9 @@ const { data, loading, error } = useDestination()
 // Mutations via hook — nunca chamar apiClient direto no componente
 const { add, remove } = useWishlist()
 ```
+
+- Buscas (`useDestination`, `useSemanticSearch`) são `useQuery` por termo (sem corrida entre respostas) e passam pelo `apiClient`
+- O histórico guarda só países abertos (nome canônico em inglês); texto livre vai só para a busca semântica
 
 #### Skeleton loading
 - Usar `DestinationSkeleton` ou classe `.et-shimmer` para loading states
@@ -225,7 +246,7 @@ const { add, remove } = useWishlist()
 ### Auth flow
 - Token JWT em `localStorage` via `apiClient.ts`
 - `AuthContext` hidrata no mount
-- 401 → logout automático + redirect `/login`
+- 401 → logout automático + limpa o cache do react-query; erro de rede/5xx no `/auth/me` **não** desloga
 - Histórico local (guest) migra para server no login
 - Guards de rota: `if (!isAuthenticated) return <Navigate to="/login" />`
 
@@ -252,8 +273,12 @@ const { add, remove } = useWishlist()
 | GET/POST/DELETE | `/wishlist` | JWT | Favoritos |
 | GET/POST/DELETE | `/visited` | JWT | Visitados |
 | GET/POST/DELETE | `/history` | JWT | Histórico |
-| GET | `/profile/stats` | JWT | Estatísticas |
-| GET | `/profile/:id/public` | JWT | Perfil público |
+| GET/PATCH | `/auth/me` | JWT | Usuário logado / trocar nome de usuário |
+| PATCH | `/visited/:cca2` | JWT | Data da viagem |
+| GET | `/stats/continents` | JWT | Estatísticas |
+| GET | `/users/:id/profile` | JWT | Perfil compartilhável |
+
+Todas as rotas têm o prefixo `/api` (ex.: `/api/auth/login`). Swagger em `/api/docs`.
 
 ---
 
@@ -278,4 +303,5 @@ Seguir Conventional Commits (via `/caveman-commit`):
 - ❌ `export default` em componentes (exceto routes)
 - ❌ Chamar `apiClient` diretamente em componentes — usar custom hooks
 - ❌ Duplicar tipos do `@easytrip/shared`
-- ❌ `population` ou `area` no `CountryMeta` (não disponível no `world-countries`)
+- ❌ `population` no `CountryMeta` — a população vem de `countries/population.json` (Banco Mundial), lida no `CountryService`
+- ❌ Casar país por nome entre bases diferentes — use códigos (cca2/cca3/ccn3)

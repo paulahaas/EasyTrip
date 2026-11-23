@@ -4,6 +4,18 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
+  // O usuário demo tem senha pública (README). Em produção só é criado se
+  // SEED_DEMO=true for definido de propósito.
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env.SEED_DEMO !== 'true'
+  ) {
+    console.log(
+      'seed ignorado em produção (defina SEED_DEMO=true para criar o demo)',
+    );
+    return;
+  }
+
   const email = 'demo@easytrip.test';
   const passwordHash = await bcrypt.hash('demo1234', 10);
 
