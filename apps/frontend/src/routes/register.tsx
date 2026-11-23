@@ -1,9 +1,13 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, Navigate, useNavigate } from '@tanstack/react-router'
 import { Plane } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
 import { RegisterForm } from '@/components/RegisterForm'
 
 export function RegisterPage() {
   const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
+
+  if (isAuthenticated) return <Navigate to="/" />
 
   return (
     <div className="min-h-[calc(100vh-56px)] flex items-center justify-center px-4 py-12">

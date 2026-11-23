@@ -5,7 +5,8 @@ describe('countryMatch', () => {
   it('normaliza aliases conhecidos', () => {
     expect(normalizeCountryName('usa')).toBe('United States of America')
     expect(normalizeCountryName('UK')).toBe('United Kingdom')
-    expect(normalizeCountryName('Czechia')).toBe('Czech Republic')
+    // world-atlas usa "Czechia": não pode virar "Czech Republic"
+    expect(normalizeCountryName('Czechia')).toBe('Czechia')
   })
 
   it('sameCountry é case-insensitive', () => {

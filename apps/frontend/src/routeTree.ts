@@ -4,7 +4,9 @@ import {
   createRouter,
   lazyRouteComponent,
 } from '@tanstack/react-router'
+import { NotFound } from './components/NotFound'
 import { RootLayout } from './components/RootLayout'
+import { AboutPage } from './routes/about'
 import { HomePage } from './routes/index'
 import { LoginPage } from './routes/login'
 import { RegisterPage } from './routes/register'
@@ -18,7 +20,7 @@ const PublicProfilePage = lazyRouteComponent(
   'PublicProfilePage',
 )
 
-const rootRoute = createRootRoute({ component: RootLayout })
+const rootRoute = createRootRoute({ component: RootLayout, notFoundComponent: NotFound })
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -38,6 +40,12 @@ const registerRoute = createRoute({
   component: RegisterPage,
 })
 
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: AboutPage,
+})
+
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
@@ -54,6 +62,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
+  aboutRoute,
   profileRoute,
   publicProfileRoute,
 ])

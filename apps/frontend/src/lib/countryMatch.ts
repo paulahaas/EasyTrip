@@ -1,19 +1,12 @@
 /**
- * Normaliza nomes de países para casar o que vem do RestCountries
- * com as `properties.name` do world-atlas TopoJSON.
+ * Fallback por nome para casar países com `properties.name` do world-atlas
+ * TopoJSON quando não há código numérico (ex.: Kosovo). O caminho principal
+ * do mapa é pelo ccn3 — ver `lib/ccn3.ts`.
  */
 const ALIASES: Record<string, string> = {
   'united states': 'United States of America',
   usa: 'United States of America',
-  'united kingdom': 'United Kingdom',
   uk: 'United Kingdom',
-  russia: 'Russia',
-  'south korea': 'South Korea',
-  'north korea': 'North Korea',
-  czechia: 'Czech Republic',
-  myanmar: 'Myanmar',
-  'republic of the congo': 'Republic of the Congo',
-  'democratic republic of the congo': 'Democratic Republic of the Congo',
 }
 
 export function normalizeCountryName(raw: string): string {

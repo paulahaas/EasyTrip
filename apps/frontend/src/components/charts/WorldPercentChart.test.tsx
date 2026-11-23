@@ -5,11 +5,11 @@ import { WorldPercentChart } from './WorldPercentChart'
 describe('WorldPercentChart', () => {
   it('renderiza % com 1 decimal e total de países', () => {
     const { container, getByText } = render(
-      <WorldPercentChart totalVisited={20} />,
+      <WorldPercentChart totalVisited={21} />,
     )
-    // 20/238 ≈ 8.4%
+    // 21/250 (países e territórios do world-countries) = 8.4%
     expect(getByText(/8\.4%/)).toBeInTheDocument()
-    expect(container.textContent).toContain('20 de 238 países')
+    expect(container.textContent).toContain('21 de 250 países')
   })
 
   it('0 países → 0%', () => {

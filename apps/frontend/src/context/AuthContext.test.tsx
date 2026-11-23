@@ -91,4 +91,25 @@ describe('AuthContext', () => {
     expect(localStorage.getItem('easytrip:token')).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
   })
+
+  it('não apaga a sessão quando o servidor está fora (502)', async () => {
+    localStorage.setItem('easytrip:token', 'tok')
+    mockFetch({ 'GET /api/auth/me': { status: 502, body: {} } })
+
+    const { result } = renderHook(() => useAuth(), { wrapper })
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    expect(localStorage.getItem('easytrip:token')).toBe('tok')
+  })
+
+  it('desloga quando o token é recusado (401)', async () => {
+    localStorage.setItem('easytrip:token', 'tok')
+    mockFetch({ 'GET /api/auth/me': { status: 401, body: {} } })
+
+    const { result } = renderHook(() => useAuth(), { wrapper })
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    expect(localStorage.getItem('easytrip:token')).toBeNull()
+    expect(result.current.isAuthenticated).toBe(false)
+  })
 })

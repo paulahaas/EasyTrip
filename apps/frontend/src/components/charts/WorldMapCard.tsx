@@ -7,6 +7,7 @@ import {
 } from 'react-simple-maps'
 import type { VisitedCountry } from '@easytrip/shared'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { CCN3_BY_CCA2 } from '@/lib/ccn3'
 import { sameCountry } from '@/lib/countryMatch'
 import { CONTINENT_PT, translateContinent } from '@/lib/i18n'
 
@@ -40,21 +41,21 @@ export function WorldMapCard({
 }: WorldMapCardProps) {
   const [tip, setTip] = useState<Tip | null>(null)
 
-  const visitedByName = useMemo(() => {
+  // O world-atlas identifica países pelo código numérico (geo.id = ccn3).
+  // Casar por nome falhava em 16 países ("Dem. Rep. Congo", "Turkey"...).
+  const visitedByCcn3 = useMemo(() => {
     const m = new Map<string, VisitedCountry>()
     for (const v of visited) {
-      m.set(v.countryName.toLowerCase(), v)
+      const ccn3 = CCN3_BY_CCA2[v.cca2.toUpperCase()]
+      if (ccn3) m.set(ccn3, v)
     }
     return m
   }, [visited])
 
-  function findVisited(featureName: string): VisitedCountry | null {
-    const hit = visitedByName.get(featureName.toLowerCase())
-    if (hit) return hit
-    for (const v of visited) {
-      if (sameCountry(v.countryName, featureName)) return v
-    }
-    return null
+  function findVisited(geoId: string | undefined, featureName: string): VisitedCountry | null {
+    if (geoId) return visitedByCcn3.get(geoId) ?? null
+    // Sem id no TopoJSON (Kosovo, N. Cyprus, Somaliland): cai no nome.
+    return visited.find((v) => sameCountry(v.countryName, featureName)) ?? null
   }
 
   return (
@@ -114,7 +115,7 @@ export function WorldMapCard({
                 {({ geographies }) =>
                   geographies.map((geo) => {
                     const name = geo.properties.name as string
-                    const hit = findVisited(name)
+                    const hit = findVisited(geo.id as string | undefined, name)
                     const fill = hit
                       ? CONTINENT_COLOR[hit.continent] ?? '#4f8ef7'
                       : '#1e2029'

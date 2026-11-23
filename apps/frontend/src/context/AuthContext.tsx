@@ -15,7 +15,7 @@ import type {
   UpdateProfileDTO,
   User,
 } from '@easytrip/shared'
-import { api, clearToken, getToken, setToken } from '@/lib/apiClient'
+import { ApiError, api, clearToken, getToken, setToken } from '@/lib/apiClient'
 
 const LOCAL_HISTORY_KEY = 'easytrip:search-history'
 
@@ -56,8 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const me = await api<User>('/api/auth/me')
         setUser(me)
         setTokenState(existing)
-      } catch {
-        handleLogout()
+      } catch (err) {
+        // Só desloga se o servidor recusou o token. Rede fora ou servidor
+        // acordando (502/503 no Render free) não devem apagar a sessão.
+        if (err instanceof ApiError && err.status === 401) handleLogout()
       } finally {
         setLoading(false)
       }
@@ -69,10 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     function onExternalLogout() {
       setUser(null)
       setTokenState(null)
+      // Sem isso, favoritos e histórico do usuário anterior ficam no cache.
+      qc.clear()
     }
     window.addEventListener('auth:logout', onExternalLogout)
     return () => window.removeEventListener('auth:logout', onExternalLogout)
-  }, [])
+  }, [qc])
 
   const migrateLocalHistory = useCallback(async () => {
     let queries: string[] = []

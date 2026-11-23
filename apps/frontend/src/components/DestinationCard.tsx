@@ -1,4 +1,5 @@
 import { Check, Heart, HeartOff, Undo2 } from 'lucide-react'
+import { toast } from 'sonner'
 import type { DestinationResponse } from '@easytrip/shared'
 import { Button } from '@/components/ui/button'
 import { InfoGrid } from '@/components/InfoGrid'
@@ -9,6 +10,12 @@ import { RulesSection } from '@/components/RulesSection'
 import { useAuth } from '@/context/AuthContext'
 import { useVisited } from '@/hooks/useVisited'
 import { useWishlist } from '@/hooks/useWishlist'
+
+/** geradoEm vem em ISO 8601; mostra no fuso de quem vê. */
+function formatGeneratedAt(iso: string): string {
+  const date = new Date(iso)
+  return Number.isNaN(date.getTime()) ? iso : date.toLocaleString('pt-BR')
+}
 
 interface DestinationCardProps {
   data: DestinationResponse
@@ -27,23 +34,36 @@ export function DestinationCard({ data }: DestinationCardProps) {
 
   const inWishlist = cca2 ? wishlist.items.some((i) => i.cca2 === cca2) : false
   const inVisited  = cca2 ? visited.items.some((i) => i.cca2 === cca2) : false
+  // Nome canônico (inglês); o servidor também o recalcula pelo cca2.
+  const countryName = informacoesDoPais.nomeIngles || destino
+  const geradoEmTexto = formatGeneratedAt(geradoEm)
 
-  async function toggleWishlist() {
-    if (!cca2) return
-    if (inWishlist) {
-      await wishlist.remove(cca2)
-    } else {
-      await wishlist.add({ cca2, countryName: destino, continent: informacoesDoPais.continente })
+  async function run(action: () => Promise<unknown>, failMsg: string) {
+    try {
+      await action()
+    } catch (err) {
+      toast.error(err instanceof Error && err.message ? err.message : failMsg)
     }
   }
 
-  async function toggleVisited() {
+  function toggleWishlist() {
     if (!cca2) return
-    if (inVisited) {
-      await visited.remove(cca2)
-    } else {
-      await visited.add({ cca2, countryName: destino, continent: informacoesDoPais.continente })
-    }
+    return inWishlist
+      ? run(() => wishlist.remove(cca2), 'Não foi possível remover dos favoritos')
+      : run(
+          () => wishlist.add({ cca2, countryName, continent: informacoesDoPais.continente }),
+          'Não foi possível favoritar',
+        )
+  }
+
+  function toggleVisited() {
+    if (!cca2) return
+    return inVisited
+      ? run(() => visited.remove(cca2), 'Não foi possível desmarcar')
+      : run(
+          () => visited.add({ cca2, countryName, continent: informacoesDoPais.continente }),
+          'Não foi possível marcar como visitado',
+        )
   }
 
   return (
@@ -145,7 +165,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
         )}
 
         <p className="text-[11px] text-right" style={{ color: '#4e5468' }}>
-          Atualizado em {geradoEm}
+          Atualizado em {geradoEmTexto}
         </p>
       </div>
     </div>

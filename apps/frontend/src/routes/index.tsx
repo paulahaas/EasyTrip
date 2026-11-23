@@ -12,7 +12,13 @@ import { useSearchHistory } from '@/hooks/useSearchHistory'
 import { useSemanticSearch } from '@/hooks/useSemanticSearch'
 
 export function HomePage() {
-  const { data, loading: destLoading, search } = useDestination()
+  const {
+    data,
+    loading: destLoading,
+    error: destError,
+    search: openDestination,
+    clear: clearDestination,
+  } = useDestination()
   const {
     data: semanticData,
     loading: semanticLoading,
@@ -23,18 +29,22 @@ export function HomePage() {
   const { history, add, clear } = useSearchHistory()
   const { items: recs } = useRecommendations()
 
+  // Texto livre ("país frio") vai para a busca semântica e não entra no
+  // histórico: o histórico guarda só países que a pessoa abriu.
   function handleSearch(query: string) {
-    add(query)
-    clearSemantic()
+    clearDestination()
     semanticSearch(query)
   }
 
-  function handleSelectFromSemantic(countryName: string) {
-    search(countryName)
+  /** Abre um país (nome canônico em inglês) e registra no histórico. */
+  function openCountry(countryName: string) {
     clearSemantic()
+    openDestination(countryName)
+    add(countryName)
   }
 
   const isLoading = semanticLoading || destLoading
+  const error = semanticError ?? destError
 
   return (
     <>
@@ -49,12 +59,12 @@ export function HomePage() {
           <AppHeader />
           <SearchBar onSearch={handleSearch} disabled={isLoading} />
 
-          <SearchHistory history={history} onSelect={handleSearch} onClear={clear} />
-          <RecommendationsStrip items={recs} onSelect={handleSearch} />
+          <SearchHistory history={history} onSelect={openCountry} onClear={clear} />
+          <RecommendationsStrip items={recs} onSelect={openCountry} />
 
           {isLoading && <DestinationSkeleton />}
 
-          {semanticError && (
+          {error && !isLoading && (
             <Alert
               className="border-0 mb-4"
               style={{
@@ -63,14 +73,14 @@ export function HomePage() {
                 color: '#f87171',
               }}
             >
-              <AlertDescription className="text-sm">{semanticError}</AlertDescription>
+              <AlertDescription className="text-sm">{error}</AlertDescription>
             </Alert>
           )}
 
           {semanticData && !isLoading && (
             <SemanticSearchResults
               items={semanticData}
-              onSelect={handleSelectFromSemantic}
+              onSelect={openCountry}
             />
           )}
 

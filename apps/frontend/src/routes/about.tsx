@@ -20,7 +20,7 @@ const TECH = [
 
 const TEAM = ['Marcella', 'Paula', 'Pedro Cardoso', 'Richard', 'Gustavo Correia']
 
-export default function About() {
+export function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-10">
       {/* Hero */}

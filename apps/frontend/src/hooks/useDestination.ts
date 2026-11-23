@@ -1,37 +1,37 @@
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import type { DestinationResponse } from '@easytrip/shared'
-import { ApiError } from '@/lib/apiClient'
+import { api } from '@/lib/apiClient'
 
-async function fetchDestination(name: string): Promise<DestinationResponse> {
-  const res = await fetch(`/api/destination/${encodeURIComponent(name.trim())}`)
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new ApiError(
-      (body as { erro?: string }).erro ?? 'Destino não encontrado.',
-      res.status,
-    )
-  }
-  return res.json()
-}
-
+/**
+ * Detalhes de um país. Cada nome é uma query própria: se a pessoa abrir dois
+ * países em sequência, a resposta atrasada do primeiro não sobrescreve o segundo.
+ */
 export function useDestination() {
-  const [data, setData] = useState<DestinationResponse | null>(null)
-  const mutation = useMutation({
-    mutationFn: fetchDestination,
-    onSuccess: (res) => setData(res),
+  const [name, setName] = useState<string | null>(null)
+  const query = useQuery<DestinationResponse>({
+    queryKey: ['destination', name],
+    queryFn: () =>
+      api<DestinationResponse>(`/api/destination/${encodeURIComponent(name ?? '')}`),
+    enabled: !!name,
+    staleTime: 5 * 60_000,
+    retry: false,
   })
 
   function search(destination: string) {
-    if (!destination.trim()) return
-    setData(null)
-    mutation.mutate(destination)
+    const trimmed = destination.trim()
+    if (trimmed) setName(trimmed)
+  }
+
+  function clear() {
+    setName(null)
   }
 
   return {
-    data,
-    loading: mutation.isPending,
-    error: mutation.error instanceof Error ? mutation.error.message : null,
+    data: name ? (query.data ?? null) : null,
+    loading: !!name && query.isFetching && !query.data,
+    error: name && query.error instanceof Error ? query.error.message : null,
     search,
+    clear,
   }
 }
