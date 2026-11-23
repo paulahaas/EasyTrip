@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiConflictResponse,
@@ -18,6 +26,7 @@ import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import type { AuthUser } from './decorators/current-user.decorator';
 import { Roles } from './decorators/roles.decorator';
+import { LoginThrottleGuard } from './guards/login-throttle.guard';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -28,6 +37,7 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   @Post('register')
+  @UseGuards(LoginThrottleGuard)
   @ApiOperation({
     summary: 'Cadastra um novo usuário',
     description:
@@ -53,6 +63,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @UseGuards(LoginThrottleGuard)
   @HttpCode(200)
   @ApiOperation({
     summary: 'Autentica e retorna um access token JWT',
@@ -63,6 +74,11 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     type: ErrorResponseDto,
     description: 'Credenciais inválidas',
+  })
+  @ApiResponse({
+    status: 429,
+    type: ErrorResponseDto,
+    description: 'Muitas tentativas em pouco tempo',
   })
   login(@Body() dto: LoginDto): Promise<AuthResponse> {
     return this.auth.login(dto.login, dto.password);

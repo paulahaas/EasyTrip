@@ -7,12 +7,15 @@ services:
     name: easytrip
     runtime: node
     plan: free
-    buildCommand: npm ci && npm run build
-    startCommand: cd apps/backend && DATABASE_URL="${DATABASE_URL_UNPOOLED:-$DATABASE_URL}" npx prisma migrate deploy && npx prisma db seed && node dist/apps/backend/src/main
+    # --include=dev: com NODE_ENV=production o npm pularia o Nest CLI, Vite e TypeScript.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: cd apps/backend && DATABASE_URL="${DATABASE_URL_UNPOOLED:-$DATABASE_URL}" npx prisma migrate deploy && node dist/apps/backend/src/main
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
         value: 22.12.0
+      - key: NODE_ENV
+        value: production
       - key: DATABASE_URL
         sync: false
       - key: DATABASE_URL_UNPOOLED
