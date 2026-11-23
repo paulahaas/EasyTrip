@@ -41,7 +41,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <label
           htmlFor="login-identifier"
           className="text-xs uppercase tracking-wider"
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
         >
           Email ou nome de usuário
         </label>
@@ -60,7 +60,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <label
           htmlFor="login-password"
           className="text-xs uppercase tracking-wider"
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
         >
           Senha
         </label>
@@ -80,7 +80,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           style={{
             background: 'rgba(239,68,68,0.1)',
             border: '1px solid rgba(239,68,68,0.25)',
-            color: '#f87171',
+            color: 'var(--color-danger)',
           }}
         >
           <AlertDescription className="text-sm">{error}</AlertDescription>
@@ -90,8 +90,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         type="submit"
         disabled={submitting}
         style={{
-          background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)',
-          color: '#0e0f14',
+          background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))',
+          color: 'var(--color-background)',
         }}
       >
         {submitting ? 'Entrando...' : 'Entrar'}

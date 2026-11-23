@@ -41,7 +41,7 @@ export function AuthRequiredDialog({
               border: '1px solid rgba(79,142,247,0.3)',
             }}
           >
-            <Lock size={20} color="#4f8ef7" />
+            <Lock size={20} color="var(--color-accent)" />
           </div>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -53,16 +53,16 @@ export function AuthRequiredDialog({
           <Button
             onClick={() => go('/register')}
             style={{
-              background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)',
-              color: '#0e0f14',
+              background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))',
+              color: 'var(--color-background)',
             }}
           >
             Criar conta grátis
           </Button>
         </DialogFooter>
-        <p className="text-xs text-center" style={{ color: '#7c8194' }}>
+        <p className="text-xs text-center" style={{ color: 'var(--color-muted)' }}>
           Ou{' '}
-          <Link to="/" style={{ color: '#4f8ef7' }}>
+          <Link to="/" style={{ color: 'var(--color-accent)' }}>
             voltar ao início
           </Link>
         </p>

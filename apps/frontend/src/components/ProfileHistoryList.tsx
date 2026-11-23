@@ -10,10 +10,10 @@ export function ProfileHistoryList() {
   return (
     <div className="et-card p-5 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <History size={16} style={{ color: '#7dd3fc' }} />
+        <History size={16} style={{ color: 'var(--color-accent2)' }} />
         <h3
           className="text-lg font-normal"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           Histórico de pesquisas
         </h3>
@@ -24,7 +24,7 @@ export function ProfileHistoryList() {
             size="sm"
             onClick={clear}
             className="gap-1 text-xs ml-auto cursor-pointer"
-            style={{ color: '#4e5468' }}
+            style={{ color: 'var(--color-muted2)' }}
           >
             <Trash2 size={11} /> Limpar
           </Button>
@@ -32,7 +32,7 @@ export function ProfileHistoryList() {
       </div>
 
       {entries.length === 0 ? (
-        <p className="text-sm py-4 text-center" style={{ color: '#7c8194' }}>
+        <p className="text-sm py-4 text-center" style={{ color: 'var(--color-muted)' }}>
           Ainda sem pesquisas registradas.
         </p>
       ) : (
@@ -41,9 +41,9 @@ export function ProfileHistoryList() {
             <li
               key={entry.id}
               className="flex items-center justify-between text-sm rounded-lg px-3 py-2.5"
-              style={{ background: '#1e2029' }}
+              style={{ background: 'var(--color-surface2)' }}
             >
-              <span className="flex items-center gap-2.5" style={{ color: '#f0f2f8' }}>
+              <span className="flex items-center gap-2.5" style={{ color: 'var(--color-foreground)' }}>
                 <CountryFlag cca2={entry.cca2} />
                 <span>{entry.cca2 ? countryNamePt(entry.cca2, entry.countryName) : entry.countryName}</span>
               </span>
@@ -51,9 +51,9 @@ export function ProfileHistoryList() {
                 type="button"
                 onClick={() => removeById(entry.id)}
                 className="cursor-pointer transition-colors"
-                style={{ color: '#4e5468' }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171' }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = '#4e5468' }}
+                style={{ color: 'var(--color-muted2)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-danger)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-muted2)' }}
                 aria-label={`Remover ${entry.countryName}`}
               >
                 <X size={14} />

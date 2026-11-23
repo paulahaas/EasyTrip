@@ -16,6 +16,45 @@
   --color-danger: #f87171;
   --color-warning: #fbbf24;
 
+  /* Cores de apoio (antes fixas no JSX) */
+  --color-text-soft: #9ba1b4; /* texto de descrição (entre foreground e muted) */
+  --color-violet: #a78bfa; /* destaque roxo (comparar com amigo) */
+  --color-map-hover: #2a2d3a; /* país sem visita sob o cursor no mapa */
+
+  /* Continentes (mapa e gráfico) */
+  --color-continent-africa: #f59e0b;
+  --color-continent-antarctica: #a3a3a3;
+  --color-continent-asia: #ef4444;
+  --color-continent-north-america: #10b981;
+  --color-continent-oceania: #8b5cf6;
+  --color-continent-south-america: #eab308;
+
+  /* Tags da busca semântica */
+  --color-tag-green: #86efac;
+  --color-tag-red: #fca5a5;
+  --color-tag-yellow: #fde68a;
+  --color-tag-orange: #fdba74;
+  --color-tag-blue: #93c5fd;
+  --color-tag-violet: #c4b5fd;
+  --color-tag-indigo: #a5b4fc;
+  --color-tag-lime: #a3e635;
+  --color-tag-teal: #5eead4;
+  --color-tag-pink: #f9a8d4;
+  --color-tag-bg-blue: #1e3a5f;
+  --color-tag-bg-brown: #3d2a1e;
+  --color-tag-bg-green: #1e3a2f;
+  --color-tag-bg-indigo: #1e2a3d;
+  --color-tag-bg-olive: #1e2a1e;
+  --color-tag-bg-slate: #1a1d28;
+  --color-tag-bg-violet: #2a1e3a;
+  --color-tag-bg-red: #3a1e1e;
+  --color-tag-bg-orange: #3a2a1e;
+  --color-tag-bg-navy: #1e2a3a;
+  --color-tag-bg-forest: #1e3a1e;
+  --color-tag-bg-khaki: #2a2a1e;
+  --color-tag-bg-pink: #3a1e2a;
+  --color-tag-bg-teal: #1e3a3a;
+
   --font-sans: "Geist", sans-serif;
 
   --radius-sm: 0.5rem;

@@ -22,13 +22,13 @@ export function SearchBar({ onSearch, disabled }: SearchBarProps) {
     <div
       className="flex items-center gap-0 mb-7 rounded-xl overflow-hidden transition-shadow"
       style={{
-        background: '#16181f',
+        background: 'var(--color-surface)',
         border: '1px solid rgba(255,255,255,0.1)',
         boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
       }}
       onClick={() => inputRef.current?.focus()}
     >
-      <div className="pl-4 flex items-center shrink-0" style={{ color: '#4e5468' }}>
+      <div className="pl-4 flex items-center shrink-0" style={{ color: 'var(--color-muted2)' }}>
         <Search size={17} />
       </div>
       <input
@@ -39,14 +39,14 @@ export function SearchBar({ onSearch, disabled }: SearchBarProps) {
         placeholder="Busque por clima, idioma, região, país..."
         disabled={disabled}
         className="flex-1 bg-transparent h-12 px-3 text-sm outline-none placeholder:text-muted2"
-        style={{ color: '#f0f2f8' }}
+        style={{ color: 'var(--color-foreground)' }}
       />
       <button
         type="button"
         onClick={handleSearch}
         disabled={disabled || !value.trim()}
         className="shrink-0 h-12 px-5 text-sm font-semibold rounded-none transition-opacity disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
-        style={{ background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)', color: '#0e0f14' }}
+        style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))', color: 'var(--color-background)' }}
       >
         Buscar
       </button>

@@ -27,7 +27,7 @@ export function ProfilePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
-        <p className="text-sm animate-pulse" style={{ color: '#7c8194' }}>Carregando...</p>
+        <p className="text-sm animate-pulse" style={{ color: 'var(--color-muted)' }}>Carregando...</p>
       </div>
     )
   }
@@ -41,8 +41,7 @@ export function ProfilePage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6">
       {/* ── Profile hero card ── */}
       <div
-        className="rounded-xl overflow-hidden"
-        style={{ background: '#16181f', border: '1px solid rgba(255,255,255,0.07)' }}
+        className="et-card overflow-hidden"
       >
         {/* Gradient banner */}
         <div
@@ -52,10 +51,10 @@ export function ProfilePage() {
 
         {/* Profile content */}
         <div className="px-5 pb-5 -mt-10 flex flex-col sm:flex-row sm:items-end gap-4">
-          <Avatar className="h-20 w-20 ring-4 ring-[#16181f] shrink-0">
+          <Avatar className="h-20 w-20 ring-4 ring-[var(--color-surface)] shrink-0">
             <AvatarFallback
               className="text-xl font-semibold"
-              style={{ background: 'linear-gradient(135deg, #1e2029, #22252f)', color: '#7dd3fc' }}
+              style={{ background: 'linear-gradient(135deg, var(--color-surface2), var(--color-surface3))', color: 'var(--color-accent2)' }}
             >
               {initials}
             </AvatarFallback>
@@ -63,9 +62,9 @@ export function ProfilePage() {
 
           <div className="flex-1 sm:mb-2">
             <UsernameEditor username={user.username} />
-            <p className="text-xs mt-0.5" style={{ color: '#7c8194' }}>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-muted)' }}>
               {user.email}
-              {user.role === 'ADMIN' && <span style={{ color: '#7dd3fc' }}> · administrador</span>}
+              {user.role === 'ADMIN' && <span style={{ color: 'var(--color-accent2)' }}> · administrador</span>}
               {' · '}membro desde{' '}
               {new Date(user.createdAt).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
             </p>
@@ -78,17 +77,16 @@ export function ProfilePage() {
 
         {/* Quick stats */}
         <div className="grid grid-cols-3 gap-px border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.06)' }}>
-          <QuickStat icon={<TrendingUp size={15} />} label="Visitados"   value={totalVisited}       color="#7dd3fc" />
-          <QuickStat icon={<Heart size={15} />}      label="Favoritos"   value={wishlist.items.length} color="#f87171" />
-          <QuickStat icon={<MapPin size={15} />}     label="Continentes" value={continentsVisited}   color="#4f8ef7" />
+          <QuickStat icon={<TrendingUp size={15} />} label="Visitados"   value={totalVisited}       color="var(--color-accent2)" />
+          <QuickStat icon={<Heart size={15} />}      label="Favoritos"   value={wishlist.items.length} color="var(--color-danger)" />
+          <QuickStat icon={<MapPin size={15} />}     label="Continentes" value={continentsVisited}   color="var(--color-accent)" />
         </div>
       </div>
 
       {/* ── Tabs ── */}
       <Tabs defaultValue="overview">
         <TabsList
-          className="w-full sm:w-auto flex gap-0.5 p-1 rounded-lg h-auto"
-          style={{ background: '#16181f', border: '1px solid rgba(255,255,255,0.07)' }}
+          className="et-card w-full sm:w-auto flex gap-0.5 p-1 h-auto"
         >
           {[
             { value: 'overview', label: 'Visão geral', icon: <Globe2 size={13} /> },
@@ -153,9 +151,9 @@ function QuickStat({
   return (
     <div
       className="flex flex-col items-center gap-1 py-4"
-      style={{ background: '#16181f' }}
+      style={{ background: 'var(--color-surface)' }}
     >
-      <span className="text-2xl sm:text-3xl font-light" style={{ color: '#f0f2f8' }}>
+      <span className="text-2xl sm:text-3xl font-light" style={{ color: 'var(--color-foreground)' }}>
         {value}
       </span>
       <span className="flex items-center gap-1 text-[11px] font-medium" style={{ color }}>

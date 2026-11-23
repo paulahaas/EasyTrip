@@ -25,10 +25,10 @@ export function ContinentStatsCard({ data, heading }: ContinentStatsCardProps = 
   return (
     <div className="et-card p-5 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <BarChart2 size={16} style={{ color: '#7dd3fc' }} />
+        <BarChart2 size={16} style={{ color: 'var(--color-accent2)' }} />
         <h2
           className="text-lg font-normal"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           {heading ?? 'Por continente'}
         </h2>
@@ -55,14 +55,14 @@ export function ContinentStatsCard({ data, heading }: ContinentStatsCardProps = 
       {stats?.perContinent.map((row) => (
         <div key={row.continent} className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between text-xs">
-            <span style={{ color: '#f0f2f8' }}>
+            <span style={{ color: 'var(--color-foreground)' }}>
               {CONTINENT_PT[row.continent] ?? row.continent}
             </span>
-            <span style={{ color: '#7c8194' }}>
+            <span style={{ color: 'var(--color-muted)' }}>
               {row.visited}/{row.total}
               <span
                 className="ml-1.5 font-medium"
-                style={{ color: row.percent > 0 ? '#7dd3fc' : '#4e5468' }}
+                style={{ color: row.percent > 0 ? 'var(--color-accent2)' : 'var(--color-muted2)' }}
               >
                 {row.percent}%
               </span>

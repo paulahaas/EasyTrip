@@ -6,7 +6,7 @@ interface ExchangeHighlightProps {
 }
 
 const gradientText = {
-  background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)',
+  background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
@@ -29,7 +29,7 @@ export function ExchangeHighlight({ cambio }: ExchangeHighlightProps) {
         className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
         style={{ background: 'rgba(79,142,247,0.15)' }}
       >
-        <TrendingUp size={16} style={{ color: '#7dd3fc' }} />
+        <TrendingUp size={16} style={{ color: 'var(--color-accent2)' }} />
       </div>
       <div className="flex flex-col gap-0.5 min-w-0">
         <p className="et-label mb-0.5">Câmbio com o Real (BRL)</p>
@@ -39,7 +39,7 @@ export function ExchangeHighlight({ cambio }: ExchangeHighlightProps) {
         <p className="text-sm font-semibold" style={gradientText}>
           {cambio.cotacaoEmBRL}
         </p>
-        <p className="text-[11px] mt-1" style={{ color: '#7c8194' }}>
+        <p className="text-[11px] mt-1" style={{ color: 'var(--color-muted)' }}>
           Cotação de {atualizado} ·{' '}
           <a
             href="https://www.exchangerate-api.com"

@@ -68,8 +68,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
 
   return (
     <div
-      className="animate-fade-up rounded-xl overflow-hidden"
-      style={{ background: '#16181f', border: '1px solid rgba(255,255,255,0.07)' }}
+      className="et-card animate-fade-up overflow-hidden"
     >
       {/* ── Hero header with blurred flag background ── */}
       <div className="relative h-36 overflow-hidden">
@@ -104,7 +103,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
           <div className="flex-1 min-w-0">
             <h2
               className="text-2xl sm:text-3xl font-normal leading-tight truncate"
-              style={{ color: '#f0f2f8' }}
+              style={{ color: 'var(--color-foreground)' }}
             >
               {nome}
             </h2>
@@ -136,8 +135,8 @@ export function DestinationCard({ data }: DestinationCardProps) {
               disabled={!cca2}
               className="gap-1.5 text-xs h-8 cursor-pointer rounded-full"
               style={inWishlist
-                ? { background: 'rgba(248,113,113,0.1)', borderColor: 'rgba(248,113,113,0.3)', color: '#f87171' }
-                : { borderColor: 'rgba(255,255,255,0.1)', color: '#7c8194' }
+                ? { background: 'rgba(248,113,113,0.1)', borderColor: 'rgba(248,113,113,0.3)', color: 'var(--color-danger)' }
+                : { borderColor: 'rgba(255,255,255,0.1)', color: 'var(--color-muted)' }
               }
             >
               {inWishlist
@@ -152,8 +151,8 @@ export function DestinationCard({ data }: DestinationCardProps) {
               disabled={!cca2}
               className="gap-1.5 text-xs h-8 cursor-pointer rounded-full"
               style={inVisited
-                ? { background: 'rgba(52,211,153,0.1)', borderColor: 'rgba(52,211,153,0.3)', color: '#34d399' }
-                : { borderColor: 'rgba(255,255,255,0.1)', color: '#7c8194' }
+                ? { background: 'rgba(52,211,153,0.1)', borderColor: 'rgba(52,211,153,0.3)', color: 'var(--color-success)' }
+                : { borderColor: 'rgba(255,255,255,0.1)', color: 'var(--color-muted)' }
               }
             >
               {inVisited
@@ -164,7 +163,7 @@ export function DestinationCard({ data }: DestinationCardProps) {
           </div>
         )}
 
-        <p className="text-[11px] text-right" style={{ color: '#4e5468' }}>
+        <p className="text-[11px] text-right" style={{ color: 'var(--color-muted2)' }}>
           Atualizado em {geradoEmTexto}
         </p>
       </div>

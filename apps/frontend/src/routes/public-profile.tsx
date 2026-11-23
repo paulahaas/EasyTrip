@@ -28,7 +28,7 @@ export function PublicProfilePage() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
-        <p className="text-sm animate-pulse" style={{ color: '#7c8194' }}>Carregando...</p>
+        <p className="text-sm animate-pulse" style={{ color: 'var(--color-muted)' }}>Carregando...</p>
       </div>
     )
   }
@@ -40,23 +40,23 @@ export function PublicProfilePage() {
           <div className="max-w-sm text-center flex flex-col items-center gap-4">
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
-              style={{ background: '#1e2029' }}
+              style={{ background: 'var(--color-surface2)' }}
             >
               🌍
             </div>
             <h1
               className="text-2xl font-normal"
-              style={{ color: '#f0f2f8' }}
+              style={{ color: 'var(--color-foreground)' }}
             >
               Conteúdo protegido
             </h1>
-            <p className="text-sm" style={{ color: '#7c8194' }}>
+            <p className="text-sm" style={{ color: 'var(--color-muted)' }}>
               Crie uma conta gratuita para ver perfis de viajantes e descobrir destinos.
             </p>
             <Link to="/register">
               <Button
                 className="rounded-full px-6 font-semibold"
-                style={{ background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)', color: '#0e0f14' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))', color: 'var(--color-background)' }}
               >
                 Criar conta
               </Button>
@@ -84,7 +84,7 @@ export function PublicProfilePage() {
   if (!data) {
     return (
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 text-center flex flex-col items-center gap-4">
-        <p className="text-sm" style={{ color: '#7c8194' }}>Perfil não encontrado.</p>
+        <p className="text-sm" style={{ color: 'var(--color-muted)' }}>Perfil não encontrado.</p>
         <Link to="/">
           <Button variant="outline" size="sm">Voltar ao início</Button>
         </Link>
@@ -99,27 +99,26 @@ export function PublicProfilePage() {
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 text-xs w-fit transition-colors"
-        style={{ color: '#7c8194' }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = '#f0f2f8' }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = '#7c8194' }}
+        style={{ color: 'var(--color-muted)' }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-foreground)' }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-muted)' }}
       >
         <ArrowLeft size={13} /> Voltar
       </Link>
 
       {/* Profile card */}
       <div
-        className="rounded-xl overflow-hidden"
-        style={{ background: '#16181f', border: '1px solid rgba(255,255,255,0.07)' }}
+        className="et-card overflow-hidden"
       >
         <div
           className="h-20 w-full"
           style={{ background: 'linear-gradient(135deg, rgba(79,142,247,0.2) 0%, rgba(125,211,252,0.08) 100%)' }}
         />
         <div className="px-5 pb-5 -mt-8 flex flex-col sm:flex-row sm:items-end gap-4">
-          <Avatar className="h-16 w-16 ring-4 ring-[#16181f]">
+          <Avatar className="h-16 w-16 ring-4 ring-[var(--color-surface)]">
             <AvatarFallback
               className="text-lg font-semibold"
-              style={{ background: '#22252f', color: '#7dd3fc' }}
+              style={{ background: 'var(--color-surface3)', color: 'var(--color-accent2)' }}
             >
               {initials}
             </AvatarFallback>
@@ -127,11 +126,11 @@ export function PublicProfilePage() {
           <div className="sm:mb-1 flex-1">
             <h1
               className="text-xl font-normal"
-              style={{ color: '#f0f2f8' }}
+              style={{ color: 'var(--color-foreground)' }}
             >
               @{data.username}
             </h1>
-            <p className="text-xs mt-0.5" style={{ color: '#7c8194' }}>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-muted)' }}>
               No EasyTrip desde {new Date(data.createdAt).toLocaleDateString('pt-BR')}
             </p>
           </div>
@@ -139,13 +138,13 @@ export function PublicProfilePage() {
 
         {/* Quick stats */}
         <div className="grid grid-cols-2 gap-px border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.06)' }}>
-          <div className="flex flex-col items-center gap-1 py-4" style={{ background: '#16181f' }}>
-            <span className="text-2xl font-light" style={{ color: '#f0f2f8' }}>{data.totalVisited}</span>
-            <span className="flex items-center gap-1 text-[11px]" style={{ color: '#7dd3fc' }}><TrendingUp size={11} /> visitados</span>
+          <div className="flex flex-col items-center gap-1 py-4" style={{ background: 'var(--color-surface)' }}>
+            <span className="text-2xl font-light" style={{ color: 'var(--color-foreground)' }}>{data.totalVisited}</span>
+            <span className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--color-accent2)' }}><TrendingUp size={11} /> visitados</span>
           </div>
-          <div className="flex flex-col items-center gap-1 py-4" style={{ background: '#16181f' }}>
-            <span className="text-2xl font-light" style={{ color: '#f0f2f8' }}>{data.totalWishlist}</span>
-            <span className="flex items-center gap-1 text-[11px]" style={{ color: '#f87171' }}><Heart size={11} /> favoritos</span>
+          <div className="flex flex-col items-center gap-1 py-4" style={{ background: 'var(--color-surface)' }}>
+            <span className="text-2xl font-light" style={{ color: 'var(--color-foreground)' }}>{data.totalWishlist}</span>
+            <span className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--color-danger)' }}><Heart size={11} /> favoritos</span>
           </div>
         </div>
       </div>
@@ -169,12 +168,12 @@ export function PublicProfilePage() {
       <div className="et-card p-5 flex flex-col gap-4">
         <h2
           className="text-lg font-normal"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           Países visitados
         </h2>
         {data.visited.length === 0
-          ? <p className="text-sm" style={{ color: '#7c8194' }}>Ainda sem países visitados.</p>
+          ? <p className="text-sm" style={{ color: 'var(--color-muted)' }}>Ainda sem países visitados.</p>
           : (
             <div className="flex flex-wrap gap-2">
               {data.visited.map((v) => (
@@ -192,12 +191,12 @@ export function PublicProfilePage() {
       <div className="et-card p-5 flex flex-col gap-4">
         <h2
           className="text-lg font-normal flex items-center gap-2"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
-          <MapPin size={16} style={{ color: '#7dd3fc' }} /> Favoritos
+          <MapPin size={16} style={{ color: 'var(--color-accent2)' }} /> Favoritos
         </h2>
         {data.wishlist.length === 0
-          ? <p className="text-sm" style={{ color: '#7c8194' }}>Sem favoritos ainda.</p>
+          ? <p className="text-sm" style={{ color: 'var(--color-muted)' }}>Sem favoritos ainda.</p>
           : (
             <div className="flex flex-wrap gap-2">
               {data.wishlist.map((w) => (

@@ -26,6 +26,7 @@ function errorMessage(body: unknown, status: number): string {
   if (Array.isArray(message) && message.length > 0) return message.map(String).join('. ')
   if (typeof message === 'string' && message) return message
   if (typeof erro === 'string' && erro) return erro
+  if (status >= 500) return 'Servidor indisponível no momento. Tente de novo em instantes.'
   return `HTTP ${status}`
 }
 

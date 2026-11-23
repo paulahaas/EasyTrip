@@ -11,7 +11,7 @@ export function FoodsSection({ comidas }: FoodsSectionProps) {
   return (
     <section className="flex flex-col gap-2" aria-labelledby="foods-title">
       <h3 id="foods-title" className="flex items-center gap-1.5 et-label">
-        <UtensilsCrossed size={10} style={{ color: '#4f8ef7' }} />
+        <UtensilsCrossed size={10} style={{ color: 'var(--color-accent)' }} />
         Comidas e bebidas típicas
       </h3>
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -19,12 +19,12 @@ export function FoodsSection({ comidas }: FoodsSectionProps) {
           <li
             key={comida.nome}
             className="rounded-lg p-3 flex flex-col gap-0.5"
-            style={{ background: '#1e2029' }}
+            style={{ background: 'var(--color-surface2)' }}
           >
-            <span className="text-sm font-medium" style={{ color: '#f0f2f8' }}>
+            <span className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>
               {comida.nome}
             </span>
-            <span className="text-xs leading-snug" style={{ color: '#9ba1b4' }}>
+            <span className="text-xs leading-snug" style={{ color: 'var(--color-text-soft)' }}>
               {comida.descricao}
             </span>
           </li>

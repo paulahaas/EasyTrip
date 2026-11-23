@@ -10,18 +10,9 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { CCN3_BY_CCA2 } from '@/lib/ccn3'
 import { sameCountry } from '@/lib/countryMatch'
 import { CONTINENT_PT, translateContinent } from '@/lib/i18n'
+import { CONTINENT_COLOR, continentColor } from '@/lib/palette'
 
 const GEO_URL = '/countries-110m.json'
-
-const CONTINENT_COLOR: Record<string, string> = {
-  Africa: '#f59e0b',
-  Antarctica: '#a3a3a3',
-  Asia: '#ef4444',
-  Europe: '#4f8ef7',
-  'North America': '#10b981',
-  Oceania: '#8b5cf6',
-  'South America': '#eab308',
-}
 
 interface WorldMapCardProps {
   visited: VisitedCountry[]
@@ -62,7 +53,7 @@ export function WorldMapCard({
     <Card
       className="border-0"
       style={{
-        background: '#16181f',
+        background: 'var(--color-surface)',
         border: '1px solid rgba(255,255,255,0.07)',
       }}
     >
@@ -72,12 +63,12 @@ export function WorldMapCard({
             <h2
               className="text-lg font-semibold"
               style={{
-                color: '#f0f2f8',
+                color: 'var(--color-foreground)',
               }}
             >
               {heading}
             </h2>
-            <p className="text-xs" style={{ color: '#7c8194' }}>
+            <p className="text-xs" style={{ color: 'var(--color-muted)' }}>
               {visited.length} países pintados
             </p>
           </div>
@@ -86,7 +77,7 @@ export function WorldMapCard({
               <span
                 key={continent}
                 className="inline-flex items-center gap-1"
-                style={{ color: '#7c8194' }}
+                style={{ color: 'var(--color-muted)' }}
               >
                 <span
                   className="inline-block w-2 h-2 rounded-full"
@@ -101,7 +92,7 @@ export function WorldMapCard({
       <CardContent className="relative">
         <div
           className="rounded-lg overflow-hidden"
-          style={{ background: '#0e0f14' }}
+          style={{ background: 'var(--color-background)' }}
         >
           <ComposableMap
             projection="geoEqualEarth"
@@ -117,8 +108,8 @@ export function WorldMapCard({
                     const name = geo.properties.name as string
                     const hit = findVisited(geo.id as string | undefined, name)
                     const fill = hit
-                      ? CONTINENT_COLOR[hit.continent] ?? '#4f8ef7'
-                      : '#1e2029'
+                      ? continentColor(hit.continent)
+                      : 'var(--color-surface2)'
                     return (
                       <Geography
                         key={geo.rsmKey}
@@ -147,8 +138,8 @@ export function WorldMapCard({
                           hover: {
                             outline: 'none',
                             fill: hit
-                              ? CONTINENT_COLOR[hit.continent]
-                              : '#2a2d3a',
+                              ? continentColor(hit.continent)
+                              : 'var(--color-map-hover)',
                             cursor: 'pointer',
                           },
                           pressed: { outline: 'none' },
@@ -167,18 +158,18 @@ export function WorldMapCard({
             style={{
               left: tip.x + 12,
               top: tip.y + 12,
-              background: '#1e2029',
-              color: '#f0f2f8',
+              background: 'var(--color-surface2)',
+              color: 'var(--color-foreground)',
               border: '1px solid rgba(255,255,255,0.1)',
             }}
           >
             <div className="font-medium">{tip.name}</div>
             {tip.continent ? (
-              <div style={{ color: '#7dd3fc' }}>
+              <div style={{ color: 'var(--color-accent2)' }}>
                 ✓ visitado — {translateContinent(tip.continent)}
               </div>
             ) : (
-              <div style={{ color: '#7c8194' }}>ainda não visitado</div>
+              <div style={{ color: 'var(--color-muted)' }}>ainda não visitado</div>
             )}
           </div>
         )}

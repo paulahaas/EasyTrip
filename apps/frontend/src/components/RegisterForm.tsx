@@ -54,7 +54,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         <label
           htmlFor="register-email"
           className="text-xs uppercase tracking-wider"
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
         >
           Email
         </label>
@@ -71,7 +71,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         <label
           htmlFor="register-username"
           className="text-xs uppercase tracking-wider"
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
         >
           Nome de usuário
         </label>
@@ -88,7 +88,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           maxLength={20}
           required
         />
-        <span className="text-xs" style={{ color: '#7c8194' }}>
+        <span className="text-xs" style={{ color: 'var(--color-muted)' }}>
           3 a 20 caracteres: letras, números, _ ou .
         </span>
       </div>
@@ -96,7 +96,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         <label
           htmlFor="register-password"
           className="text-xs uppercase tracking-wider"
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
         >
           Senha
         </label>
@@ -114,7 +114,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         <label
           htmlFor="register-confirm-password"
           className="text-xs uppercase tracking-wider"
-          style={{ color: '#7c8194' }}
+          style={{ color: 'var(--color-muted)' }}
         >
           Confirmar senha
         </label>
@@ -134,7 +134,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           style={{
             background: 'rgba(239,68,68,0.1)',
             border: '1px solid rgba(239,68,68,0.25)',
-            color: '#f87171',
+            color: 'var(--color-danger)',
           }}
         >
           <AlertDescription className="text-sm">{error}</AlertDescription>
@@ -144,8 +144,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         type="submit"
         disabled={submitting}
         style={{
-          background: 'linear-gradient(135deg, #4f8ef7, #7dd3fc)',
-          color: '#0e0f14',
+          background: 'linear-gradient(135deg, var(--color-accent), var(--color-accent2))',
+          color: 'var(--color-background)',
         }}
       >
         {submitting ? 'Criando...' : 'Criar conta'}

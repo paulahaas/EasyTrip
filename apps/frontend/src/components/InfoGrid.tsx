@@ -86,17 +86,17 @@ export function InfoGrid({ info }: InfoGridProps) {
         <div
           key={key}
           className="rounded-lg p-3 flex flex-col gap-1.5"
-          style={{ background: '#1e2029' }}
+          style={{ background: 'var(--color-surface2)' }}
         >
           <div className="flex items-center gap-1.5 et-label">
-            <Icon size={10} style={{ color: '#4f8ef7' }} />
+            <Icon size={10} style={{ color: 'var(--color-accent)' }} />
             {label}
           </div>
-          <span className="text-sm font-medium leading-snug" style={{ color: '#f0f2f8' }}>
+          <span className="text-sm font-medium leading-snug" style={{ color: 'var(--color-foreground)' }}>
             {value || '—'}
           </span>
           {hint && (
-            <span className="text-[11px] leading-snug" style={{ color: '#7c8194' }}>
+            <span className="text-[11px] leading-snug" style={{ color: 'var(--color-muted)' }}>
               {hint}
             </span>
           )}

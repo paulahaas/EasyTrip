@@ -14,7 +14,7 @@ interface WorldPercentChartProps {
 export function WorldPercentChart({ totalVisited }: WorldPercentChartProps) {
   const remaining = Math.max(0, WORLD_TOTAL - totalVisited)
   const data = [
-    { name: 'Visitados', value: totalVisited, color: '#4f8ef7' },
+    { name: 'Visitados', value: totalVisited, color: 'var(--color-accent)' },
     { name: 'Restantes', value: remaining, color: 'rgba(255,255,255,0.08)' },
   ]
   const percent = Math.round((totalVisited / WORLD_TOTAL) * 1000) / 10
@@ -23,18 +23,18 @@ export function WorldPercentChart({ totalVisited }: WorldPercentChartProps) {
     <Card
       className="border-0"
       style={{
-        background: '#16181f',
+        background: 'var(--color-surface)',
         border: '1px solid rgba(255,255,255,0.07)',
       }}
     >
       <CardHeader>
         <h2
           className="text-lg font-semibold"
-          style={{ color: '#f0f2f8' }}
+          style={{ color: 'var(--color-foreground)' }}
         >
           Percentual do mundo
         </h2>
-        <p className="text-xs" style={{ color: '#7c8194' }}>
+        <p className="text-xs" style={{ color: 'var(--color-muted)' }}>
           {totalVisited} de {WORLD_TOTAL} países
         </p>
       </CardHeader>
@@ -59,10 +59,10 @@ export function WorldPercentChart({ totalVisited }: WorldPercentChartProps) {
             </Pie>
             <Tooltip
               contentStyle={{
-                background: '#1e2029',
+                background: 'var(--color-surface2)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: 8,
-                color: '#f0f2f8',
+                color: 'var(--color-foreground)',
                 fontSize: 12,
               }}
             />
@@ -72,12 +72,12 @@ export function WorldPercentChart({ totalVisited }: WorldPercentChartProps) {
           <span
             className="text-4xl font-semibold"
             style={{
-              color: '#f0f2f8',
+              color: 'var(--color-foreground)',
             }}
           >
             {percent}%
           </span>
-          <span className="text-xs" style={{ color: '#7c8194' }}>
+          <span className="text-xs" style={{ color: 'var(--color-muted)' }}>
             do mundo
           </span>
         </div>

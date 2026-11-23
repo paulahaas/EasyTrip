@@ -16,7 +16,7 @@ export function CountryFlag({ cca2, size = 14 }: CountryFlagProps) {
   const code = cca2?.toLowerCase()
 
   if (!code || failed) {
-    return <Globe2 size={size} aria-hidden style={{ color: '#7c8194', flexShrink: 0 }} />
+    return <Globe2 size={size} aria-hidden style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
   }
 
   return (
