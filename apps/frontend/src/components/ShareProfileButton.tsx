@@ -2,6 +2,7 @@ import { Copy, Share2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { profileUrl } from '@/lib/profileLink'
 
 interface ShareProfileButtonProps {
   userId: string
@@ -11,10 +12,11 @@ export function ShareProfileButton({ userId }: ShareProfileButtonProps) {
   const [copied, setCopied] = useState(false)
 
   async function share() {
-    const url = `${window.location.origin}/profile/${userId}`
+    const url = profileUrl(window.location.origin, userId)
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Meu perfil no EasyTrip', text: 'Veja meu perfil de viagens', url })
+        // Sem `text`: vários apps colam o texto no fim do link e quebram o id.
+        await navigator.share({ title: 'Meu perfil de viagens no EasyTrip', url })
         return
       }
     } catch {

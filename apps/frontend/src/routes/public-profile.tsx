@@ -15,10 +15,12 @@ import { useAuth } from '@/context/AuthContext'
 import { usePublicProfile } from '@/hooks/usePublicProfile'
 import { useVisited } from '@/hooks/useVisited'
 import { countryNamePt } from '@/lib/countryName'
+import { profileIdFromParam } from '@/lib/profileLink'
 import { CountryFlag } from '@/components/CountryFlag'
 
 export function PublicProfilePage() {
-  const { id } = useParams({ from: '/profile/$id' })
+  const { id: rawId } = useParams({ from: '/profile/$id' })
+  const id = profileIdFromParam(rawId)
   const { isAuthenticated, loading: authLoading, user } = useAuth()
   const myVisited = useVisited()
   const [dismissed, setDismissed] = useState(false)
