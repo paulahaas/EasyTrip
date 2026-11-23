@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { computeAchievements } from '@easytrip/shared'
 import type { VisitedCountry } from '@easytrip/shared'
 import { AchievementsCard } from './AchievementsCard'
-import { CompareCard, compareVisited } from './CompareCard'
-import { TravelTimeline, groupByYear } from './TravelTimeline'
+import { compareVisited, groupByYear } from '@/lib/travel'
+import { CompareCard } from './CompareCard'
+import { TravelTimeline } from './TravelTimeline'
 import { countryNamePt, formatVisitMonth } from '@/lib/countryName'
 
 function visit(cca2: string, continent: string, visitedAt: string | null = null): VisitedCountry {

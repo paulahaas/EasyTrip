@@ -70,14 +70,22 @@ describe('CountryService', () => {
     );
     expect(br.regras).toEqual([]);
 
-    countries.getByName.mockReturnValue(makeCountry({ cca2: 'SG', cca3: 'SGP' }));
+    countries.getByName.mockReturnValue(
+      makeCountry({ cca2: 'SG', cca3: 'SGP' }),
+    );
     const sg = svc.getCountryInfo('Singapore');
-    expect(sg.regras.some((r) => r.tipo === 'proibido' && /chiclete/i.test(r.titulo))).toBe(true);
+    expect(
+      sg.regras.some(
+        (r) => r.tipo === 'proibido' && /chiclete/i.test(r.titulo),
+      ),
+    ).toBe(true);
     expect(sg.maoDirecao).toBe('esquerda');
   });
 
   it('país sem conteúdo curado devolve listas vazias', () => {
-    countries.getByName.mockReturnValue(makeCountry({ cca2: 'AQ', cca3: 'ATA' }));
+    countries.getByName.mockReturnValue(
+      makeCountry({ cca2: 'AQ', cca3: 'ATA' }),
+    );
     const res = svc.getCountryInfo('Antarctica');
     expect(res.comidas).toEqual([]);
     expect(res.regras).toEqual([]);

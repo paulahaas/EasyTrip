@@ -2,7 +2,10 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "outputs": []
+      // O Vite grava em ../backend/public, fora deste pacote, e o turbo não
+      // guarda isso em cache. Sem cache, o build sempre roda: um cache hit
+      // pularia o build e o site sumiria do backend.
+      "cache": false
     }
   }
 }

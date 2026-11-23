@@ -20,8 +20,8 @@ export default defineConfig({
         // e são baixadas em paralelo com o código do site.
         advancedChunks: {
           groups: [
-            { name: 'react', test: /node_modules[\/](react|react-dom|scheduler)[\/]/ },
-            { name: 'tanstack', test: /node_modules[\/]@tanstack[\/]/ },
+            { name: 'react', test: /node_modules[/\\](react|react-dom|scheduler)[/\\]/ },
+            { name: 'tanstack', test: /node_modules[/\\]@tanstack[/\\]/ },
           ],
         },
       },

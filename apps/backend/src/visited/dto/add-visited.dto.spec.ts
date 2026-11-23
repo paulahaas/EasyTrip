@@ -12,7 +12,9 @@ describe('AddVisitedDto', () => {
   });
 
   it('aceita data até o ano que vem', () => {
-    expect(errors({ cca2: 'JP', visitedAt: `${maxVisitYear()}-01-01` })).toEqual([]);
+    expect(
+      errors({ cca2: 'JP', visitedAt: `${maxVisitYear()}-01-01` }),
+    ).toEqual([]);
   });
 
   it('recusa data depois do ano que vem', () => {

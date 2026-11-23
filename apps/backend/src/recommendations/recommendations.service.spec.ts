@@ -99,7 +99,8 @@ function build(opts: {
       Object.values(META).filter((m) => m.subregion === subregion),
     ),
     getByCca3: jest.fn(
-      (cca3: string) => Object.values(META).find((m) => m.cca3 === cca3) ?? null,
+      (cca3: string) =>
+        Object.values(META).find((m) => m.cca3 === cca3) ?? null,
     ),
   };
 
@@ -211,9 +212,9 @@ describe('RecommendationsService', () => {
   it('vizinho de fronteira pesa 2 e vem com reason border', async () => {
     const prisma = {
       searchHistory: {
-        findMany: jest.fn().mockResolvedValue([
-          { cca2: 'BR', createdAt: new Date() },
-        ]),
+        findMany: jest
+          .fn()
+          .mockResolvedValue([{ cca2: 'BR', createdAt: new Date() }]),
       },
       wishlist: { findMany: jest.fn().mockResolvedValue([]) },
       visitedCountry: { findMany: jest.fn().mockResolvedValue([]) },
@@ -226,7 +227,13 @@ describe('RecommendationsService', () => {
       subregion: 'South America',
       borders: ['ARG'],
     };
-    const ar = { ...br, cca2: 'AR', cca3: 'ARG', name: 'Argentina', borders: [] };
+    const ar = {
+      ...br,
+      cca2: 'AR',
+      cca3: 'ARG',
+      name: 'Argentina',
+      borders: [],
+    };
     const cl = { ...br, cca2: 'CL', cca3: 'CHL', name: 'Chile', borders: [] };
     const countries = {
       getByCca2: jest.fn(() => br),

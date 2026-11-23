@@ -2,25 +2,10 @@ import { CalendarDays } from 'lucide-react'
 import type { VisitedCountry } from '@easytrip/shared'
 import { CountryFlag } from '@/components/CountryFlag'
 import { countryNamePt, formatVisitMonth } from '@/lib/countryName'
+import { groupByYear } from '@/lib/travel'
 
 interface TravelTimelineProps {
   visited: VisitedCountry[]
-}
-
-/** Agrupa as viagens por ano, da mais recente para a mais antiga. */
-export function groupByYear(visited: VisitedCountry[]) {
-  const dated = visited
-    .filter((v) => v.visitedAt)
-    .sort((a, b) => b.visitedAt!.localeCompare(a.visitedAt!))
-  const years = new Map<string, VisitedCountry[]>()
-  for (const v of dated) {
-    const year = v.visitedAt!.slice(0, 4)
-    years.set(year, [...(years.get(year) ?? []), v])
-  }
-  return {
-    years: [...years.entries()],
-    undated: visited.filter((v) => !v.visitedAt),
-  }
 }
 
 export function TravelTimeline({ visited }: TravelTimelineProps) {

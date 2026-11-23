@@ -12,15 +12,17 @@ export function IsVisitDate() {
     Matches(/^(19|20)\d{2}-\d{2}-\d{2}$/, {
       message: 'visitedAt deve estar no formato AAAA-MM-DD',
     }),
-    IsDateString({ strict: true }, { message: 'visitedAt não é uma data válida' }),
+    IsDateString(
+      { strict: true },
+      { message: 'visitedAt não é uma data válida' },
+    ),
     ValidateBy({
       name: 'isVisitYearInRange',
       validator: {
         validate: (value: unknown) =>
           typeof value === 'string' &&
           Number(value.slice(0, 4)) <= maxVisitYear(),
-        defaultMessage: () =>
-          `visitedAt não pode passar de ${maxVisitYear()}`,
+        defaultMessage: () => `visitedAt não pode passar de ${maxVisitYear()}`,
       },
     }),
   );

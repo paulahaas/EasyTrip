@@ -9,7 +9,8 @@ function ctx(login: string, ip = '1.2.3.4') {
 describe('LoginThrottleGuard', () => {
   it('deixa passar até 10 tentativas e bloqueia a 11ª', () => {
     const guard = new LoginThrottleGuard();
-    for (let i = 0; i < 10; i++) expect(guard.canActivate(ctx('maria'))).toBe(true);
+    for (let i = 0; i < 10; i++)
+      expect(guard.canActivate(ctx('maria'))).toBe(true);
     expect(() => guard.canActivate(ctx('maria'))).toThrow(HttpException);
   });
 

@@ -27,9 +27,8 @@ export class LoginThrottleGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const req = ctx.switchToHttp().getRequest<Request>();
     const body = (req.body ?? {}) as { login?: unknown; email?: unknown };
-    const id = String(body.login ?? body.email ?? '')
-      .trim()
-      .toLowerCase();
+    const raw = body.login ?? body.email;
+    const id = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
     const key = `${req.ip ?? 'unknown'}|${id}`;
     const now = Date.now();
 

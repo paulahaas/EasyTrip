@@ -1,24 +1,14 @@
 import { Users } from 'lucide-react'
-import type { VisitedCountry } from '@easytrip/shared'
 import { CountryFlag } from '@/components/CountryFlag'
 import { countryNamePt } from '@/lib/countryName'
+import { compareVisited, type SavedCountry } from '@/lib/travel'
 
-type Country = Pick<VisitedCountry, 'cca2' | 'countryName'>
+type Country = SavedCountry
 
 interface CompareCardProps {
   mine: Country[]
   theirs: Country[]
   theirName: string
-}
-
-export function compareVisited(mine: Country[], theirs: Country[]) {
-  const mineSet = new Set(mine.map((c) => c.cca2))
-  const theirSet = new Set(theirs.map((c) => c.cca2))
-  return {
-    emComum: theirs.filter((c) => mineSet.has(c.cca2)),
-    soDela: theirs.filter((c) => !mineSet.has(c.cca2)),
-    soMeus: mine.filter((c) => !theirSet.has(c.cca2)),
-  }
 }
 
 function Chips({ countries, empty }: { countries: Country[]; empty: string }) {

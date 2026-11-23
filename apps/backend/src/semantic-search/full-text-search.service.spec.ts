@@ -49,7 +49,7 @@ describe('FullTextSearchService', () => {
   describe('buildIndex', () => {
     it('constrói índice com os países', async () => {
       const svc = makeService([makeCountry()]);
-      await svc.buildIndex();
+      svc.buildIndex();
       const res = await svc.search('Brazil');
       expect(res.length).toBeGreaterThan(0);
       expect(res[0].cca2).toBe('BR');
@@ -57,15 +57,15 @@ describe('FullTextSearchService', () => {
 
     it('é idempotente — segundo build não duplica', async () => {
       const svc = makeService([makeCountry()]);
-      await svc.buildIndex();
-      await svc.buildIndex();
+      svc.buildIndex();
+      svc.buildIndex();
       const res = await svc.search('Brazil');
       expect(res).toHaveLength(1);
     });
 
     it('não indexa quando lista vazia', async () => {
       const svc = makeService([]);
-      await svc.buildIndex();
+      svc.buildIndex();
       const res = await svc.search('Brazil');
       expect(res).toEqual([]);
     });
@@ -74,7 +74,7 @@ describe('FullTextSearchService', () => {
   describe('search', () => {
     let svc: FullTextSearchService;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       svc = makeService([
         makeCountry({
           cca2: 'BR',
@@ -104,7 +104,7 @@ describe('FullTextSearchService', () => {
           latlng: [46, 2],
         }),
       ]);
-      await svc.buildIndex();
+      svc.buildIndex();
     });
 
     it('encontra Brasil por nome', async () => {

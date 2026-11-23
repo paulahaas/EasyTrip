@@ -29,11 +29,12 @@ export class FullTextSearchService implements OnModuleInit {
     });
   }
 
-  async onModuleInit() {
-    await this.buildIndex();
+  onModuleInit() {
+    this.buildIndex();
   }
 
-  async buildIndex(): Promise<void> {
+  /** Monta o índice uma vez (os dados são offline, então é síncrono). */
+  buildIndex(): void {
     if (this.indexed) return;
     const all = this.countries.getAll();
 
@@ -54,10 +55,8 @@ export class FullTextSearchService implements OnModuleInit {
     this.logger.log(`index built: ${docs.length} countries`);
   }
 
-  async search(query: string): Promise<{ cca2: string; bm25: number }[]> {
-    if (!this.indexed) {
-      await this.buildIndex();
-    }
+  search(query: string): Promise<{ cca2: string; bm25: number }[]> {
+    if (!this.indexed) this.buildIndex();
 
     // Sem stopwords: "país frio na Europa" não deve casar tudo que começa com "na".
     const terms = removeStopwords(query);
@@ -69,6 +68,8 @@ export class FullTextSearchService implements OnModuleInit {
       combineWith: 'OR',
     });
 
-    return results.map((r) => ({ cca2: r.id as string, bm25: r.score }));
+    return Promise.resolve(
+      results.map((r) => ({ cca2: r.id as string, bm25: r.score })),
+    );
   }
 }

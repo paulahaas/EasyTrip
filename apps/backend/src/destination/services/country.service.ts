@@ -13,7 +13,10 @@ import {
 } from '../../countries/country-extras';
 import population from '../../countries/population.json';
 
-const POPULATION = population as Record<string, { value: number; year: number }>;
+const POPULATION = population as Record<
+  string,
+  { value: number; year: number }
+>;
 
 // Nome da moeda em português a partir do código ISO 4217 (ex.: BRL → "Real brasileiro").
 const currencyNames = new Intl.DisplayNames(['pt-BR'], { type: 'currency' });

@@ -60,7 +60,9 @@ export class ExchangeService {
     // (ex.: "JP¥ 100 = R$ 3,19" em vez de "JP¥ 1 = R$ 0,0319").
     const inReais = 1 / perReal;
     const units =
-      inReais < 1 ? Math.min(10 ** Math.ceil(-Math.log10(inReais)), 1_000_000) : 1;
+      inReais < 1
+        ? Math.min(10 ** Math.ceil(-Math.log10(inReais)), 1_000_000)
+        : 1;
 
     return {
       moedaOrigem: code,

@@ -15,7 +15,9 @@ describe('requireJwtSecret', () => {
 
   it('recusa placeholder ou segredo curto em produção', () => {
     expect(() =>
-      requireJwtSecret(config({ JWT_SECRET: 'replace-me', NODE_ENV: 'production' })),
+      requireJwtSecret(
+        config({ JWT_SECRET: 'replace-me', NODE_ENV: 'production' }),
+      ),
     ).toThrow(/fraco/);
     expect(
       requireJwtSecret(

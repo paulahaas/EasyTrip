@@ -81,7 +81,9 @@ export class VisitedService {
       cca2: row.cca2,
       countryName: row.countryName,
       continent: row.continent,
-      visitedAt: row.visitedAt ? row.visitedAt.toISOString().slice(0, 10) : null,
+      visitedAt: row.visitedAt
+        ? row.visitedAt.toISOString().slice(0, 10)
+        : null,
       createdAt: row.createdAt.toISOString(),
     };
   }

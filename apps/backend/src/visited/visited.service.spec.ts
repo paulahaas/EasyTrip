@@ -139,7 +139,11 @@ describe('VisitedService', () => {
   describe('continente e data da viagem', () => {
     it('recalcula o continente das Américas pelo código do país', async () => {
       prisma.visitedCountry.create.mockResolvedValue(makeRow({ cca2: 'BR' }));
-      await svc.add('u1', { cca2: 'br', countryName: 'Brazil', continent: 'Americas' });
+      await svc.add('u1', {
+        cca2: 'br',
+        countryName: 'Brazil',
+        continent: 'Americas',
+      });
       expect(prisma.visitedCountry.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           cca2: 'BR',

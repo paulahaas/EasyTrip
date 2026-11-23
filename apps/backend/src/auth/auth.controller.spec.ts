@@ -1,7 +1,6 @@
 import { AuthController } from './auth.controller';
 
 const USER = { id: 'u1', email: 'a@b.com', role: 'USER' as const };
-const TOKEN_RES = { user: USER, tokens: { accessToken: 'tok' } };
 
 describe('AuthController', () => {
   let service: {
