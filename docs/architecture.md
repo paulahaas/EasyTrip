@@ -24,9 +24,9 @@ O build é orquestrado pelo **Turborepo**: cada app tem seus scripts `dev`, `bui
 
 | Camada | Tecnologia |
 |--------|-----------|
-| Framework | NestJS 10 |
-| ORM | Prisma 6 |
-| Banco | PostgreSQL 15 (Docker local) |
+| Framework | NestJS 11 |
+| ORM | Prisma 5 |
+| Banco | PostgreSQL 16 (Docker local), `npm run db:local` ou Neon em produção |
 | Autenticação | JWT via `@nestjs/jwt` (Bearer token) |
 | Validação | `class-validator` + `class-transformer` |
 | HTTP client | `@nestjs/axios` (RxJS/firstValueFrom) |

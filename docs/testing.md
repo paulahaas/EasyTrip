@@ -27,20 +27,25 @@ Cada service tem seu próprio spec com mocks do Prisma e dependências.
 |---------|-------------|
 | `auth/auth.service.spec.ts` | Hash de senha, validação de credenciais, geração de JWT, conflito de email |
 | `auth/auth.controller.spec.ts` | Rotas `/login`, `/register`, `/me` — payload e response |
-| `auth/guards/jwt-auth.guard.spec.ts` | Guard extrai user do JWT, rejeita token inválido |
-| `auth/guards/roles.guard.spec.ts` | Guard permite/bloqueia por role |
+| `auth/auth.module.spec.ts` | `JWT_SECRET` obrigatório; segredo fraco recusado em produção |
+| `auth/guards/login-throttle.guard.spec.ts` | Limite de 10 tentativas por IP + login a cada 15 min |
+| `auth/guards/roles.guard.spec.ts` | Guard valida o JWT e permite/bloqueia por role |
+| `countries/countries.service.spec.ts` | Resolução de nome (PT/EN, sem acento, siglas, trecho único) |
+| `countries/country-extras.spec.ts` | Idiomas, continentes, DDI, mão de direção; totais por continente batem com o world-countries |
 | `destination/destination.service.spec.ts` | Agrega país + clima + câmbio, propaga erro 404 |
 | `destination/destination.controller.spec.ts` | Rota `/search` e `/:name` |
 | `destination/services/country.service.spec.ts` | Busca por nome, cca2, cca3 — síncrona |
-| `destination/services/weather.service.spec.ts` | Formata resposta do OpenWeatherMap |
+| `destination/services/weather.service.spec.ts` | Formata resposta do OpenWeatherMap, consulta `cidade,PAÍS`, cache |
 | `destination/services/exchange.service.spec.ts` | Formata cotação do ExchangeRate |
 | `history/history.service.spec.ts` | CRUD de histórico, deduplicação, limite de 8, bulk import |
-| `recommendations/recommendations.service.spec.ts` | Filtra por sub-região, exclui já visitados/wishlist |
+| `recommendations/recommendations.service.spec.ts` | Fronteira (peso 2) + sub-região (peso 1), exclui já visitados/wishlist |
 | `semantic-search/full-text-search.service.spec.ts` | Índice MiniSearch — busca exata, fuzzy, fallback |
+| `semantic-search/keyword-map.spec.ts` | Filtros do keyword-map, normalização e stopwords |
 | `semantic-search/semantic-search.service.spec.ts` | Score final = BM25 + tagScore |
 | `stats/stats.service.spec.ts` | Agregação por continente, sempre 7 continentes |
 | `users/users.service.spec.ts` | Criação, busca, perfil público |
-| `visited/visited.service.spec.ts` | Add, remove, list — conflito 409 |
+| `visited/visited.service.spec.ts` | Add, remove, list, data da viagem — 409, país desconhecido (400) |
+| `visited/dto/add-visited.dto.spec.ts` | Validação do DTO: data até o ano que vem, tamanho do nome |
 | `wishlist/wishlist.service.spec.ts` | Add, remove, list — conflito 409 |
 
 ### Testes E2E (`test/*.e2e-spec.ts`)
@@ -93,14 +98,25 @@ Framework: **Vitest** com **Testing Library** (`@testing-library/react`).
 
 | Arquivo | O que testa |
 |---------|-------------|
-| `components/SearchBar.test.tsx` | Input aceita texto, submit dispara busca |
-| `components/DestinationCard.test.tsx` | Renderiza nome/bandeira, toggle wishlist/visited |
-| `components/RecommendationsStrip.test.tsx` | Renderiza lista de recomendações, empty state |
+| `components/AuthRequiredDialog.test.tsx` | Diálogo de login para conteúdo protegido |
 | `components/ContinentStatsCard.test.tsx` | Exibe percentual e total visitados por continente |
-| `components/WorldMap.test.tsx` | Renderiza mapa SVG, destaca países visitados |
-| `components/AuthModal.test.tsx` | Formulário login/register, validação, erro de auth |
-| `routes/home.test.tsx` | Fluxo completo: busca → resultado → adicionar wishlist |
-| `routes/profile.test.tsx` | Estatísticas + listas visitados/wishlist |
+| `components/CountryFlag.test.tsx` | Bandeira como imagem com fallback |
+| `components/CountrySections.test.tsx` | Comidas típicas e regras do país |
+| `components/LoginForm.test.tsx` | Login por email ou usuário, validação |
+| `components/RegisterForm.test.tsx` | Cadastro, nome de usuário inválido, erro da API |
+| `components/ProfileFeatures.test.tsx` | Conquistas, linha do tempo, comparar com amigo |
+| `components/RecommendationsStrip.test.tsx` | Renderiza lista de recomendações, empty state |
+| `components/SearchHistory.test.tsx` | Chips do histórico e limpar |
+| `components/UsernameEditor.test.tsx` | Edição do nome de usuário |
+| `components/charts/ContinentBarChart.test.tsx` | Gráfico por continente |
+| `components/charts/WorldMapCard.test.tsx` | Todo país do world-atlas tem código (mapa casa por ccn3) |
+| `components/charts/WorldPercentChart.test.tsx` | Percentual do mundo visitado |
+| `context/AuthContext.test.tsx` | Login, migração do histórico, sessão mantida em 502 e encerrada em 401 |
+| `hooks/useLocalHistory.test.ts` | Histórico local de visitante |
+| `hooks/useWishlist.test.tsx` | Query + mutations da wishlist |
+| `lib/countryMatch.test.ts` | Fallback por nome do mapa |
+
+`src/test/setup.ts` troca o `localStorage` por um em memória quando o do ambiente não funciona (Node 25+ expõe um global próprio que encobre o do jsdom).
 
 ### Setup e providers
 
